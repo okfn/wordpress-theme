@@ -1,14 +1,12 @@
 <?php
 /*
-Template Name: OKFN Front Page 
+Template Name: OKFN Front Page
  */
 ?>
 <?php get_header(); ?>
 <div class="row">
 	<div id="content" class="okfn-front span12">
 		<div class="padder">
-
-		<?php do_action( 'bp_before_blog_page' ); ?>
 
 		<div class="page" id="blog-page" role="main">
 
@@ -36,7 +34,7 @@ Template Name: OKFN Front Page
 			<h3>From our Blog</h3>
 			<?php $okfn_front_post_number="4" ?>
       <div class="magazine posts<?php echo $okfn_front_post_number ?>">
-      <?php 
+      <?php
         if (switch_to_blog(37,true)) {
           // Query remaining posts
           $post_filter_etc = array('posts_per_page' => $okfn_front_post_number);
@@ -58,8 +56,6 @@ Template Name: OKFN Front Page
       </div><!-- .magazine -->
 
 		</div><!-- .page -->
-
-		<?php do_action( 'bp_after_blog_page' ); ?>
 
 		</div><!-- .padder -->
 	</div><!-- #content -->

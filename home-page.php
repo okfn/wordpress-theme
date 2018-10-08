@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: Home 
+Template Name: Home
  */
 
 /* body class="magazine" */
@@ -12,9 +12,18 @@ function browser_body_class($classes = '') {
 
     // Get options
     global $options;
-    foreach ($options as $value) {
-      if (get_option( $value['id'] ) === FALSE) { $$value['id'] = $value['std']; } else { $$value['id'] = get_option( $value['id'] ); }
-    }
+	foreach ($options as $value) {
+		if (isset($value['id'], $value['std'])):
+		  $option_value = get_option($value['id'], $value['std']);
+		  if (isset($option_value)):
+			if (version_compare(PHP_VERSION, '7.0.0', '>=')) {
+			  ${$value['id']} = $option_value;
+			} else {
+			  $$value['id'] = $option_value;
+			}
+		  endif;
+		endif;
+	  }
 		if (!empty($okfn_home_featured)) {
 		  $featured_cat = $okfn_home_featured;
 		} else {
@@ -27,18 +36,16 @@ function browser_body_class($classes = '') {
   <div id="content" class="span12">
     <div class="padder">
 
-    <?php do_action( 'bp_before_blog_home' ) ?>
-
     <?php do_action( 'template_notices' ) ?>
 
     <div class="page" id="blog-latest" role="main">
-    
+
 		<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
     <?php the_content(); ?>
 		<?php endwhile; endif; ?>
     <h3 class="blog-latest-heading"><?php echo __("From our Blog", "okfn")?></h3>
     <div class="posts">
-    <?php 
+    <?php
     /* =================== */
     /* == Magazine Body == */
     /* =================== */
@@ -67,8 +74,6 @@ function browser_body_class($classes = '') {
     ?>
     </div>
     </div>
-
-    <?php do_action( 'bp_after_blog_home' ) ?>
 
     </div><!-- .padder -->
 </div><!-- #content -->

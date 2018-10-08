@@ -3,29 +3,23 @@
 	<div id="content" class="search-page span8">
 		<div class="padder">
 
-		<?php do_action( 'bp_before_blog_search' ) ?>
-
 		<div class="page" id="blog-search" role="main">
 
 			<!--<h2 class="pagetitle"><?php _e( 'Site', 'buddypress' ) ?></h2> -->
 
 			<?php if (have_posts()) : ?>
       <h1 class="pagetitle">
-      Search Results for <?php /* Search Count */ $allsearch = &new WP_Query("s=$s&showposts=-1"); $key = wp_specialchars($s, 1); $count = $allsearch->post_count; _e(''); _e('<span class="search-terms">'); echo $key; _e('</span>'); _e(' &mdash; '); echo $count . ' '; _e('match(es)'); wp_reset_query(); ?>
+      Search Results for <?php the_search_query(); ?>
       </h1>
 				<!--<h3 class="pagetitle"><?php _e( 'Search Results', 'buddypress' ) ?></h3> -->
 
-				<?php bp_dtheme_content_nav( 'nav-above' ); ?>
-
 				<?php while (have_posts()) : the_post(); ?>
-
-					<?php do_action( 'bp_before_blog_post' ) ?>
 
 					<div id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
 						<!--<div class="author-box">
 							<?php echo get_avatar( get_the_author_meta( 'email' ), '50' ); ?>
-							<p><?php printf( _x( 'by %s', 'Post written by...', 'buddypress' ), bp_core_get_userlink( $post->post_author ) ) ?></p>
+							<p><?php printf( _x( 'by %s', 'Post written by...', 'buddypress' ), get_the_author_posts_link() ) ?></p>
 						</div> -->
 
 						<div class="post-content">
@@ -43,11 +37,7 @@
 
 					</div>
 
-					<?php do_action( 'bp_after_blog_post' ) ?>
-
 				<?php endwhile; ?>
-
-				<?php bp_dtheme_content_nav( 'nav-below' ); ?>
 
 			<?php else : ?>
 
@@ -57,8 +47,6 @@
 			<?php endif; ?>
 
 		</div>
-
-		<?php do_action( 'bp_after_blog_search' ) ?>
 
 		</div><!-- .padder -->
 	</div><!-- #content -->

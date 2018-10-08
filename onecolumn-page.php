@@ -14,8 +14,6 @@ get_header(); ?>
 	<div id="content" class="span12">
 		<div class="padder one-column">
 
-		<?php do_action( 'bp_before_blog_page' ); ?>
-
 		<div class="page" id="blog-page" role="main">
 
 			<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
@@ -40,8 +38,6 @@ get_header(); ?>
 			<?php endwhile; endif; ?>
 
 		</div><!-- .page -->
-
-		<?php do_action( 'bp_after_blog_page' ); ?>
 
 		</div><!-- .padder -->
 	</div><!-- #content -->

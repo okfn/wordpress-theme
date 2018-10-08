@@ -3,36 +3,19 @@
 /* Make OKFN theme available for translation.
  * Translations can be added to the /languages/ directory.
  */
-	//load_theme_textdomain( 'okfn', TEMPLATEPATH.'/languages' );
-	load_child_theme_textdomain( 'okfn', get_stylesheet_directory() . '/languages' );
-  load_child_theme_textdomain('buddypress', get_stylesheet_directory() .'/languages/bp-languages' );
-
-/*
- * Register a series of DOM-manipulating filters.
- */
-add_filter('wp_nav_menu', 'filter_nav_menu');
-add_filter('bp_before_account_details_fields', 'register_form_blurb');
+load_child_theme_textdomain( 'okfn', get_stylesheet_directory() . '/languages' );
 
 /*
  * Use the simple_html_dom library to perform
  * easy manipulations on wordpress' output.
  */
-include('simple_html_dom.php');
+get_template_part( 'simple_html_dom' );
+
 
 /*
- * Kill Buddypress' profile links. They are wrong and stupid!
- */
-function remove_xprofile_links() {
-    remove_filter( 'bp_get_the_profile_field_value', 'xprofile_filter_link_profile_data', 9, 2 );
-}
-add_action( 'bp_init', 'remove_xprofile_links' );
-
-/*
- * Disable the parent theme's stylesheets. We work from scratch.
- */
-if ( !function_exists( 'bp_dtheme_enqueue_styles' ) ) :
-    function bp_dtheme_enqueue_styles() {}
-endif;
+* Register a series of DOM-manipulating filters.
+*/
+add_filter('wp_nav_menu_items', 'filter_nav_menu');
 
 /*
  * Modify the DOM to enable bootstrap dropdown menus.
@@ -40,46 +23,24 @@ endif;
 function filter_nav_menu( $header ) {
 
   $header = str_get_html($header);
+
   foreach ($header->find('li') as $li) {
-    // "current-menu-item" is marked as "active" for bootstra
-    if (stristr($li->class, "current-menu-item")) {
-      $li->class .= " active";
-    }
-    // Any <li> containing a <ul> gets a special class
-    $isDropdown = count($li->find('ul')) > 0;
-    if ($isDropdown) {
-      $li->class.=" dropdown";
-      $tag = 'data-dropdown';
-      $li->$tag = "dropdown";
-      $li->find('a',0)->class.=" dropdown-toggle";
-      $li->find('ul',0)->class.=" dropdown-menu";
-    }
+	// "current-menu-item" is marked as "active" for bootstra
+	if (stristr($li->class, "current-menu-item")) {
+	  $li->class .= " active";
+	}
+	// Any <li> containing a <ul> gets a special class
+	$isDropdown = count($li->find('ul')) > 0;
+	if ($isDropdown) {
+	  $li->class.=" dropdown";
+	  $tag = 'data-dropdown';
+	  $li->$tag = "dropdown";
+	  $li->find('a',0)->class.=" dropdown-toggle";
+	  $li->find('ul',0)->class.=" dropdown-menu";
+	}
   }
 
   return $header;
-}
-
-/* Taken from buddypress:functions.php.bp_dtheme_main_nav. Used by header.php */
-function okfn_fallback_nav_menu( $args ) {
-	global $bp;
-
-	$pages_args = array(
-		'depth'      => 0,
-		'echo'       => false,
-		'exclude'    => '',
-		'title_li'   => ''
-	);
-	$menu = wp_page_menu( $pages_args );
-	$menu = str_replace( array( '<div class="menu"><ul>', '</ul></div>' ), array( '<ul id="nav" class="nav">', '</ul><!-- #nav -->' ), $menu );
-	echo $menu;
-
-	do_action( 'bp_nav_items' );
-}
-
-function register_form_blurb( $args ) {
-  echo "<p>Community Membership is a way of &quot;opting in&quot; and publicly acknowledging a connnection with the Open Knowledge Foundation and support for its activities."
-    ." It entails no specific obligations (nor confers specific rights!) and anyone may join.</p>"
-    ."<p><a href=\"/governance/#community-membership\">Read more about Community Membership &raquo;</a></p>";
 }
 
 /*
@@ -93,15 +54,16 @@ function choose_best_category( $categories) {
   $categories = $categories[0];
   global $options;
   foreach ($options as $value) {
-    if(array_key_exists('id', $value)) {
-      if (get_option( $value['id'] ) === FALSE) {
-        if (array_key_exists('std', $value)) {
-          $$value['id'] = $value['std'] or NULL;
-        }
-      } else {
-        $$value['id'] = get_option( $value['id'] );
-      }
-    }
+	if (isset($value['id'], $value['std'])):
+	  $option_value = get_option($value['id'], $value['std']);
+	  if (isset($option_value)):
+		if (version_compare(PHP_VERSION, '7.0.0', '>=')) {
+		  ${$value['id']} = $option_value;
+		} else {
+		  $$value['id'] = $option_value;
+		}
+	  endif;
+	endif;
   }
   if (!empty($okfn_category_priority)) {
 		$category_priority_custom = stripslashes($okfn_category_priority);
@@ -113,10 +75,10 @@ function choose_best_category( $categories) {
   // Choose the first category I have in the priority list
   $first = null;
   foreach ($category_priority as $priority) {
-    foreach ($categories as $category) {
-      if ($priority == $category->name)
-        return $category->name;
-    }
+	foreach ($categories as $category) {
+	  if ($priority == $category->name)
+		return $category->name;
+	}
   }
   return $categories[0]->name;
   // I have no special categories. Just choose the first one.
@@ -124,416 +86,456 @@ function choose_best_category( $categories) {
 };
 
 function echo_magazine_post($post, $is_featured) {
-    $post_class = $is_featured ? 'featured' : 'preview';
-    $post_category = choose_best_category( array( get_the_category()) );
-    // Extract the first img src from the post body
-    $regex = '/magazine.image\s*=\s*"?([^"\s]*)/';
-    preg_match($regex, get_the_content(), $matches);
-    if ( has_post_thumbnail() ) {
-      $post_img = wp_get_attachment_url( get_post_thumbnail_id($post->ID) ); // use wp featured image
-    }
-    elseif (count($matches)) $post_img = $matches[1]; // else use old featured image
-    else {
-      $post_img = 'http://assets.okfn.org/web/images/blog-placeholder.png'; // else use placeholder
-    }
-    echo '<div class="box post '.$post_class.'">';
-    echo '<div class="padder"> <a class="image" href="'.get_permalink().'" style="background-image:url('.$post_img.');"></a>';
-    echo '<div class="text">';
-    echo '<h2><a href="'.get_permalink().'" rel="bookmark">'; the_title(); echo '</a></h2>';
-    echo '<span class="entry-meta"> Posted on ';
-    printf( __( '%1$s <span>in %2$s</span>', 'buddypress' ), get_the_date(), get_the_category_list( ', ' ) );
-    echo 'by ' . bp_core_get_userlink( $post->post_author );
-    echo '</span>';
-    echo the_excerpt();
-    echo '</div>';
-    echo '<a href="'.get_permalink().'" class="btn btn-info">'.__("Full Post", "okfn").'</a> </div>';
-    echo '<h3 class="ribbon">';
-    echo $post_category;
-    echo '</h3>';
-    echo '</div>';
+	$post_class = $is_featured ? 'featured' : 'preview';
+	$post_category = choose_best_category( array( get_the_category()) );
+	// Extract the first img src from the post body
+	$regex = '/magazine.image\s*=\s*"?([^"\s]*)/';
+	preg_match($regex, get_the_content(), $matches);
+	if ( has_post_thumbnail() ) {
+	  $post_img = wp_get_attachment_url( get_post_thumbnail_id($post->ID) ); // use wp featured image
+	}
+	elseif (count($matches)) $post_img = $matches[1]; // else use old featured image
+	else {
+	  $post_img = 'http://assets.okfn.org/web/images/blog-placeholder.png'; // else use placeholder
+	}
+	echo '<div class="box post '.$post_class.'">';
+	echo '<div class="padder"> <a class="image" href="'.get_permalink().'" style="background-image:url('.$post_img.');"></a>';
+	echo '<div class="text">';
+	echo '<h2><a href="'.get_permalink().'" rel="bookmark">'; the_title(); echo '</a></h2>';
+	echo '<span class="entry-meta"> Posted on ';
+	printf( __( '%1$s <span>in %2$s</span>', 'buddypress' ), get_the_date(), get_the_category_list( ', ' ) );
+	echo 'by ' . get_the_author_posts_link();
+	echo '</span>';
+	echo the_excerpt();
+	echo '</div>';
+	echo '<a href="'.get_permalink().'" class="btn btn-info">'.__("Full Post", "okfn").'</a> </div>';
+	echo '<h3 class="ribbon">';
+	echo $post_category;
+	echo '</h3>';
+	echo '</div>';
 }
 
+function oki_dtheme_setup() {
 
- // The height and width of your custom header. You can hook into the theme's own filters to change these values.
- // Add a filter to bp_dtheme_header_image_width and bp_dtheme_header_image_height to change these values.
-		define( 'HEADER_IMAGE_WIDTH',  apply_filters( 'bp_dtheme_header_image_width',  60 ) );
-		define( 'HEADER_IMAGE_HEIGHT', apply_filters( 'bp_dtheme_header_image_height', 60  ) );
+	// This theme uses post thumbnails
+	add_theme_support( 'post-thumbnails' );
 
+	// Add default posts and comments RSS feed links to head
+	add_theme_support( 'automatic-feed-links' );
+
+	// This theme uses wp_nav_menu() in one location.
+	register_nav_menus( array(
+		'primary' => __( 'Primary Navigation', 'buddypress' ),
+	) );
+
+	add_theme_support( 'custom-background' );
+
+	// Add custom header support if allowed
+	define( 'HEADER_TEXTCOLOR', 'FFFFFF' );
+
+	// The height and width of your custom header. You can hook into the theme's own filters to change these values.
+	// Add a filter to bp_dtheme_header_image_width and bp_dtheme_header_image_height to change these values.
+	define( 'HEADER_IMAGE_WIDTH', 60 );
+	define( 'HEADER_IMAGE_HEIGHT', 60 );
+
+	// We'll be using post thumbnails for custom header images on posts and pages. We want them to be 1250 pixels wide by 133 pixels tall.
+	// Larger images will be auto-cropped to fit, smaller ones will be ignored.
+	set_post_thumbnail_size( HEADER_IMAGE_WIDTH, HEADER_IMAGE_HEIGHT, true );
+
+	// Add a way for the custom header to be styled in the admin panel that controls custom headers.
+	add_theme_support( 'custom-header' );
+}
+add_action( 'after_setup_theme', 'oki_dtheme_setup' );
 
 /*
  *  Theme Options
  */
  // Get default category priority list to use as placeholder
-		$default_category_priority = okfn_load_file( get_bloginfo('stylesheet_directory').'/category-priority.txt');
-		$default_category_priority_string = implode(', ',$default_category_priority);
+	$default_category_priority = okfn_load_file( get_bloginfo('stylesheet_directory').'/category-priority.txt');
+	$default_category_priority_string = implode(', ',$default_category_priority);
  // Settings
-    $themename = "OKF Theme";
-    $shortname = "okfn";
-    $options = array (
+	$themename = "OKF Theme";
+	$shortname = "okfn";
+	$options = array (
 		array(    "name" => "general_options",
 		"type" => "open"),
 		array(    "name" => "General Styling",
-        "type" => "title"),
+		"type" => "title"),
 		array("name" => "Flavour",
-        "id" => $shortname."_colours",
-        "type" => "radio",
-        "desc" => "Change the general look of the site",
-        "options" => array("default" => "Classic", "grey" => "OKF", "blue" => "Ckan", "turquoise" => "Glam", "school" => "School", "white" => "Simple"),
-        "std" => "grey",
+		"id" => $shortname."_colours",
+		"type" => "radio",
+		"desc" => "Change the general look of the site",
+		"options" => array("default" => "Classic", "grey" => "OKF", "blue" => "Ckan", "turquoise" => "Glam", "school" => "School", "white" => "Simple"),
+		"std" => "grey",
 				"class" => "thumbs"),
 		array(  "name" => "Favicon",
-        "desc" => "Replace default favicon with your own ico file",
-        "id" => $shortname."_favicon",
-        "type" => "text",
+		"desc" => "Replace default favicon with your own ico file",
+		"id" => $shortname."_favicon",
+		"type" => "text",
 				"placeholder" => "enter url"),
 		array("name" => "Tagline Location",
-        "id" => $shortname."_tagline_location",
-        "type" => "radio",
-        "desc" => "Where would you like the tagline to appear on the page?",
-        "options" => array("home" => "Top of home page", "default" => "Top of every page", "header" => "In the header", "hide" => "Nowhere"),
-        "std" => "hide"),
+		"id" => $shortname."_tagline_location",
+		"type" => "radio",
+		"desc" => "Where would you like the tagline to appear on the page?",
+		"options" => array("home" => "Top of home page", "default" => "Top of every page", "header" => "In the header", "hide" => "Nowhere"),
+		"std" => "hide"),
 		array(    "name" => "TopBar",
-        "type" => "title"),
+		"type" => "title"),
 		array(  "name" => "Show TopBar?",
-        "desc" => "Show / hide the BuddyPress bar at the top of this site.",
-        "id" => $shortname."_buddypress_disable",
-        "type" => "radio",
+		"desc" => "Show / hide the BuddyPress bar at the top of this site.",
+		"id" => $shortname."_buddypress_disable",
+		"type" => "radio",
 				"options" => array("true" => "Hide", "false" => "Show"),
-        "std" => "true"),
+		"std" => "true"),
 		array(    "name" => "Header",
-        "type" => "title"),
+		"type" => "title"),
 		array(  "name" => "Header Height",
-        "desc" => "Check this box to make the header taller.",
-        "id" => $shortname."_tall_header",
-        "type" => "radio",
+		"desc" => "Check this box to make the header taller.",
+		"id" => $shortname."_tall_header",
+		"type" => "radio",
 				"options" => array("true" => "Tall", "false" => "Short"),
-        "std" => "true"),
+		"std" => "true"),
 		array(  "name" => "Make my logo bigger!",
-        "desc" => "Check this box to increase font size of site title. Useful when you have a short title. Only works with tall header.",
-        "id" => $shortname."_large_title",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to increase font size of site title. Useful when you have a short title. Only works with tall header.",
+		"id" => $shortname."_large_title",
+		"type" => "checkbox",
+		"std" => "false"),
 		array("name" => "Logo Font",
-        "id" => $shortname."_logo_font",
-        "type" => "radio",
-        "desc" => "Font for header logo text",
-        "options" => array("default" => "Open Sans", "ubuntu" => "Ubuntu"),
-        "std" => "default"),
+		"id" => $shortname."_logo_font",
+		"type" => "radio",
+		"desc" => "Font for header logo text",
+		"options" => array("default" => "Open Sans", "ubuntu" => "Ubuntu"),
+		"std" => "default"),
 		array(  "name" => "Hide Logo Icon?",
-        "desc" => "Check this box if you would like to HIDE the logo image.",
-        "id" => $shortname."_logo_icon",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box if you would like to HIDE the logo image.",
+		"id" => $shortname."_logo_icon",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Hide Logo Text?",
-        "desc" => "Check this box if you would like to HIDE the logo text.",
-        "id" => $shortname."_logo_text",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box if you would like to HIDE the logo text.",
+		"id" => $shortname."_logo_text",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Custom Header Text",
-        "desc" => "Check this box to enable custom header text.",
-        "id" => $shortname."_header_text",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to enable custom header text.",
+		"id" => $shortname."_header_text",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Header Text",
-        "desc" => "Text or html to display in header.",
-        "id" => $shortname."_header_textarea",
-        "type" => "textarea"),
+		"desc" => "Text or html to display in header.",
+		"id" => $shortname."_header_textarea",
+		"type" => "textarea"),
 		array("name" => "Align Header Text",
-        "id" => $shortname."_header_text_align",
-        "type" => "radio",
-        "desc" => "Which side of the header would you like this to appear?",
-        "options" => array("left" => "Left", "right" => "Right"),
-        "std" => "right"),
+		"id" => $shortname."_header_text_align",
+		"type" => "radio",
+		"desc" => "Which side of the header would you like this to appear?",
+		"options" => array("left" => "Left", "right" => "Right"),
+		"std" => "right"),
 		array(  "name" => "Custom Header Text Two",
-        "desc" => "Check this box to enable custom header text.",
-        "id" => $shortname."_header_text2",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to enable custom header text.",
+		"id" => $shortname."_header_text2",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Header Text",
-        "desc" => "Text or html to display in header.",
-        "id" => $shortname."_header_textarea2",
-        "type" => "textarea"),
+		"desc" => "Text or html to display in header.",
+		"id" => $shortname."_header_textarea2",
+		"type" => "textarea"),
 		array("name" => "Align Header Text",
-        "id" => $shortname."_header_text_align2",
-        "type" => "radio",
-        "desc" => "Which side of the header would you like this to appear?",
-        "options" => array("left" => "Left", "right" => "Right"),
-        "std" => "right"),
+		"id" => $shortname."_header_text_align2",
+		"type" => "radio",
+		"desc" => "Which side of the header would you like this to appear?",
+		"options" => array("left" => "Left", "right" => "Right"),
+		"std" => "right"),
 		array(  "name" => "Corner Ribbon Toggle",
-        "desc" => "Check this box to enable text in the top right of the page.",
-        "id" => $shortname."_corner_ribbon",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to enable text in the top right of the page.",
+		"id" => $shortname."_corner_ribbon",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Corner Ribbon Text",
-        "desc" => "Text or html to display in the ribbon.",
-        "id" => $shortname."_corner_ribbon_text",
-        "type" => "textarea"),
+		"desc" => "Text or html to display in the ribbon.",
+		"id" => $shortname."_corner_ribbon_text",
+		"type" => "textarea"),
 		array(  "name" => "Corner Ribbon Link",
-        "desc" => "url to link to",
-        "id" => $shortname."_corner_ribbon_link",
-        "type" => "text"),
+		"desc" => "url to link to",
+		"id" => $shortname."_corner_ribbon_link",
+		"type" => "text"),
 		array(  "name" => "Hide OKF Ribbon",
-        "desc" => "Check this box to disable OKF Panel hooks.",
-        "id" => $shortname."_okf_ribbon",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to disable OKF Panel hooks.",
+		"id" => $shortname."_okf_ribbon",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Search Icon",
-        "desc" => "Enable search bar in header",
-        "id" => $shortname."_header_search",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Enable search bar in header",
+		"id" => $shortname."_header_search",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(    "name" => "Sub-Header",
-        "type" => "title"),
+		"type" => "title"),
 		array(  "name" => "Sub-header Bar?",
-        "desc" => "Check this box to display a bar below the header, inclusing breadcrumbs. (Does not appear on homepage)",
-        "id" => $shortname."_subheader",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to display a bar below the header, inclusing breadcrumbs. (Does not appear on homepage)",
+		"id" => $shortname."_subheader",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Search in Sub-header?",
-        "desc" => "Check this box to display add a search field to the sub-header bar.",
-        "id" => $shortname."_subheader_search",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to display add a search field to the sub-header bar.",
+		"id" => $shortname."_subheader_search",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(    "type" => "close"),
 
 		array(    "name" => "social_options",
 		"type" => "open"),
 		array(  	"name" => "Social",
-        "type" => "title"),
+		"type" => "title"),
 		array(  "name" => "Twitter Link",
-        "desc" => "Add link to Twitter profile.",
-        "id" => $shortname."_twitter_link",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Add link to Twitter profile.",
+		"id" => $shortname."_twitter_link",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Twitter Username",
-        "desc" => "twitter.com/...",
-        "id" => $shortname."_twitter_username",
-        "type" => "text"),
+		"desc" => "twitter.com/...",
+		"id" => $shortname."_twitter_username",
+		"type" => "text"),
 		array("name" => "Twitter Location",
-        "id" => $shortname."_twitter_location",
-        "type" => "radio",
-        "desc" => "Where to put Twitter icon",
-        "options" => array("default" => "Header", "footer" => "Footer", "both" => "Header and Footer"),
-        "std" => "default"),
+		"id" => $shortname."_twitter_location",
+		"type" => "radio",
+		"desc" => "Where to put Twitter icon",
+		"options" => array("default" => "Header", "footer" => "Footer", "both" => "Header and Footer"),
+		"std" => "default"),
 		array(  "name" => "Facebook Link",
-        "desc" => "Add link to Facebook profile.",
-        "id" => $shortname."_facebook_link",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Add link to Facebook profile.",
+		"id" => $shortname."_facebook_link",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Facebook Username",
-        "desc" => "This is what comes after'facebook.com/' in the URL (this will also be used for Open Graph tags).",
-        "id" => $shortname."_facebook_username",
-        "type" => "text"),
+		"desc" => "This is what comes after'facebook.com/' in the URL (this will also be used for Open Graph tags).",
+		"id" => $shortname."_facebook_username",
+		"type" => "text"),
 		array("name" => "Facebook Location",
-        "id" => $shortname."_facebook_location",
-        "type" => "radio",
-        "desc" => "Where to put Facebook icon",
-        "options" => array("default" => "Header", "footer" => "Footer", "both" => "Header and Footer"),
-        "std" => "default"),
+		"id" => $shortname."_facebook_location",
+		"type" => "radio",
+		"desc" => "Where to put Facebook icon",
+		"options" => array("default" => "Header", "footer" => "Footer", "both" => "Header and Footer"),
+		"std" => "default"),
 		array(  "name" => "ShareThis",
-        "desc" => "Check this box to enable ShareThis.",
-        "id" => $shortname."_sharethis",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to enable ShareThis.",
+		"id" => $shortname."_sharethis",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(    "name" => "Publisher ID",
-        "desc" => "If you have a ShareThis account, enter your publisher ID here.",
-        "id" => $shortname."_sharethis_id",
-        "std" => "",
-        "type" => "text"),
+		"desc" => "If you have a ShareThis account, enter your publisher ID here.",
+		"id" => $shortname."_sharethis_id",
+		"std" => "",
+		"type" => "text"),
 		array("name" => "ShareThis Location",
-        "id" => $shortname."_sharethis_location",
-        "type" => "radio",
-        "desc" => "Where is it going?",
-        "options" => array("footer" => "Footer", "elsewhere" => "Elsewhere"),
-        "std" => "footer"),
+		"id" => $shortname."_sharethis_location",
+		"type" => "radio",
+		"desc" => "Where is it going?",
+		"options" => array("footer" => "Footer", "elsewhere" => "Elsewhere"),
+		"std" => "footer"),
 //		array(  "name" => "Enable Tweet",
 //        "desc" => "Include Seaclouds Tweet script. Uses twitter username specified above.",
 //        "id" => $shortname."_enable_tweet",
 //        "type" => "checkbox",
 //        "std" => "false"),
 		array(    "name" => "Mailing List Bar",
-        "type" => "title"),
+		"type" => "title"),
 		array(  "name" => "MailChimp Plugin",
-        "desc" => "MailChimp form powered by N-Media MailChimp plugin",
-        "id" => $shortname."_mailchimp_bar",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "MailChimp form powered by N-Media MailChimp plugin",
+		"id" => $shortname."_mailchimp_bar",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Mailing List Heading",
-        "desc" => "Appears next to the form",
-        "id" => $shortname."_mailchimp_heading",
-        "type" => "text"),
+		"desc" => "Appears next to the form",
+		"id" => $shortname."_mailchimp_heading",
+		"type" => "text"),
 		array(  "name" => "Description",
 				"desc" => "Used if multiple lists",
-        "id" => $shortname."_mailchimp_description",
-        "type" => "text"),
+		"id" => $shortname."_mailchimp_description",
+		"type" => "text"),
 		array(  "name" => "Form ID",
-        "desc" => "fid number found in shortcode",
-        "id" => $shortname."_mailchimp_id",
-        "type" => "text"),
+		"desc" => "fid number found in shortcode",
+		"id" => $shortname."_mailchimp_id",
+		"type" => "text"),
 		array(  "name" => "Native Mailing List 1",
-        "desc" => "Add mailing list form",
-        "id" => $shortname."_mailinglist_bar",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Add mailing list form",
+		"id" => $shortname."_mailinglist_bar",
+		"type" => "checkbox",
+		"std" => "false"),
 	  array("name" => "Type",
-        "id" => $shortname."_mailinglist_bar_type",
-        "type" => "radio",
-        "desc" => "Where is the mailing list",
-        "options" => array("mailman" => "Mailman", "mailchimp" => "MailChimp"),
-        "std" => "mailman"),
+		"id" => $shortname."_mailinglist_bar_type",
+		"type" => "radio",
+		"desc" => "Where is the mailing list",
+		"options" => array("mailman" => "Mailman", "mailchimp" => "MailChimp"),
+		"std" => "mailman"),
 		array(  "name" => "Mailing List Heading",
-        "desc" => "Appears next to the form",
-        "id" => $shortname."_mailinglist_heading",
-        "type" => "text"),
+		"desc" => "Appears next to the form",
+		"id" => $shortname."_mailinglist_heading",
+		"type" => "text"),
 		array(  "name" => "Description",
 				"desc" => "Used if multiple lists",
-        "id" => $shortname."_mailinglist_description",
-        "type" => "text"),
+		"id" => $shortname."_mailinglist_description",
+		"type" => "text"),
 		array(  "name" => "Action",
-        "desc" => "URL from form action attribute. Mailman example: http://lists.okfn.org/mailman/subscribe/XYZ",
-        "id" => $shortname."_mailinglist_action",
-        "type" => "text"),
+		"desc" => "URL from form action attribute. Mailman example: http://lists.okfn.org/mailman/subscribe/XYZ",
+		"id" => $shortname."_mailinglist_action",
+		"type" => "text"),
 		array(  "name" => "Native Mailing List 2",
-        "desc" => "Add mailing list form",
-        "id" => $shortname."_mailinglist_bar2",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Add mailing list form",
+		"id" => $shortname."_mailinglist_bar2",
+		"type" => "checkbox",
+		"std" => "false"),
 	  array("name" => "Type",
-        "id" => $shortname."_mailinglist_bar_type2",
-        "type" => "radio",
-        "desc" => "Where is the mailing list",
-        "options" => array("mailman" => "Mailman", "mailchimp" => "MailChimp"),
-        "std" => "mailman"),
+		"id" => $shortname."_mailinglist_bar_type2",
+		"type" => "radio",
+		"desc" => "Where is the mailing list",
+		"options" => array("mailman" => "Mailman", "mailchimp" => "MailChimp"),
+		"std" => "mailman"),
 		array(  "name" => "Mailing List Heading",
-        "desc" => "Appears next to the form",
-        "id" => $shortname."_mailinglist_heading2",
-        "type" => "text"),
+		"desc" => "Appears next to the form",
+		"id" => $shortname."_mailinglist_heading2",
+		"type" => "text"),
 		array(  "name" => "Description",
 				"desc" => "Used if multiple lists",
-        "id" => $shortname."_mailinglist_description2",
-        "type" => "text"),
+		"id" => $shortname."_mailinglist_description2",
+		"type" => "text"),
 		array(  "name" => "Action",
-        "desc" => "URL from form action attribute. Mailman example: http://lists.okfn.org/mailman/subscribe/XYZ",
-        "id" => $shortname."_mailinglist_action2",
-        "type" => "text"),
+		"desc" => "URL from form action attribute. Mailman example: http://lists.okfn.org/mailman/subscribe/XYZ",
+		"id" => $shortname."_mailinglist_action2",
+		"type" => "text"),
 		array("name" => "Mailing List Location",
-        "id" => $shortname."_mailinglist_bar_location",
-        "type" => "radio",
-        "desc" => "Where to put bar",
-        "options" => array("header" => "Header (home page, first list only)", "footer" => "Footer"),
-        "std" => "footer"),
+		"id" => $shortname."_mailinglist_bar_location",
+		"type" => "radio",
+		"desc" => "Where to put bar",
+		"options" => array("header" => "Header (home page, first list only)", "footer" => "Footer"),
+		"std" => "footer"),
 		array(  "type" => "close"),
 
 		array(    "name" => "blog_options",
-		     "type" => "open"),
+			 "type" => "open"),
 		array(    "name" => "Blog",
-        "type" => "title"),
+		"type" => "title"),
 		array(  "name" => "Large Blog Avatars",
-        "desc" => "Check this box to use large avatars on blog post page (requires Gravatar).",
-        "id" => $shortname."_large_avatars",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to use large avatars on blog post page (requires Gravatar).",
+		"id" => $shortname."_large_avatars",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Blog Archive",
-        "desc" => "URL to all blog posts, used in Magazine template.",
-        "id" => $shortname."_blog_link",
-        "type" => "text"),
+		"desc" => "URL to all blog posts, used in Magazine template.",
+		"id" => $shortname."_blog_link",
+		"type" => "text"),
 		array(  "name" => "Magazine Posts",
-        "desc" => "How many posts to show in the Magazine template.",
-        "id" => $shortname."_magazine_posts",
-        "type" => "text"),
+		"desc" => "How many posts to show in the Magazine template.",
+		"id" => $shortname."_magazine_posts",
+		"type" => "text"),
 		array(  "name" => "Featured Category",
-        "desc" => "Name of category to feature on magazine style pages ('Featured' by default).",
-        "id" => $shortname."_magazine_featured",
-        "type" => "text"),
+		"desc" => "Name of category to feature on magazine style pages ('Featured' by default).",
+		"id" => $shortname."_magazine_featured",
+		"type" => "text"),
 		array(  "name" => "Home Category",
-        "desc" => "Name of category to feature on homepage ('Featured' by default).",
-        "id" => $shortname."_home_featured",
-        "type" => "text"),
+		"desc" => "Name of category to feature on homepage ('Featured' by default).",
+		"id" => $shortname."_home_featured",
+		"type" => "text"),
 		array(  "name" => "Events Category",
-        "desc" => "Name of category to feature on events page ('Events' by default).",
-        "id" => $shortname."_events_featured",
-        "type" => "text"),
+		"desc" => "Name of category to feature on events page ('Events' by default).",
+		"id" => $shortname."_events_featured",
+		"type" => "text"),
 		array(  "name" => "Narrow Post Column",
-        "desc" => "Check this box to use alternative post page layout.",
-        "id" => $shortname."_narrow_blog",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to use alternative post page layout.",
+		"id" => $shortname."_narrow_blog",
+		"type" => "checkbox",
+		"std" => "false"),
 	  array(    "name" => "Category Priority",
-        "type" => "title"),
+		"type" => "title"),
 		array(  "name" => "Which category is shown, when only room for one?",
-        "desc" => "List in order of priority. Categories must be comma separated, and are case sensitive.",
-        "id" => $shortname."_category_priority",
-        "type" => "textarea",
+		"desc" => "List in order of priority. Categories must be comma separated, and are case sensitive.",
+		"id" => $shortname."_category_priority",
+		"type" => "textarea",
 				"rows" => "11",
 				"placeholder" => $default_category_priority_string),
 		array(    "type" => "close"),
 
 		array(    "name" => "misc_options",
-		    "type" => "open"),
+			"type" => "open"),
 		array(    "name" => "Misc",
-        "type" => "title"),
+		"type" => "title"),
 		//array("name" => "Carousel Style",
-        //"id" => $shortname."_carosel",
-        //"type" => "radio",
-        //"desc" => "Change layout style of Bootstrap carousel",
-        //"options" => array("default" => "Default", "text-right" => "Text on Right (full width)", "stack" => "Text on Right (photo stack)"),
-        //"std" => "default"),
+		//"id" => $shortname."_carosel",
+		//"type" => "radio",
+		//"desc" => "Change layout style of Bootstrap carousel",
+		//"options" => array("default" => "Default", "text-right" => "Text on Right (full width)", "stack" => "Text on Right (photo stack)"),
+		//"std" => "default"),
 		array(  "name" => "Tagline in meta title?",
-        "desc" => "Check this box to append site title with tagline in the meta title tag.",
-        "id" => $shortname."_tagline_title",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to append site title with tagline in the meta title tag.",
+		"id" => $shortname."_tagline_title",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Flattr OKFN",
-        "desc" => "Check this box to add a link to donate to the Open Knowledge Foundation.",
-        "id" => $shortname."_flattr_okfn",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "Check this box to add a link to donate to the Open Knowledge Foundation.",
+		"id" => $shortname."_flattr_okfn",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(  "name" => "Enable Flags",
-        "desc" => "https://github.com/lafeber/world-flags-sprite",
-        "id" => $shortname."_flags_sprite",
-        "type" => "checkbox",
-        "std" => "false"),
+		"desc" => "https://github.com/lafeber/world-flags-sprite",
+		"id" => $shortname."_flags_sprite",
+		"type" => "checkbox",
+		"std" => "false"),
 		array(    "type" => "close"),
 );
 
 function mytheme_add_admin() {
 
-    global $themename, $shortname, $options;
+	global $themename, $shortname, $options;
 
-    if ( $_GET['page'] == basename(__FILE__) ) {
+	if ( isset($_GET['page']) && $_GET['page'] == basename(__FILE__) ) {
 
-        if ( 'save' == $_REQUEST['action'] ) {
+		if ( isset($_REQUEST['action']) && 'save' == $_REQUEST['action'] ) {
 
-                foreach ($options as $value) {
-                    update_option( $value['id'], $_REQUEST[ $value['id'] ] ); }
+				foreach ($options as $value) {
+					if ( isset( $value['id'] ) && isset( $_REQUEST[ $value['id'] ] ) ) :
+						update_option( $value['id'], $_REQUEST[ $value['id'] ] );
+					endif;
+				}
 
-                foreach ($options as $value) {
-                    if( isset( $_REQUEST[ $value['id'] ] ) ) { update_option( $value['id'], $_REQUEST[ $value['id'] ]  ); } else { delete_option( $value['id'] ); } }
+				foreach ($options as $value) {
+					if( isset( $value['id'] ) && isset( $_REQUEST[ $value['id'] ] ) ) {
+						if ( isset( $value['id'] ) && isset( $_REQUEST[ $value['id'] ] ) ):
+							update_option( $value['id'], $_REQUEST[ $value['id'] ] );
+						endif;
+					} else {
+						if ( isset( $value['id'] ) ):
+							delete_option( $value['id'] );
+						endif;
+					}
+				}
 
-                header("Location: themes.php?page=functions.php&saved=true");
-                die;
+				header("Location: themes.php?page=functions.php&saved=true");
+				die;
 
-        } else if( 'reset' == $_REQUEST['action'] ) {
+		} else if( isset($_REQUEST['action']) && 'reset' == $_REQUEST['action'] ) {
 
-            foreach ($options as $value) {
-                delete_option( $value['id'] ); }
+			foreach ($options as $value) {
+				if ( isset( $value['id'] ) ):
+					delete_option( $value['id'] );
+				endif;
+			}
 
-            header("Location: themes.php?page=functions.php&reset=true");
-            die;
+			header("Location: themes.php?page=functions.php&reset=true");
+			die;
 
-        }
-    }
+		}
+	}
 
-    add_theme_page($themename." Options", "".$themename." Options", 'switch_themes', basename(__FILE__), 'mytheme_admin');
+	add_theme_page($themename." Options", "".$themename." Options", 'switch_themes', basename(__FILE__), 'mytheme_admin');
 
 }
 
 function mytheme_admin() {
 
-    global $themename, $shortname, $options;
+	global $themename, $shortname, $options;
 
-    if ( $_REQUEST['saved'] ) echo '<div id="message" class="updated fade"><p><strong>'.$themename.' settings saved.</strong></p></div>';
-    if ( $_REQUEST['reset'] ) echo '<div id="message" class="updated fade"><p><strong>'.$themename.' settings reset.</strong></p></div>';
+	if ( isset($_REQUEST['saved']) && $_REQUEST['saved'] ) echo '<div id="message" class="updated fade"><p><strong>'.$themename.' settings saved.</strong></p></div>';
+	if ( isset($_REQUEST['reset']) && $_REQUEST['reset'] ) echo '<div id="message" class="updated fade"><p><strong>'.$themename.' settings reset.</strong></p></div>';
 
 ?>
 
@@ -579,7 +581,7 @@ function mytheme_admin() {
 		display:block;
 		padding:3px;
 		background: rgb(255, 255, 255); /* fallback */
-    background: rgba(255, 2554, 255, 0.9);
+	background: rgba(255, 2554, 255, 0.9);
 	}
 	.options .submit {
 		display:block;
@@ -603,170 +605,170 @@ function mytheme_admin() {
 
   <?php foreach ($options as $value) {
 
-    switch ( $value['type'] ) {
+	switch ( $value['type'] ) {
 
-      case "open":
-      ?>
-         <div id="<?php echo $value['name']; ?>" class="group" <?php if( $active_tab !== $value['name'] ) : ?> style="display:none;"<?php endif; ?> >
+	  case "open":
+	  ?>
+		 <div id="<?php echo $value['name']; ?>" class="group" <?php if( $active_tab !== $value['name'] ) : ?> style="display:none;"<?php endif; ?> >
 
-      <?php break;
+	  <?php break;
 
-      case "close":
-      ?>
+	  case "close":
+	  ?>
 
-          </div>
-
-
-      <?php break;
-
-      case "title":
-      ?>
-      <h3><?php echo $value['name']; ?></h3>
+		  </div>
 
 
-      <?php break;
+	  <?php break;
 
-      case 'text':
-      ?>
-
-        <div class="section section-text" id="section_<?php echo $value['id']; ?>">
-          <div class="heading">
-            <h4><?php echo $value['name']; ?></h4>
-            <p class="explain"><?php echo $value['desc']; ?></p>
-          </div>
-          <div class="option">
-            <div class="controls">
-              <input name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" type="<?php echo $value['type']; ?>" value="<?php if ( get_option( $value['id'] ) != "") { echo get_option( $value['id'] ); } else { echo $value['std']; } ?>" <?php if (  $value['placeholder']  != "") : ?>placeholder="<?php echo $value['placeholder']; ?>"<?php endif ?>/>
-              <br>
-            </div>
-            <div class="clear"></div>
-          </div>
-        </div>
+	  case "title":
+	  ?>
+	  <h3><?php echo $value['name']; ?></h3>
 
 
-      <?php
-      break;
+	  <?php break;
 
-      case 'textarea':
-      ?>
+	  case 'text':
+	  ?>
 
-          <?php $input = get_option( $value['id'] ); $output = stripslashes ($input); ?>
+		<div class="section section-text" id="section_<?php echo $value['id']; ?>">
+		  <div class="heading">
+			<h4><?php echo $value['name']; ?></h4>
+			<p class="explain"><?php echo $value['desc']; ?></p>
+		  </div>
+		  <div class="option">
+			<div class="controls">
+			  <input name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" type="<?php echo $value['type']; ?>" value="<?php if ( get_option( $value['id'] ) != "") { echo get_option( $value['id'] ); } else { echo ( isset($value['std']) ? $value['std'] : '' ); } ?>" <?php if ( isset( $value['placeholder'] ) ) : printf('placeholder="%s"', $value['placeholder'] ); endif; ?>/>
+			  <br>
+			</div>
+			<div class="clear"></div>
+		  </div>
+		</div>
 
-          <div class="section section-textarea" id="section_<?php echo $value['id']; ?>">
-            <div class="heading">
-              <h4><?php echo $value['name']; ?></h4>
-              <p class="explain"><?php echo $value['desc']; ?></p>
-            </div>
-            <div class="option">
-              <div class="controls">
-                <textarea name="<?php echo $value['id']; ?>" cols="70" rows="<?php if (  $value['rows']  != "") { echo $value['rows']; } else { echo '5'; } ?>" <?php if (  $value['placeholder']  != "") : ?>placeholder="<?php echo $value['placeholder']; ?>"<?php endif ?>><?php if ( get_option( $value['id'] ) != "") { echo $output; } else { echo $value['std']; } ?></textarea>
-                <br>
-              </div>
-              <div class="clear"></div>
-            </div>
-          </div>
 
-      <?php
-      break;
+	  <?php
+	  break;
 
-      case 'select':
-      ?>
+	  case 'textarea':
+	  ?>
 
-      <div class="section section-select" id="section_<?php echo $value['id']; ?>">
-        <div class="heading">
-          <h4><?php echo $value['name']; ?></h4>
+		  <?php $input = get_option( $value['id'] ); $output = stripslashes ($input); ?>
+
+		  <div class="section section-textarea" id="section_<?php echo $value['id']; ?>">
+			<div class="heading">
+			  <h4><?php echo $value['name']; ?></h4>
+			  <p class="explain"><?php echo $value['desc']; ?></p>
+			</div>
+			<div class="option">
+			  <div class="controls">
+				<textarea name="<?php echo $value['id']; ?>" cols="70" rows="<?php if ( isset( $value['rows'] ) && $value['rows'] != "") { echo $value['rows']; } else { echo '5'; } ?>" <?php if ( isset( $value['placeholder'] ) ) : printf('placeholder="%s"', $value['placeholder'] ); endif; ?>><?php if ( get_option( $value['id'] ) != "") { echo $output; } else { echo ( isset( $value['std'] ) ? $value['std'] : '' ); } ?></textarea>
+				<br>
+			  </div>
+			  <div class="clear"></div>
+			</div>
+		  </div>
+
+	  <?php
+	  break;
+
+	  case 'select':
+	  ?>
+
+	  <div class="section section-select" id="section_<?php echo $value['id']; ?>">
+		<div class="heading">
+		  <h4><?php echo $value['name']; ?></h4>
 					<p class="explain"><?php echo $value['desc']; ?></p>
-        </div>
-        <div class="option">
-          <div class="controls">
-          <select name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>"><?php foreach ($value['options'] as $option) { ?><option<?php if ( get_option( $value['id'] ) == $option) { echo ' selected="selected"'; } elseif ($option == $value['std']) { echo ' selected="selected"'; } ?>><?php echo $option; ?></option><?php } ?></select>
-          <br>
-          </div>
-          <div class="clear"></div>
-        </div>
-      </div>
+		</div>
+		<div class="option">
+		  <div class="controls">
+		  <select name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>"><?php foreach ($value['options'] as $option) { ?><option<?php if ( get_option( $value['id'] ) == $option) { echo ' selected="selected"'; } elseif ($option == $value['std']) { echo ' selected="selected"'; } ?>><?php echo $option; ?></option><?php } ?></select>
+		  <br>
+		  </div>
+		  <div class="clear"></div>
+		</div>
+	  </div>
 
   <?php break;
 
-      case 'media':
+	  case 'media':
 			$upload_button_text = __( 'Upload', 'okfn' );
-      ?>
+	  ?>
 
-        <div class="section section-text" id="section_<?php echo $value['id']; ?>">
-          <div class="heading">
-            <h4><?php echo $value['name']; ?></h4>
-            <p class="explain"><?php echo $value['desc']; ?></p>
-          </div>
-          <div class="option">
-            <div class="controls">
-              <input type="text" id="<?php echo $value['id']; ?>" name="<?php echo $value['id']; ?>" value="<?php if ( get_option( $value['id'] ) != "") { echo get_option( $value['id'] ); } else { echo $value['std']; } ?>" <?php if (  $value['placeholder']  != "") : ?>placeholder="<?php echo $value['placeholder']; ?>"<?php endif ?> />
-              <!--<input id="<?php echo $value['id']; ?>_upload_button" type="button" class="button" value="<?php echo $upload_button_text; ?>" /> -->
-              <br>
-            </div>
-            <div class="clear"></div>
-          </div>
-        </div>
+		<div class="section section-text" id="section_<?php echo $value['id']; ?>">
+		  <div class="heading">
+			<h4><?php echo $value['name']; ?></h4>
+			<p class="explain"><?php echo $value['desc']; ?></p>
+		  </div>
+		  <div class="option">
+			<div class="controls">
+			  <input type="text" id="<?php echo $value['id']; ?>" name="<?php echo $value['id']; ?>" value="<?php if ( get_option( $value['id'] ) != "") { echo get_option( $value['id'] ); } else { echo ( isset($value['std']) ? $value['std']: '' ); } ?>" <?php if ( !empty( $value['placeholder'] ) ) : printf('placeholder="%s"', $value['placeholder'] ); endif; ?> />
+			  <!--<input id="<?php echo $value['id']; ?>_upload_button" type="button" class="button" value="<?php echo $upload_button_text; ?>" /> -->
+			  <br>
+			</div>
+			<div class="clear"></div>
+		  </div>
+		</div>
 
 
-      <?php
-          break;
+	  <?php
+		  break;
 
-      case "checkbox":
-      ?>
+	  case "checkbox":
+	  ?>
 
-      <div class="section section-checkbox" id="section_<?php echo $value['id']; ?>">
-        <div class="heading">
-        	<h4><?php echo $value['name']; ?></h4>
-        </div>
-        <div class="option">
-          <div class="controls">
-            <?php if( get_option($value['id'] ) ){ $checked = "checked=\"checked\""; } else { if ( $value['std'] === "true" ){ $checked = "checked=\"checked\""; } else { $checked = ""; } } ?>
-            <input type="checkbox" name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" value="true" <?php echo $checked; ?> />
-            <label for="<?php echo $value['id']; ?>" class="explain"><?php echo $value['desc']; ?></label>
-          </div>
-          <div class="clear"></div>
-        </div>
-      </div>
+	  <div class="section section-checkbox" id="section_<?php echo $value['id']; ?>">
+		<div class="heading">
+			<h4><?php echo $value['name']; ?></h4>
+		</div>
+		<div class="option">
+		  <div class="controls">
+			<?php if( get_option($value['id'] ) ){ $checked = "checked=\"checked\""; } else { if ( $value['std'] === "true" ){ $checked = "checked=\"checked\""; } else { $checked = ""; } } ?>
+			<input type="checkbox" name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" value="true" <?php echo $checked; ?> />
+			<label for="<?php echo $value['id']; ?>" class="explain"><?php echo $value['desc']; ?></label>
+		  </div>
+		  <div class="clear"></div>
+		</div>
+	  </div>
 
-          <?php 		break;
+		  <?php break;
 
-          case "radio":?>
+		  case "radio":?>
 
-      <div class="section section-radio <?php echo $value['class'] ?>" id="section_<?php echo $value['id']; ?>">
-        <div class="heading">
-          <h4><?php echo $value['name']; ?></h4>
-          <p class="explain"><?php echo $value['desc']; ?></p>
-        </div>
-        <div class="option">
-          <div class="controls">
-            <?php foreach ($value['options'] as $option_value => $option_text) {
-                $checked = ' ';
-                if (get_option($value['id']) == $option_value) {
-                    $checked = ' checked="checked" ';
-                }
-                else if (get_option($value['id']) === FALSE && $value['std'] == $option_value){
-                    $checked = ' checked="checked" ';
-                }
-                else {
-                    $checked = ' ';
-                }
+	  <div class="section section-radio <?php echo ( isset($value['class']) ? $value['class'] : '' ); ?>" id="section_<?php echo $value['id']; ?>">
+		<div class="heading">
+		  <h4><?php echo $value['name']; ?></h4>
+		  <p class="explain"><?php echo $value['desc']; ?></p>
+		</div>
+		<div class="option">
+		  <div class="controls">
+			<?php foreach ($value['options'] as $option_value => $option_text) {
+				$checked = ' ';
+				if (get_option($value['id']) == $option_value) {
+					$checked = ' checked="checked" ';
+				}
+				else if (get_option($value['id']) === FALSE && $value['std'] == $option_value){
+					$checked = ' checked="checked" ';
+				}
+				else {
+					$checked = ' ';
+				}
 
-                if ($value['class'] == "thumbs") {
-                    $bgimage = "".get_bloginfo('stylesheet_directory')."/screenshot-".$option_value.".png";
-                }
-                else {
-                    $bgimage = '';
-                }
+				if ( isset($value['class']) &&	 $value['class'] == "thumbs") {
+					$bgimage = "".get_bloginfo('stylesheet_directory')."/screenshot-".$option_value.".png";
+				}
+				else {
+					$bgimage = '';
+				}
 
-                echo '<label style="background-image:url('.$bgimage.');"><span><input type="radio" style="margin-right:10px;" name="'.$value['id'].'" value="'.
-                    $option_value.'" '.$checked."/>".$option_text."</span></label>";
-            } ?>
-          </div>
-          <div class="clear"></div>
-        </div>
-      </div>
+				echo '<label style="background-image:url('.$bgimage.');"><span><input type="radio" style="margin-right:10px;" name="'.$value['id'].'" value="'.
+					$option_value.'" '.$checked."/>".$option_text."</span></label>";
+			} ?>
+		  </div>
+		  <div class="clear"></div>
+		</div>
+	  </div>
 
-          <?php break;
+		  <?php break;
 
   }
   }
@@ -794,12 +796,12 @@ add_action('admin_menu', 'mytheme_add_admin'); ?>
 <?php
 if ( function_exists('register_sidebar') )
 	register_sidebar(array(
-        'id' => 'sidebar-1',
-        'before_widget' => '<li id="%1$s" class="widget %2$s">',
-        'after_widget' => '</li>',
-        'before_title' => '',
-        'after_title' => '',
-    ));
+		'id' => 'sidebar-1',
+		'before_widget' => '<li id="%1$s" class="widget %2$s">',
+		'after_widget' => '</li>',
+		'before_title' => '',
+		'after_title' => '',
+	));
 
 
 
@@ -819,147 +821,147 @@ if ( function_exists('register_sidebar') )
 ***********************************************************************/
 
 function wp_bac_breadcrumb() {
-    //Variable (symbol >> encoded) and can be styled separately.
-    //Use >> for different level categories (parent >> child >> grandchild)
-            $delimiter = '<span class="delimiter">/</span>';
-    //Use bullets for same level categories ( parent . parent )
-    $delimiter1 = '<span class="delimiter1"> &bull; </span>';
+	//Variable (symbol >> encoded) and can be styled separately.
+	//Use >> for different level categories (parent >> child >> grandchild)
+			$delimiter = '<span class="delimiter">/</span>';
+	//Use bullets for same level categories ( parent . parent )
+	$delimiter1 = '<span class="delimiter1"> &bull; </span>';
 
-    //text link for the 'Home' page
-            $main = 'Home';
-    //Display only the first 30 characters of the post title.
-            $maxLength= 30;
+	//text link for the 'Home' page
+			$main = 'Home';
+	//Display only the first 30 characters of the post title.
+			$maxLength= 30;
 
-    //variable for archived year
-    $arc_year = get_the_time('Y');
-    //variable for archived month
-    $arc_month = get_the_time('F');
-    //variables for archived day number + full
-    $arc_day = get_the_time('d');
-    $arc_day_full = get_the_time('l');
+	//variable for archived year
+	$arc_year = get_the_time('Y');
+	//variable for archived month
+	$arc_month = get_the_time('F');
+	//variables for archived day number + full
+	$arc_day = get_the_time('d');
+	$arc_day_full = get_the_time('l');
 
-    //variable for the URL for the Year
-    $url_year = get_year_link($arc_year);
-    //variable for the URL for the Month
-    $url_month = get_month_link($arc_year,$arc_month);
+	//variable for the URL for the Year
+	$url_year = get_year_link($arc_year);
+	//variable for the URL for the Month
+	$url_month = get_month_link($arc_year,$arc_month);
 
-    /*is_front_page(): If the front of the site is displayed, whether it is posts or a Page. This is true
-    when the main blog page is being displayed and the 'Settings > Reading ->Front page displays'
-    is set to "Your latest posts", or when 'Settings > Reading ->Front page displays' is set to
-    "A static page" and the "Front Page" value is the current Page being displayed. In this case
-    no need to add breadcrumb navigation. is_home() is a subset of is_front_page() */
+	/*is_front_page(): If the front of the site is displayed, whether it is posts or a Page. This is true
+	when the main blog page is being displayed and the 'Settings > Reading ->Front page displays'
+	is set to "Your latest posts", or when 'Settings > Reading ->Front page displays' is set to
+	"A static page" and the "Front Page" value is the current Page being displayed. In this case
+	no need to add breadcrumb navigation. is_home() is a subset of is_front_page() */
 
-    //Check if NOT the front page (whether your latest posts or a static page) is displayed. Then add breadcrumb trail.
-    if (!is_front_page()) {
-        //If Breadcrump exists, wrap it up in a div container for styling.
-        //You need to define the breadcrumb class in CSS file.
-        echo '<ul class="breadcrumb">';
+	//Check if NOT the front page (whether your latest posts or a static page) is displayed. Then add breadcrumb trail.
+	if (!is_front_page()) {
+		//If Breadcrump exists, wrap it up in a div container for styling.
+		//You need to define the breadcrumb class in CSS file.
+		echo '<ul class="breadcrumb">';
 
-        //global WordPress variable $post. Needed to display multi-page navigations.
-        global $post, $cat;
-        //A safe way of getting values for a named option from the options database table.
-        $homeLink = get_option('home'); //same as: $homeLink = get_bloginfo('url');
-        //If you don't like "You are here:", just remove it.
-        echo '<li><a href="' . $homeLink . '">' . $main . '</a></li>' . $delimiter;
+		//global WordPress variable $post. Needed to display multi-page navigations.
+		global $post, $cat;
+		//A safe way of getting values for a named option from the options database table.
+		$homeLink = get_option('home'); //same as: $homeLink = get_bloginfo('url');
+		//If you don't like "You are here:", just remove it.
+		echo '<li><a href="' . $homeLink . '">' . $main . '</a></li>' . $delimiter;
 
-        //Display breadcrumb for single post
-        if (is_single()) { //check if any single post is being displayed.
-            //Returns an array of objects, one object for each category assigned to the post.
-            //This code does not work well (wrong delimiters) if a single post is listed
-            //at the same time in a top category AND in a sub-category. But this is highly unlikely.
-            $category = get_the_category();
-            $num_cat = count($category); //counts the number of categories the post is listed in.
+		//Display breadcrumb for single post
+		if (is_single()) { //check if any single post is being displayed.
+			//Returns an array of objects, one object for each category assigned to the post.
+			//This code does not work well (wrong delimiters) if a single post is listed
+			//at the same time in a top category AND in a sub-category. But this is highly unlikely.
+			$category = get_the_category();
+			$num_cat = count($category); //counts the number of categories the post is listed in.
 
-            //If you have a single post assigned to one category.
-            //If you don't set a post to a category, WordPress will assign it a default category.
-            if ($num_cat <=1)  //I put less or equal than 1 just in case the variable is not set (a catch all).
-            {
-                echo get_category_parents($category[0],  true,' ' . $delimiter . ' ');
-                //Display the full post title.
-                echo ' ' . get_the_title();
-            }
-            //then the post is listed in more than 1 category.
-            else {
-                //Put bullets between categories, since they are at the same level in the hierarchy.
-                echo the_category( $delimiter1, multiple);
-                    //Display partial post title, in order to save space.
-                    if (strlen(get_the_title()) >= $maxLength) { //If the title is long, then don't display it all.
-                        echo ' ' . $delimiter . trim(substr(get_the_title(), 0, $maxLength)) . ' ...';
-                    }
-                    else { //the title is short, display all post title.
-                        echo ' ' . $delimiter . get_the_title();
-                    }
-            }
-        }
-        //Display breadcrumb for category and sub-category archive
-        elseif (is_category()) { //Check if Category archive page is being displayed.
-            //returns the category title for the current page.
-            //If it is a subcategory, it will display the full path to the subcategory.
-            //Returns the parent categories of the current category with links separated by '»'
-            echo 'Archive Category: "' . get_category_parents($cat, true,' ' . $delimiter . ' ') . '"' ;
-        }
-        //Display breadcrumb for tag archive
-        elseif ( is_tag() ) { //Check if a Tag archive page is being displayed.
-            //returns the current tag title for the current page.
-            echo 'Posts Tagged: "' . single_tag_title("", false) . '"';
-        }
-        //Display breadcrumb for calendar (day, month, year) archive
-        elseif ( is_day()) { //Check if the page is a date (day) based archive page.
-            echo '<a href="' . $url_year . '">' . $arc_year . '</a> ' . $delimiter . ' ';
-            echo '<a href="' . $url_month . '">' . $arc_month . '</a> ' . $delimiter . $arc_day . ' (' . $arc_day_full . ')';
-        }
-        elseif ( is_month() ) {  //Check if the page is a date (month) based archive page.
-            echo '<a href="' . $url_year . '">' . $arc_year . '</a> ' . $delimiter . $arc_month;
-        }
-        elseif ( is_year() ) {  //Check if the page is a date (year) based archive page.
-            echo $arc_year;
-        }
-        //Display breadcrumb for search result page
-        elseif ( is_search() ) {  //Check if search result page archive is being displayed.
-            echo 'Search Results for: "' . get_search_query() . '"';
-        }
-        //Display breadcrumb for top-level pages (top-level menu)
-        elseif ( is_page() && !$post->post_parent ) { //Check if this is a top Level page being displayed.
-            echo get_the_title();
-        }
-        //Display breadcrumb trail for multi-level subpages (multi-level submenus)
-        elseif ( is_page() && $post->post_parent ) {  //Check if this is a subpage (submenu) being displayed.
-            //get the ancestor of the current page/post_id, with the numeric ID
-            //of the current post as the argument.
-            //get_post_ancestors() returns an indexed array containing the list of all the parent categories.
-            $post_array = get_post_ancestors($post);
+			//If you have a single post assigned to one category.
+			//If you don't set a post to a category, WordPress will assign it a default category.
+			if ($num_cat <=1)  //I put less or equal than 1 just in case the variable is not set (a catch all).
+			{
+				echo get_category_parents($category[0],  true,' ' . $delimiter . ' ');
+				//Display the full post title.
+				echo ' ' . get_the_title();
+			}
+			//then the post is listed in more than 1 category.
+			else {
+				//Put bullets between categories, since they are at the same level in the hierarchy.
+				echo the_category( $delimiter1, multiple);
+					//Display partial post title, in order to save space.
+					if (strlen(get_the_title()) >= $maxLength) { //If the title is long, then don't display it all.
+						echo ' ' . $delimiter . trim(substr(get_the_title(), 0, $maxLength)) . ' ...';
+					}
+					else { //the title is short, display all post title.
+						echo ' ' . $delimiter . get_the_title();
+					}
+			}
+		}
+		//Display breadcrumb for category and sub-category archive
+		elseif (is_category()) { //Check if Category archive page is being displayed.
+			//returns the category title for the current page.
+			//If it is a subcategory, it will display the full path to the subcategory.
+			//Returns the parent categories of the current category with links separated by '»'
+			echo 'Archive Category: "' . get_category_parents($cat, true,' ' . $delimiter . ' ') . '"' ;
+		}
+		//Display breadcrumb for tag archive
+		elseif ( is_tag() ) { //Check if a Tag archive page is being displayed.
+			//returns the current tag title for the current page.
+			echo 'Posts Tagged: "' . single_tag_title("", false) . '"';
+		}
+		//Display breadcrumb for calendar (day, month, year) archive
+		elseif ( is_day()) { //Check if the page is a date (day) based archive page.
+			echo '<a href="' . $url_year . '">' . $arc_year . '</a> ' . $delimiter . ' ';
+			echo '<a href="' . $url_month . '">' . $arc_month . '</a> ' . $delimiter . $arc_day . ' (' . $arc_day_full . ')';
+		}
+		elseif ( is_month() ) {  //Check if the page is a date (month) based archive page.
+			echo '<a href="' . $url_year . '">' . $arc_year . '</a> ' . $delimiter . $arc_month;
+		}
+		elseif ( is_year() ) {  //Check if the page is a date (year) based archive page.
+			echo $arc_year;
+		}
+		//Display breadcrumb for search result page
+		elseif ( is_search() ) {  //Check if search result page archive is being displayed.
+			echo 'Search Results for: "' . get_search_query() . '"';
+		}
+		//Display breadcrumb for top-level pages (top-level menu)
+		elseif ( is_page() && !$post->post_parent ) { //Check if this is a top Level page being displayed.
+			echo get_the_title();
+		}
+		//Display breadcrumb trail for multi-level subpages (multi-level submenus)
+		elseif ( is_page() && $post->post_parent ) {  //Check if this is a subpage (submenu) being displayed.
+			//get the ancestor of the current page/post_id, with the numeric ID
+			//of the current post as the argument.
+			//get_post_ancestors() returns an indexed array containing the list of all the parent categories.
+			$post_array = get_post_ancestors($post);
 
-            //Sorts in descending order by key, since the array is from top category to bottom.
-            krsort($post_array);
+			//Sorts in descending order by key, since the array is from top category to bottom.
+			krsort($post_array);
 
-            //Loop through every post id which we pass as an argument to the get_post() function.
-            //$post_ids contains a lot of info about the post, but we only need the title.
-            foreach($post_array as $key=>$postid){
-                //returns the object $post_ids
-                $post_ids = get_post($postid);
-                //returns the name of the currently created objects
-                $title = $post_ids->post_title;
-                //Create the permalink of $post_ids
-                echo '<a href="' . get_permalink($post_ids) . '">' . $title . '</a>' . $delimiter;
-            }
-            the_title(); //returns the title of the current page.
-        }
-        //Display breadcrumb for author archive
-        elseif ( is_author() ) {//Check if an Author archive page is being displayed.
-            global $author;
-            //returns the user's data, where it can be retrieved using member variables.
-            $user_info = get_userdata($author);
-            echo  'Archived Article(s) by Author: ' . $user_info->display_name ;
-        }
-        //Display breadcrumb for 404 Error
-        elseif ( is_404() ) {//checks if 404 error is being displayed
-            echo  'Error 404 - Not Found.';
-        }
-        else {
-            //All other cases that I missed. No Breadcrumb trail.
-        }
-       echo '</ul>';
-    }
+			//Loop through every post id which we pass as an argument to the get_post() function.
+			//$post_ids contains a lot of info about the post, but we only need the title.
+			foreach($post_array as $key=>$postid){
+				//returns the object $post_ids
+				$post_ids = get_post($postid);
+				//returns the name of the currently created objects
+				$title = $post_ids->post_title;
+				//Create the permalink of $post_ids
+				echo '<a href="' . get_permalink($post_ids) . '">' . $title . '</a>' . $delimiter;
+			}
+			the_title(); //returns the title of the current page.
+		}
+		//Display breadcrumb for author archive
+		elseif ( is_author() ) {//Check if an Author archive page is being displayed.
+			global $author;
+			//returns the user's data, where it can be retrieved using member variables.
+			$user_info = get_userdata($author);
+			echo  'Archived Article(s) by Author: ' . $user_info->display_name ;
+		}
+		//Display breadcrumb for 404 Error
+		elseif ( is_404() ) {//checks if 404 error is being displayed
+			echo  'Error 404 - Not Found.';
+		}
+		else {
+			//All other cases that I missed. No Breadcrumb trail.
+		}
+	   echo '</ul>';
+	}
 }
 
 
@@ -1099,8 +1101,7 @@ function my_theme_register_required_plugins() {
 	$config = array(
 		'domain'       		=> $theme_text_domain,         	// Text domain - likely want to be the same as your theme.
 		'default_path' 		=> '',                         	// Default absolute path to pre-packaged plugins
-		'parent_menu_slug' 	=> 'themes.php', 				// Default parent menu slug
-		'parent_url_slug' 	=> 'themes.php', 				// Default parent URL slug
+		'parent_slug' 	=> 'themes.php', 				// Default parent menu slug
 		'menu'         		=> 'install-required-plugins', 	// Menu slug
 		'has_notices'      	=> true,                       	// Show admin notices or not
 		'is_automatic'    	=> false,					   	// Automatically activate plugins after installation or not
@@ -1133,20 +1134,12 @@ function my_theme_register_required_plugins() {
 add_theme_support( 'post-thumbnails' );
 
 
-include('shortcodes.php');
+get_template_part('shortcodes');
 
 // Workaround PHP slow file loading
 function okfn_load_file($url) {
-    $ch = curl_init();
-    
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_URL, $url);
-    
-    $data = curl_exec($ch);
-    curl_close($ch);
-    
-    return explode("\n", $data);
+	$response = wp_remote_get( $url );
+	return explode("\n", apply_filters('the_content_feed', $response['body']));
 }
 
 ?>

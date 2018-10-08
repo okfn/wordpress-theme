@@ -3,8 +3,6 @@
 	<div id="content" class="span8">
 		<div class="padder">
 
-		<?php do_action( 'bp_before_blog_page' ); ?>
-
 		<div class="page" id="blog-page" role="main">
 
 			<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
@@ -29,8 +27,6 @@
 			<?php endwhile; endif; ?>
 
 		</div><!-- .page -->
-
-		<?php do_action( 'bp_after_blog_page' ); ?>
 
 		</div><!-- .padder -->
 	</div><!-- #content -->

@@ -2,7 +2,7 @@
 /*
 Template Name: Full Width Banner
  */
- 
+
  /* body class */
 add_filter('body_class','browser_body_class');
 function browser_body_class($classes = '') {
@@ -13,10 +13,8 @@ function browser_body_class($classes = '') {
 
 <?php get_header() ?>
 
-<?php do_action( 'bp_before_blog_home' ) ?>
-
 <?php do_action( 'template_notices' ) ?>
-		
+
 <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 
 <?php if (has_post_thumbnail( $post->ID ) ): ?>
@@ -28,7 +26,7 @@ function browser_body_class($classes = '') {
 	  	<h1><?php the_title(); ?></h1>
       <span class="caption">
         <?php echo get_post(get_post_thumbnail_id())->post_title; ?>
-      </span>   
+      </span>
       <?php echo get_post(get_post_thumbnail_id())->post_excerpt; ?>
     </div>
   </div>
@@ -42,7 +40,7 @@ function browser_body_class($classes = '') {
     </div>
   </div>
 </div>
-  
+
 <?php endwhile; endif; ?>
-		
+
 <?php get_footer() ?>

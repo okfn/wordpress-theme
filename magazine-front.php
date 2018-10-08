@@ -12,17 +12,18 @@ function browser_body_class($classes = '') {
 
     // Get options
     global $options;
-    foreach ($options as $value) {
-      if(array_key_exists('id', $value)) {
-        if (get_option( $value['id'] ) === FALSE) {
-          if (array_key_exists('std', $value)) {
-            $$value['id'] = $value['std'] or NULL;
-          }
-        } else {
-          $$value['id'] = get_option( $value['id'] );
-        }
-      }
-    }
+	foreach ($options as $value) {
+		if (isset($value['id'], $value['std'])):
+		  $option_value = get_option($value['id'], $value['std']);
+		  if (isset($option_value)):
+			if (version_compare(PHP_VERSION, '7.0.0', '>=')) {
+			  ${$value['id']} = $option_value;
+			} else {
+			  $$value['id'] = $option_value;
+			}
+		  endif;
+		endif;
+	}
     if (!empty($okfn_magazine_posts)) {
 		  $magazinePostNumber = $okfn_magazine_posts;
 		} else {
@@ -39,8 +40,6 @@ function browser_body_class($classes = '') {
 <div class="row">
   <div id="content" class="span8">
     <div class="padder">
-
-    <?php do_action( 'bp_before_blog_home' ) ?>
 
     <?php do_action( 'template_notices' ) ?>
 
@@ -90,25 +89,24 @@ function browser_body_class($classes = '') {
           <a class="carousel-control left" href="#magCarousel" data-slide="prev">&lsaquo;</a>
           <a class="carousel-control right" href="#magCarousel" data-slide="next">&rsaquo;</a>
           <?php global $options;
-          foreach ($options as $value) {
-            if(array_key_exists('id', $value)) {
-              if (get_option( $value['id'] ) === FALSE) {
-                if (array_key_exists('std', $value)) {
-                  $$value['id'] = $value['std'] or NULL;
-                }
-              } else {
-                $$value['id'] = get_option( $value['id'] );
-              }
-            }
-          }
+  foreach ($options as $value) {
+	if (isset($value['id'], $value['std'])):
+	  $option_value = get_option($value['id'], $value['std']);
+	  if (isset($option_value)):
+		if (version_compare(PHP_VERSION, '7.0.0', '>=')) {
+		  ${$value['id']} = $option_value;
+		} else {
+		  $$value['id'] = $option_value;
+		}
+	  endif;
+	endif;
+  }
 						if (!empty($okfn_blog_link)) : ?>
 						<a href="<?php echo $okfn_blog_link ?>" class="all-posts">See all posts</a>
 					<?php endif; ?>
         </div>
       </div>
     </div>
-
-    <?php do_action( 'bp_after_blog_home' ) ?>
 
     </div><!-- .padder -->
   </div><!-- #content -->

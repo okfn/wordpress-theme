@@ -1,15 +1,24 @@
 <?php
 /*
-Template Name: Presentation 
+Template Name: Presentation
  */
- 
+
 // shortcode
 
 // theme options
 global $options;
 foreach ($options as $value) {
-  if (get_option( $value['id'] ) === FALSE) { $$value['id'] = $value['std']; } else { $$value['id'] = get_option( $value['id'] ); }
-}
+	if (isset($value['id'], $value['std'])):
+	  $option_value = get_option($value['id'], $value['std']);
+	  if (isset($option_value)):
+		if (version_compare(PHP_VERSION, '7.0.0', '>=')) {
+		  ${$value['id']} = $option_value;
+		} else {
+		  $$value['id'] = $option_value;
+		}
+	  endif;
+	endif;
+  }
 ?>
 
 <!DOCTYPE html>
@@ -22,10 +31,10 @@ foreach ($options as $value) {
 	<link rel="stylesheet" href="<?php echo get_bloginfo('stylesheet_directory'); ?>/css/shower.css"/>
   <?php if ($okfn_colours == "school") {?>
   <link rel="stylesheet" href="<?php echo get_bloginfo('stylesheet_directory'); ?>/css/shower-school.css"/>
-  <?php } else {?> 
+  <?php } else {?>
   <link rel="stylesheet" href="<?php echo get_bloginfo('stylesheet_directory'); ?>/css/shower-okf.css"/>
   <?php }?>
-  
+
   <?php if ($okfn_colours == "blue") : ?>
     <link rel="shortcut icon" href="http://assets.okfn.org/p/ckan/img/ckan.ico" />
   <?php elseif ($okfn_colours == "white" || $okfn_colours == "turquoise") : ?>
@@ -50,7 +59,7 @@ foreach ($options as $value) {
 				}
 		?>
 	</header>
-		
+
 
     <?php the_content(); ?>
   <?php endwhile; endif; ?>
@@ -66,11 +75,11 @@ foreach ($options as $value) {
             <?php echo stripslashes($okfn_header_textarea2); ?>
           </div>
         <?php endif; ?>
-        
-        <a title="<?php _ex( 'Home', 'Home page banner link title', 'buddypress' ); ?>" 
-            class="brand" 
+
+        <a title="<?php _ex( 'Home', 'Home page banner link title', 'buddypress' ); ?>"
+            class="brand"
             href="<?php echo home_url(); ?>">
-            
+
           <?php
             // Check for header image
             $header_image = get_header_image();
@@ -80,9 +89,9 @@ foreach ($options as $value) {
           <?php elseif ($okfn_logo_icon == "false") : ?>
             <img src="http://assets.okfn.org/web/images/header-logox2.png" alt="logo"/>
           <?php endif; ?>
-      
+
           <?php if ( $okfn_logo_text == "false" ) : ?>
-            <?php bp_site_name(); ?>
+            <?php bloginfo('title'); ?>
           <?php endif; ?>
         </a>
       </div>

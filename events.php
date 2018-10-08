@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: Events 
+Template Name: Events
  */
 
 /* body class="magazine" */
@@ -13,8 +13,17 @@ function browser_body_class($classes = '') {
   // Get options
   global $options;
   foreach ($options as $value) {
-    if (get_option( $value['id'] ) === FALSE) { $$value['id'] = $value['std']; } else { $$value['id'] = get_option( $value['id'] ); }
-   }
+	if (isset($value['id'], $value['std'])):
+	  $option_value = get_option($value['id'], $value['std']);
+	  if (isset($option_value)):
+		if (version_compare(PHP_VERSION, '7.0.0', '>=')) {
+		  ${$value['id']} = $option_value;
+		} else {
+		  $$value['id'] = $option_value;
+		}
+	  endif;
+	endif;
+  }
   // to use if custom post number is required
   if (!empty($okfn_event_posts)) {
 	  $eventPostNumber = $okfn_event_posts;
@@ -32,23 +41,23 @@ function browser_body_class($classes = '') {
 <?php get_header() ?>
 <div class="row">
 <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-    
+
 	<?php $event_content = get_the_content(); ?>
-	
+
 	<?php $featured_event_image = get_the_post_thumbnail($page->ID, 'full'); ?>
-  <?php 
+  <?php
 		global $post;
-	
+
 		$thumbnail_id    = get_post_thumbnail_id($post->ID);
 		$thumbnail_image = get_posts(array('p' => $thumbnail_id, 'post_type' => 'attachment'));
-	
+
 		if ($thumbnail_image && isset($thumbnail_image[0])) {
 			$featured_event_link = $thumbnail_image[0]->post_excerpt;
 		}
 		else $featured_event_link = '#';
 
 ?>
-      
+
   <?php // get custom field named GCID
     if (get_post_meta($post->ID,'GCEID')) {
       $gceid = get_post_meta($post->ID,'GCEID', true);
@@ -58,15 +67,15 @@ function browser_body_class($classes = '') {
   ?>
 
 <?php endwhile; endif; ?>
-    
+
 <?php // if GCEID is valid use for calendar ID, else use 1
-	if (is_numeric ($gceid))  { 
-		$calendar_id = $gceid; 
-	} else { 
-		$calendar_id = '1';  
+	if (is_numeric ($gceid))  {
+		$calendar_id = $gceid;
+	} else {
+		$calendar_id = '1';
 	} ;
 ?>
-    
+
   <div class="span12">
       <h1 class="pagetitle"><?php the_title(); ?></h1>
   </div>
@@ -75,18 +84,16 @@ function browser_body_class($classes = '') {
   <div id="content" class="span8">
     <div class="padder">
 
-    <?php do_action( 'bp_before_blog_home' ) ?>
-
     <?php do_action( 'template_notices' ) ?>
-    
+
     <div class="page" id="blog-latest" role="main">
 
 
-    <?php 
+    <?php
     /* =================== */
     /* == Magazine Body == */
     /* =================== */
-		
+
 		if (switch_to_blog(37,true)) {
       $post_filter_main = array('category_name' => $featured_cat, 'posts_per_page' => 1 );
 
@@ -113,7 +120,7 @@ function browser_body_class($classes = '') {
             while (have_posts()) {
               the_post();
               echo_magazine_post($post, false);
-                
+
                if ($counter % 4 == 0) : ?>
                 </div>
                 <div class="item">
@@ -133,20 +140,18 @@ function browser_body_class($classes = '') {
 					}
 						if (!empty($okfn_blog_link)) : ?>
 						<a href="<?php echo $okfn_blog_link ?>" class="all-posts">See all posts</a>
-					<?php endif; 
+					<?php endif;
 					restore_current_blog();
-				} 
+				}
 				?>
         </div>
       </div>
     </div>
 
-    <?php do_action( 'bp_after_blog_home' ) ?>
-
     </div><!-- .padder -->
 </div><!-- #content -->
 <div id="sidebar" class="span4" role="complementary">
-  
+
   <?php if (!empty($featured_event_image)) { ?>
   <div class="widget widget_text">
     <div class="textwidget">
@@ -156,7 +161,7 @@ function browser_body_class($classes = '') {
     </div>
   </div>
   <?php } ?>
-  
+
  <?php
  $events_category_id = get_cat_ID('Events');
  ?>
@@ -172,7 +177,7 @@ function browser_body_class($classes = '') {
         </div>
       </form>
   </div>
-  
+
   <div class="widget widget_text">
     <div class="textwidget">
       <a class="full" target="_blank" href="https://www.google.com/calendar/b/2/embed?src=okfn.org_1v0fovp5uh4b3l88qr2c6q74o4@group.calendar.google.com&ctz=Europe/Berlin&gsessionid=6x2dZ-lGClbCnUtmhuaDeA&gt">
@@ -180,7 +185,7 @@ function browser_body_class($classes = '') {
       </a>
     </div>
   </div>
-  
+
   <div class="widget widget_text">
     <div class="textwidget">
       <a class="full" target="_blank" href="http://www.meetup.com/OpenKnowledgeFoundation/">
@@ -188,19 +193,19 @@ function browser_body_class($classes = '') {
       </a>
     </div>
   </div>
-  
+
   <!--
   <div class="widget widget_gce_widget">
     <h3 class="widgettitle">Calendar</h3>
 		<?php //echo do_shortcode( '[google-calendar-events id="'.$calendar_id.'" type="ajax" title="Events on"]' ); ?>
   </div>
   -->
-  
+
   <div class="sidebar-content">
     <?php echo $event_content; ?>
   </div>
  </div>
-  
+
 <?php //get_sidebar() ?>
 </div>
 </div>
