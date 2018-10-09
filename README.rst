@@ -2,7 +2,7 @@
 OKFN Master Theme
 =================
 
-This is a child theme of the BuddyPress bp-default theme. 
+This is a theme based on the BuddyPress bp-default theme.
 http://codex.buddypress.org/theme-development/building-a-buddypress-child-theme/
 
 
@@ -56,7 +56,7 @@ Display content in a series of slides. Example here: http://staging.okfn.org/sli
 Theme Options
 -------------
 
-The theme can be customised in a variety of ways via the Theme Options. These settings can be found in WordPress admin under Appearance >OKF Theme Options. 
+The theme can be customised in a variety of ways via the Theme Options. These settings can be found in WordPress admin under Appearance >OKF Theme Options.
 
 
 Supported Shortcode
@@ -64,12 +64,12 @@ Supported Shortcode
 
 **Carousel**
 
-To add a carousel to your page can be as simple as:: 
+To add a carousel to your page can be as simple as::
 
-  [carousel]  
-  [slide img="http://slide1.jpg" class="active"]  
-  [slide img="http://slide2.jpg"]  
-  [/carousel]  
+  [carousel]
+  [slide img="http://slide1.jpg" class="active"]
+  [slide img="http://slide2.jpg"]
+  [/carousel]
 
 Please note that one of the slides must have ``class="active"`` applied to it, this will be the first slide that is displayed.
 
@@ -79,12 +79,12 @@ Some predefined classes can be applied to the carousel to alter the styling::
 
 Other supported attributes are ``heading`` and ``caption``. For example, to add a caption to a slide you would enter it as follows:::
 
-  [carousel]  
-  [slide img="http://slide1.jpg" class="active"]  
-  [slide img="http://slide2.jpg" caption="My caption for slide two"]  
-  [/carousel]  
-	
-	
+  [carousel]
+  [slide img="http://slide1.jpg" class="active"]
+  [slide img="http://slide2.jpg" caption="My caption for slide two"]
+  [/carousel]
+
+
 **Static Banner**
 
 If you only want a single banner image, use the below::
@@ -98,8 +98,8 @@ If you only want a single banner image, use the below::
 
 If you are using the 'One column, no sidebar' template to hide the default sidebar, you can mimic the default layout like so:::
 
-  [pseudocontent] My main content [/pseudocontent]  
-  [pseudosidebar] My sidebar content [/pseudosidebar]  
+  [pseudocontent] My main content [/pseudocontent]
+  [pseudosidebar] My sidebar content [/pseudosidebar]
 
 **Image Caption**
 
@@ -107,9 +107,9 @@ Wrap an image and its caption in a border
 
 ::
 
-  [caption width="450" caption="My caption"]  
-  <img src="http://image.jpg" alt="" width="450" />  
-  [/caption]  
+  [caption width="450" caption="My caption"]
+  <img src="http://image.jpg" alt="" width="450" />
+  [/caption]
 
 
 **Hide Page Title**
@@ -118,8 +118,8 @@ Use to hide the page title
 
 ::
 
-  [notitle] 
-	
+  [notitle]
+
 
 **Full Width**
 
@@ -127,9 +127,9 @@ Force content div to be 100% wide
 
 ::
 
-  [fullwidth] 
-	
-	
+  [fullwidth]
+
+
 **BS Columns**
 
 Divide single column. Span is a number of the 12 Bootstrap columns
@@ -143,17 +143,17 @@ Divide single column. Span is a number of the 12 Bootstrap columns
   [column span="6"]
   Right Column Content
   [/column]
-  [/row] 
-	
-	
+  [/row]
+
+
 **Clear**
 
 Clear floats
 
 ::
 
-  [clear] 
-	
+  [clear]
+
 
 **Accordions**
 
