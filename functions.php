@@ -151,8 +151,13 @@ add_action( 'after_setup_theme', 'oki_dtheme_setup' );
  *  Theme Options
  */
  // Get default category priority list to use as placeholder
-	$default_category_priority = okfn_load_file( get_bloginfo('stylesheet_directory').'/category-priority.txt');
-	$default_category_priority_string = implode(', ',$default_category_priority);
+	$default_category_priority = okfn_load_file( get_bloginfo( 'stylesheet_directory' ) . '/category-priority.txt' );
+	if ( $default_category_priority ) :
+		$default_category_priority_string = implode( ', ', $default_category_priority );
+	else :
+		$default_category_priority_string = '';
+	endif;
+
  // Settings
 	$themename = "OKF Theme";
 	$shortname = "okfn";
@@ -1139,7 +1144,11 @@ get_template_part('shortcodes');
 // Workaround PHP slow file loading
 function okfn_load_file($url) {
 	$response = wp_remote_get( $url );
-	return explode("\n", apply_filters('the_content_feed', $response['body']));
+	if ( 'OK' == $response['response'] ):
+		return explode("\n", apply_filters('the_content_feed', $response['body']));
+	else:
+		return false;
+	endif;
 }
 
 ?>
