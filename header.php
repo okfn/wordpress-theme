@@ -27,7 +27,6 @@
 			}
 		}
 	  }
-	  var_dump($options);
       if ($okfn_tagline_title == "true" && get_bloginfo('description')) :
 
         ?>
