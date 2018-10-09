@@ -142,7 +142,10 @@ function oki_dtheme_setup() {
 		'primary' => __( 'Primary Navigation', 'buddypress' ),
 	) );
 
-	add_theme_support( 'custom-background' );
+	$custom_background_args = array(
+		'wp-head-callback' => 'bp_dtheme_custom_background_style'
+	);
+	add_theme_support( 'custom-background', $custom_background_args );
 
 	// Add custom header support if allowed
 	define( 'HEADER_TEXTCOLOR', 'FFFFFF' );
@@ -157,7 +160,11 @@ function oki_dtheme_setup() {
 	set_post_thumbnail_size( HEADER_IMAGE_WIDTH, HEADER_IMAGE_HEIGHT, true );
 
 	// Add a way for the custom header to be styled in the admin panel that controls custom headers.
-	add_theme_support( 'custom-header' );
+	$custom_header_args = array(
+		'wp-head-callback' => 'bp_dtheme_header_style',
+		//'admin-head-callback' => 'bp_dtheme_admin_header_style'
+	);
+	add_theme_support( 'custom-header', $custom_header_args );
 }
 add_action( 'after_setup_theme', 'oki_dtheme_setup' );
 
@@ -560,6 +567,95 @@ add_action( 'widgets_init', 'oki_theme_widgets_init' );
 		"std" => "false"),
 		array(    "type" => "close"),
 );
+
+/**
+ * The style for the custom background image or colour.
+ *
+ * Referenced via add_custom_background() in bp_dtheme_setup().
+ *
+ * @see _custom_background_cb()
+ * @since BuddyPress (1.5)
+ */
+function bp_dtheme_custom_background_style() {
+	$background = get_background_image();
+	$color = get_background_color();
+	if ( ! $background && ! $color )
+		return;
+
+	$style = $color ? "background-color: #$color;" : '';
+
+	if ( $style && !$background ) {
+		$style .= ' background-image: none;';
+
+	} elseif ( $background ) {
+		$image = " background-image: url('$background');";
+
+		$repeat = get_theme_mod( 'background_repeat', 'repeat' );
+		if ( ! in_array( $repeat, array( 'no-repeat', 'repeat-x', 'repeat-y', 'repeat' ) ) )
+			$repeat = 'repeat';
+		$repeat = " background-repeat: $repeat;";
+
+		$position = get_theme_mod( 'background_position_x', 'left' );
+		if ( ! in_array( $position, array( 'center', 'right', 'left' ) ) )
+			$position = 'left';
+		$position = " background-position: top $position;";
+
+		$attachment = get_theme_mod( 'background_attachment', 'scroll' );
+		if ( ! in_array( $attachment, array( 'fixed', 'scroll' ) ) )
+			$attachment = 'scroll';
+		$attachment = " background-attachment: $attachment;";
+
+		$style .= $image . $repeat . $position . $attachment;
+	}
+?>
+	<style type="text/css">
+		body { <?php echo trim( $style ); ?> }
+	</style>
+<?php
+}
+
+/**
+ * The styles for the post thumbnails / custom page headers.
+ *
+ * Referenced via add_custom_image_header() in bp_dtheme_setup().
+ *
+ * @global WP_Query $post The current WP_Query object for the current post or page
+ * @since BuddyPress (1.2)
+ */
+
+function bp_dtheme_header_style() {
+	global $post;
+
+	$header_image = '';
+
+	if ( is_singular() && current_theme_supports( 'post-thumbnails' ) && has_post_thumbnail( $post->ID ) ) {
+		$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'post-thumbnail' );
+
+		// $src, $width, $height
+		if ( !empty( $image ) && $image[1] >= HEADER_IMAGE_WIDTH )
+			$header_image = $image[0];
+		else
+			$header_image = get_header_image();
+
+	} else {
+		$header_image = get_header_image();
+	}
+?>
+
+	<style type="text/css">
+		<?php if ( !empty( $header_image ) ) : ?>
+			#header { background-image: url(<?php echo $header_image ?>); }
+		<?php endif; ?>
+
+		<?php if ( 'blank' == get_header_textcolor() ) { ?>
+		#header h1, #header #desc { display: none; }
+		<?php } else { ?>
+		#header h1 a, #desc { color:#<?php header_textcolor(); ?>; }
+		<?php } ?>
+	</style>
+
+<?php
+}
 
 function mytheme_add_admin() {
 
