@@ -36,13 +36,13 @@ foreach ($options as $value) {
   <?php }?>
 
   <?php if ($okfn_colours == "blue") : ?>
-    <link rel="shortcut icon" href="http://assets.okfn.org/p/ckan/img/ckan.ico" />
+    <link rel="shortcut icon" href="https://assets.okfn.org/p/ckan/img/ckan.ico" />
   <?php elseif ($okfn_colours == "white" || $okfn_colours == "turquoise") : ?>
-    <link rel="shortcut icon" href="http://assets.okfn.org/p/okfn/img/grey-favicon.ico" />
+    <link rel="shortcut icon" href="https://assets.okfn.org/p/okfn/img/grey-favicon.ico" />
   <?php elseif ($okfn_colours == "school") : ?>
-    <link rel="shortcut icon" href="http://assets.okfn.org/p/schoolofdata/img/favicon.ico" />
+    <link rel="shortcut icon" href="https://assets.okfn.org/p/schoolofdata/img/favicon.ico" />
   <?php else: ?>
-    <link rel="shortcut icon" href="http://assets.okfn.org/p/okfn/img/favicon.ico" />
+    <link rel="shortcut icon" href="https://assets.okfn.org/p/okfn/img/favicon.ico" />
   <?php endif; ?>
 </head>
 <body class="list">
@@ -87,7 +87,7 @@ foreach ($options as $value) {
           ?>
             <img src="<?php header_image(); ?>" alt="logo" />
           <?php elseif ($okfn_logo_icon == "false") : ?>
-            <img src="http://assets.okfn.org/web/images/header-logox2.png" alt="logo"/>
+            <img src="https://assets.okfn.org/web/images/header-logox2.png" alt="logo"/>
           <?php endif; ?>
 
           <?php if ( $okfn_logo_text == "false" ) : ?>

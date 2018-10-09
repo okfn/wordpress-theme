@@ -96,7 +96,7 @@ function echo_magazine_post($post, $is_featured) {
 	}
 	elseif (count($matches)) $post_img = $matches[1]; // else use old featured image
 	else {
-	  $post_img = 'http://assets.okfn.org/web/images/blog-placeholder.png'; // else use placeholder
+	  $post_img = 'https://assets.okfn.org/web/images/blog-placeholder.png'; // else use placeholder
 	}
 	echo '<div class="box post '.$post_class.'">';
 	echo '<div class="padder"> <a class="image" href="'.get_permalink().'" style="background-image:url('.$post_img.');"></a>';
@@ -382,7 +382,7 @@ add_action( 'after_setup_theme', 'oki_dtheme_setup' );
 		"id" => $shortname."_mailinglist_description",
 		"type" => "text"),
 		array(  "name" => "Action",
-		"desc" => "URL from form action attribute. Mailman example: http://lists.okfn.org/mailman/subscribe/XYZ",
+		"desc" => "URL from form action attribute. Mailman example: https://lists.okfn.org/mailman/subscribe/XYZ",
 		"id" => $shortname."_mailinglist_action",
 		"type" => "text"),
 		array(  "name" => "Native Mailing List 2",
@@ -405,7 +405,7 @@ add_action( 'after_setup_theme', 'oki_dtheme_setup' );
 		"id" => $shortname."_mailinglist_description2",
 		"type" => "text"),
 		array(  "name" => "Action",
-		"desc" => "URL from form action attribute. Mailman example: http://lists.okfn.org/mailman/subscribe/XYZ",
+		"desc" => "URL from form action attribute. Mailman example: https://lists.okfn.org/mailman/subscribe/XYZ",
 		"id" => $shortname."_mailinglist_action2",
 		"type" => "text"),
 		array("name" => "Mailing List Location",
@@ -974,7 +974,7 @@ function wp_bac_breadcrumb() {
 *	Re-usable RSS feed reader with shortcode
 */
 if ( !function_exists('base_rss_feed') ) {
-	function base_rss_feed($size = 5, $feed = 'http://wordpress.org/news/feed/', $date = false, $cache_time = 1800)
+	function base_rss_feed($size = 5, $feed = 'https://wordpress.org/news/feed/', $date = false, $cache_time = 1800)
 	{
 		// Include SimplePie RSS parsing engine
 		include_once ABSPATH . WPINC . '/feed.php';

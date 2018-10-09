@@ -26,7 +26,8 @@
 			$$value['id'] = get_option($value['id'], $value['std']);
 			}
 		}
-      }
+	  }
+	  var_dump($options);
       if ($okfn_tagline_title == "true" && get_bloginfo('description')) :
 
         ?>

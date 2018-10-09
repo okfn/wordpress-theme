@@ -56,12 +56,12 @@
                 <a class="twitter" href="https://twitter.com/<?php echo $okfn_twitter_username ?>">twitter</a>
               <?php endif; ?>
               <?php if ( !empty( $okfn_facebook_username ) && $okfn_facebook_link == "true" && $okfn_facebook_location != "default" ) : ?>
-                <a class="facebook" href="http://www.facebook.com/<?php echo $okfn_facebook_username ?>">facebook</a>
+                <a class="facebook" href="https://www.facebook.com/<?php echo $okfn_facebook_username ?>">facebook</a>
               <?php endif; ?>
 
               <?php if ( $okfn_flattr_okfn == "true" ) : ?>
-                <a href="http://flattr.com/thing/605365/Open-Knowledge-Foundation" target="_blank">
-                  <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" />
+                <a href="https://flattr.com/thing/605365/Open-Knowledge-Foundation" target="_blank">
+                  <img src="https://api.flattr.com/button/flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" />
                 </a>
               <?php endif; ?>
               <?php if ($okfn_sharethis == "true" && $okfn_sharethis_location == "footer") : ?>

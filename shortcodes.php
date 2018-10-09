@@ -55,7 +55,7 @@ function carousel_slide_shortcode( $atts ) {
 		if (!empty($img)) { $slideContent = '<img src="' .$img. '">';}
 		elseif (!empty($text)) { $slideContent = '<div class="text-slide">' .$text. '</div>';}
 		elseif (!empty($calendar)) { $slideContent = '<div class="calendar-slide">'.do_shortcode($googleCalendar).'</div>';}
-		else { $slideContent = '<img src="http://farm8.staticflickr.com/7174/6554801385_83acdc501d_o_d.png">';};
+		else { $slideContent = '<img src="https://farm8.staticflickr.com/7174/6554801385_83acdc501d_o_d.png">';};
 		if (!empty($caption)) { $slideCaptionOpen = '<div class="carousel-caption">';};
 		if (!empty($heading)) { $slideHeading = '<h2>' .$heading. '</h2>';};
 		if (!empty($caption)) { $slideCaption = '' .$caption.' </div>';};
@@ -87,7 +87,7 @@ add_shortcode( 'zcarousel', 'zcarousel_shortcode' );
 
 function zcarousel_slide_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
-			'img' => 'http://farm8.staticflickr.com/7174/6554801385_83acdc501d_o_d.png',
+			'img' => 'https://farm8.staticflickr.com/7174/6554801385_83acdc501d_o_d.png',
 		), $atts ) );
   return 'data.push({"url":"' .$img. '","caption":"' .$content. '"});';
 }
@@ -107,7 +107,7 @@ add_shortcode( 'banner', 'banner_shortcode' );
 
 function banner_shortcode( $atts, $content = null ) {
 	extract( shortcode_atts( array(
-			'bg' => 'http://assets.okfn.org/web/images/banner.png',
+			'bg' => 'https://assets.okfn.org/web/images/banner.png',
 			'height' => '320',
 			'bgcolour' => 'd4d4d4',
 			'class' => ''
@@ -265,7 +265,7 @@ if( function_exists('base_rss_feed') && !function_exists('base_rss_shortcode') )
 	function base_rss_shortcode($atts) {
 		extract(shortcode_atts(array(
 			'size' => '10',
-			'feed' => 'http://wordpress.org/news/feed/',
+			'feed' => 'https://wordpress.org/news/feed/',
 			'date' => false,
 			'class' => '',
 			'id' => '1',
@@ -450,7 +450,7 @@ function latest_posts_shortcode( $atts ){
 			// Extract the first img src from the post body
 			$regex = '/magazine.image\s*=\s*"?([^"\s]*)/';
 			preg_match($regex, get_the_content(), $matches);
-			$post_img = 'http://assets.okfn.org/web/images/blog-placeholder.png';
+			$post_img = 'https://assets.okfn.org/web/images/blog-placeholder.png';
 			if (count($matches)) $post_img = $matches[1];
 
 			$list .= '<li><a href="' . get_permalink() . '" class="box"><span class="image" style="background-image:url('.$post_img.');"></span><div class="text"><h4 class="title">' . get_the_title() . '</h4><p class="date">' . get_the_date() . '</p>' . '<span>' . get_the_excerpt() . '</span></div></a></li>';
@@ -487,7 +487,7 @@ function fbanner_shortcode( $atts, $content = null ) {
 		), $atts ) );
 
 		if ($link == y ) {
-			$open = '<a href="http://www.flickr.com/photos/'.$id.'/sets/'.$set.'/show/" class="flickr banner"><span class="inner">';
+			$open = '<a href="https://www.flickr.com/photos/'.$id.'/sets/'.$set.'/show/" class="flickr banner"><span class="inner">';
 		}
 		else {
 			$open = '<div class="flickr banner"><div class="inner">';
@@ -548,7 +548,7 @@ add_shortcode( 'himg', 'himg_shortcode' );
 
 function mailman_shortcode( $atts ){
 	extract( shortcode_atts( array(
-			'domain' => 'http://lists.okfn.org',
+			'domain' => 'https://lists.okfn.org',
 			'list' => '',
 			'button' => 'Subscribe',
 			'popup' => ''
@@ -597,7 +597,7 @@ function imagelist_item_shortcode( $atts ) {
 			'title' => '',
 			'description' => '',
 			'link' => '',
-			'image' => 'http://assets.okfn.org/web/images/blog-placeholder.png',
+			'image' => 'https://assets.okfn.org/web/images/blog-placeholder.png',
 		), $atts ) );
 
 	  if (!empty($link)) {
