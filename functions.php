@@ -43,6 +43,20 @@ function filter_nav_menu( $header ) {
   return $header;
 }
 
+/* Taken from buddypress:functions.php.bp_dtheme_main_nav. Used by header.php */
+function okfn_fallback_nav_menu( $args ) {
+	global $bp;
+	$pages_args = array(
+		'depth'      => 0,
+		'echo'       => false,
+		'exclude'    => '',
+		'title_li'   => '',
+	);
+	$menu = wp_page_menu( $pages_args );
+	$menu = str_replace( array( '<div class="menu"><ul>', '</ul></div>' ), array( '<ul id="nav" class="nav">', '</ul><!-- #nav -->' ), $menu );
+	echo $menu;
+}
+
 /*
  * Choose the "best" category (ie. most
  * important) category from multiple categories.
@@ -604,7 +618,7 @@ function mytheme_admin() {
 ?>
 
 <div class="options wrap">
-<style scoped>
+<style>
   .options .group h3 {
 		font-family: sans-serif;
 		font-weight:bold;
@@ -858,17 +872,6 @@ function mytheme_admin() {
 
 add_action('admin_menu', 'mytheme_add_admin'); ?>
 <?php
-if ( function_exists('register_sidebar') )
-	register_sidebar(array(
-		'id' => 'sidebar-1',
-		'before_widget' => '<li id="%1$s" class="widget %2$s">',
-		'after_widget' => '</li>',
-		'before_title' => '',
-		'after_title' => '',
-	));
-
-
-
 
 /***********************************************************************
 * @Author: Boutros AbiChedid
@@ -1194,10 +1197,6 @@ function my_theme_register_required_plugins() {
 	tgmpa( $plugins, $config );
 }
 
-
-add_theme_support( 'post-thumbnails' );
-
-
 get_template_part('shortcodes');
 
 // Workaround PHP slow file loading
@@ -1209,5 +1208,3 @@ function okfn_load_file($url) {
 		return false;
 	endif;
 }
-
-?>
