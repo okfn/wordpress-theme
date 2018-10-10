@@ -6,6 +6,7 @@
       </div>
     </div>
 	<?php
+		do_action('cookie_bar');
 		global $options;
 		foreach ($options as $value) {
 		  if (array_key_exists('id', $value)) {
