@@ -493,14 +493,16 @@ function fbanner_shortcode( $atts, $content = null ) {
 			$open = '<div class="flickr banner"><div class="inner">';
 		}
 		ob_start();
-		get_flickrRSS(
-			array(
-				'set' => $set,
-				'num_items' => 18,
-				'type' => 'set',
-				'id' => $id,
-			 )
-		);
+		if (function_exists('get_flickrRSS')):
+			get_flickrRSS(
+				array(
+					'set' => $set,
+					'num_items' => 18,
+					'type' => 'set',
+					'id' => $id,
+				)
+			);
+		endif;
 		$images = ob_get_clean();
 		if ($link == y ) {
 			$close = '<div class="text">' .do_shortcode($content). '</div></span></a>';
