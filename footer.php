@@ -5,7 +5,6 @@
 		<?php wp_footer(); ?>
       </div>
     </div>
-	<?php do_action('cookie_bar'); ?>
 	<?php
 		global $options;
 		foreach ($options as $value) {
@@ -43,7 +42,7 @@
         if ( $active_footers > 0) :
           $footer_width = (940 - 20 * ($active_footers - 1)) / $active_footers;
         ?>
-          <style scoped>
+          <style>
             #footer-widget-area > div {
               width: <?php echo $footer_width; ?>px !important;
 						}
