@@ -15,7 +15,7 @@ get_template_part( 'simple_html_dom' );
 /*
 * Register a series of DOM-manipulating filters.
 */
-add_filter('wp_nav_menu_items', 'filter_nav_menu');
+add_filter('wp_nav_menu', 'filter_nav_menu');
 
 /*
  * Modify the DOM to enable bootstrap dropdown menus.
@@ -170,17 +170,6 @@ add_action( 'after_setup_theme', 'oki_dtheme_setup' );
 
 function oki_theme_widgets_init() {
 
-	// Area 1, located in the sidebar. Empty by default.
-	register_sidebar( array(
-		'name'          => 'Sidebar',
-		'id'            => 'sidebar-1',
-		'description'   => __( 'The sidebar widget area', 'buddypress' ),
-		'before_widget' => '<div id="%1$s" class="widget %2$s">',
-		'after_widget'  => '</div>',
-		'before_title'  => '<h3 class="widgettitle">',
-		'after_title'   => '</h3>'
-	) );
-
 	// Area 2, located in the footer. Empty by default.
 	register_sidebar( array(
 		'name' => __( 'First Footer Widget Area', 'buddypress' ),
@@ -223,6 +212,17 @@ function oki_theme_widgets_init() {
 		'after_widget' => '</li>',
 		'before_title' => '<h3 class="widgettitle">',
 		'after_title' => '</h3>',
+	) );
+
+	// Area 1, located in the sidebar. Empty by default.
+	register_sidebar( array(
+		'name'          => 'Sidebar',
+		'id'            => 'sidebar-1',
+		'description'   => __( 'The sidebar widget area', 'buddypress' ),
+		'before_widget' => '<li id="%1$s" class="widget %2$s">',
+		'after_widget'  => '</li>',
+		'before_title'  => '',
+		'after_title'   => '',
 	) );
 }
 add_action( 'widgets_init', 'oki_theme_widgets_init' );
