@@ -88,12 +88,14 @@ function choose_best_category( $categories) {
 	}
   // Choose the first category I have in the priority list
   $first = null;
-  foreach ($category_priority as $priority) {
-	foreach ($categories as $category) {
-	  if ($priority == $category->name)
-		return $category->name;
+  if ($category_priority):
+	foreach ($category_priority as $priority) {
+		foreach ($categories as $category) {
+			if ($priority == $category->name)
+			return $category->name;
+		}
 	}
-  }
+  endif;
   return $categories[0]->name;
   // I have no special categories. Just choose the first one.
   return '???';
