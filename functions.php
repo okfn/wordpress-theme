@@ -153,7 +153,7 @@ function enqueue_scripts() {
   if ( ! is_admin() ) {
 		wp_deregister_script( 'jquery' );
 		wp_register_script(
-			'jquery', get_template_directory_uri() . '/assets/js/jquery.min.js', false, '1.11', false
+			'jquery', get_template_directory_uri() . '/assets/js/jquery.min.js', false, false, false
 		  );
 		  wp_enqueue_script( 'jquery' );
   }
@@ -168,57 +168,24 @@ function enqueue_scripts() {
   );
   wp_enqueue_script( 'okfn-wp' );
 
-  wp_enqueue_script( 'ok-ribbon', '//a.okfn.org/html/oki/panel/assets/js/frontend.js', [], [], true );
+  /* Validate user comments with Google reCAPTCHA */
+  wp_register_script(
+      'okfn_recaptcha_validator', get_template_directory_uri() . '/assets/js/okfn-recaptcha-validator.min.js', array( 'jquery' ), false, true
+  );
+
+  $translation_array = array( 'templateUrl' => get_stylesheet_directory_uri() );
+
+  wp_localize_script( 'okfn_recaptcha_validator', 'template_url', $translation_array );
 
   if ( is_single() && comments_open() ) {
 		wp_enqueue_script( 'recaptcha', '//www.google.com/recaptcha/api.js', [], [], true );
-		okfn_recaptcha_validator();
+		wp_enqueue_script( 'okfn_recaptcha_validator' );
+
   }
 }
 
 add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
 
-/* Validate user comments with Google reCAPTCHA */
-
-function okfn_recaptcha_validator() {
-  /* Make sure this script is loaded _after_ reCAPTCHA's API script!
-   *
-   * The following script is embedded because we need to get the URL of the
-   * current theme directory.
-   */
-  ?>
-  <script>
-	jQuery("#submit").click(function (e) {
-	  var data_2;
-	  jQuery.ajax({
-		type: "POST",
-		url: "<?php echo esc_url( get_template_directory_uri() ); ?>/inc/recaptcha.php",
-		data: jQuery('#commentform').serialize(),
-		async: false,
-		success: function (data) {
-		  if (data.nocaptcha === "true") {
-			data_2 = 1;
-		  } else if (data.spam === "true") {
-			data_2 = 1;
-		  } else {
-			data_2 = 0;
-		  }
-		}
-	  });
-	  if (data_2 != 0) {
-		e.preventDefault();
-		if (data_2 == 1) {
-		  alert("Sorry for the inconvenience, but please confirm that you're not a robot. Thank you.");
-		} else {
-		  alert("Seems like you'd like to spam. Sorry, that's not allowed.");
-		}
-	  } else {
-		jQuery("#commentform").submit;
-	  }
-	});
-  </script>
-  <?php
-}
 
 /**
  * Fetch Menu object to output name

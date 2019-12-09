@@ -1,67 +1,72 @@
 module.exports = function(grunt) {
-	grunt.initConfig({
-		copy: {
-			fonts: {
-				files: [
-					{
-						expand: true,
-						cwd: 'bower_components/font-awesome/fonts',
-						src: ['**/*'],
-						dest: 'assets/fonts'
-					}
-				]
-			},
-			js: {
-				files: [
-					{
-						expand: true,
-						cwd: 'bower_components',
-						src: ['bootstrap/dist/js/bootstrap.min.js', 'jquery/dist/jquery.min.js'],
-						dest: 'assets/js',
-						flatten: true
-					}
-				]
-			}
-		},
-		less: {
-			style: {
-				options: {
-					cleancss: true,
-					report: "min"
-				},
-				files: {
-					"style.css": "assets/less/style.less"
-				}
-			}
-		},
-		watch: {
-			php: {
-				files: ['**/*.php'],
-				tasks: [],
-				options: {
-					livereload: true
-				}
-			},
-			js: {
-				files: ['assets/js/**/*.js'],
-				options: {
-					livereload: true
-				}
-			},
-			less: {
-				files: ['assets/less/**/*.less'],
-				tasks: ['less:style'],
-				options: {
-					livereload: true
-				}
-			}
-		}
-	});
-	grunt.registerTask('build', ['copy', 'less:style']);
-	grunt.registerTask('dev', ['build', 'watch']);
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	return grunt.loadNpmTasks('grunt-contrib-watch');
+
+  const sass = require('node-sass');
+
+  grunt.initConfig({
+    copy: {
+      js: {
+        files: [{
+          expand: true,
+          cwd: 'node_modules',
+          src: ['bootstrap/dist/js/bootstrap.min.js', 'jquery/dist/jquery.min.js'],
+          dest: 'assets/js',
+          flatten: true
+        }]
+      }
+    },
+
+    uglify: {
+      options: {
+        mangle: false
+      },
+      recaptcha: {
+        files: {
+          'assets/js/okfn-recaptcha-validator.min.js': ['src/js/okfn-recaptcha-validator.js']
+        }
+      }
+    },
+
+    sass: {
+      options: {
+        implementation: sass,
+        sourceMap: true
+      },
+      dist: {
+        files: {
+          'style.css': 'src/scss/style.scss'
+        }
+      }
+    },
+
+    postcss: {
+      options: {
+        map: true,
+        processors: [
+          require('autoprefixer'),
+          require('cssnano')
+        ]
+      },
+      dist: {
+        src: 'style.css'
+      }
+    },
+
+    watch: {
+      js: {
+        files: ['src/js/**/*.js'],
+        tasks: ['uglify']
+      },
+      scss: {
+        files: ['src/scss/**/*.scss'],
+        tasks: ['sass', 'postcss:dist']
+      }
+    }
+  });
+  grunt.registerTask('build', ['copy', 'uglify']);
+  grunt.registerTask('dev', ['build', 'watch']);
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-sass');
+  grunt.loadNpmTasks('grunt-postcss');
+  return grunt.loadNpmTasks('grunt-contrib-watch');
 };
