@@ -1,9 +1,6 @@
 # Node packages downloaded via "npm install"
 node_modules/
 
-# Bower packages downloaded via "bower install"
-bower_components/
-
 # Misc files types
 *.DS_Store
 *.log
