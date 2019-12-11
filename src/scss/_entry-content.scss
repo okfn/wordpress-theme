@@ -1,0 +1,25 @@
+.entry-content {
+  // Limit the maximum width of iframes or embeds to 100% of the container width
+  iframe,
+  embed,
+  .tableauPlaceholder {
+    max-width: 100%;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+
+    th, td {
+      border: 1px solid $color-gray-100;
+      padding: 10px;
+    }
+    th {
+      background: $color-gray-100;
+    }
+  }
+
+  .search-form {
+    
+  }
+}

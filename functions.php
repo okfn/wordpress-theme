@@ -58,8 +58,8 @@ function okfn_theme_setup() {
   /**
    * Post thumbnails
    */
-  set_post_thumbnail_size( 570, 180, [ 'center', 'center' ] );
-  add_image_size( 'small', 370, 180, [ 'center', 'center' ] );
+  set_post_thumbnail_size( 730, 450, [ 'center', 'center' ] );
+  add_image_size( 'small', 370, 370, [ 'center', 'center' ] );
 
   /*
    * Let WordPress manage the document title.
@@ -136,9 +136,6 @@ endif;
  * Enqueue stylesheets
  */
 function enqueue_stylesheets() {
-  wp_enqueue_style(
-		  'lato-font', '//fonts.googleapis.com/css?family=Lato:400,700,900'
-  );
 
   wp_enqueue_style( 'stylesheet', get_template_directory_uri() . '/style.css', null, filemtime( get_stylesheet_directory() . '/style.css' ) );
 }
@@ -164,7 +161,12 @@ function enqueue_scripts() {
   wp_enqueue_script( 'bootstrap' );
 
   wp_register_script(
-		  'okfn-wp', get_template_directory_uri() . '/assets/js/main.js', array( 'jquery' ), '1.0.0', true
+		  'mmenu', get_template_directory_uri() . '/assets/js/jquery.mmenu.all.js', array( 'jquery' ), false, false
+  );
+  wp_enqueue_script( 'mmenu' );
+
+  wp_register_script(
+		  'okfn-wp', get_template_directory_uri() . '/assets/js/main.min.js', array( 'jquery' ), '1.0.0', true
   );
   wp_enqueue_script( 'okfn-wp' );
 
@@ -202,41 +204,6 @@ function get_menu_by_location( $location ) {
   return $menu;
 }
 
-/**
- * Theme color variation
- */
-function okfnwp_customizer( $wp_customize ) {
-  // Add option to Customizer
-  $wp_customize->add_setting(
-		  'color_scheme', array(
-			  'default' => 'theme-default',
-		  )
-  );
-  $wp_customize->add_control(
-		  'color_scheme', array(
-			  'label'   => __( 'Select theme color', 'okfnwp' ),
-			  'section' => 'colors',
-			  'type'    => 'select',
-			  'choices' => array(
-				  'theme-default' => __( 'Default (Green)', 'okfnwp' ),
-				  'theme-red'     => __( 'Red', 'okfnwp' ),
-				  'theme-white'   => __( 'White', 'okfnwp' ),
-				  'theme-blue'    => __( 'Blue', 'okfnwp' ),
-				  'theme-black'   => __( 'Black', 'okfnwp' ),
-			  ),
-		  )
-  );
-}
-
-add_action( 'customize_register', 'okfnwp_customizer' );
-
-// Append css class to <body>
-function theme_color( $classes ) {
-  $classes[] = get_theme_mod( 'color_scheme', '' );
-  return $classes;
-}
-
-add_filter( 'body_class', 'theme_color' );
 
 // Show title on home page
 add_filter( 'wp_title', 'wp_title_for_home', 10, 2 );
@@ -473,4 +440,27 @@ function validate_gravatar( $id_or_email ) {
   } else {
 		return false;
   }
+}
+
+
+// Add search button to main nav via items_wrap
+// default value of 'items_wrap' is <ul id="%1$s" class="%2$s">%3$s</ul>'
+function main_nav_wrap() {
+  $wrap  = '<ul class="primary nav">';
+  $wrap .= '%3$s';
+  $wrap .= '<li class="search"><label for="search"><span class="icon-search" aria-hidden="true" id="display-search-bar"></span><span class="sr-only">Search</span></label></li>';
+  $wrap .= '</ul>';
+  return $wrap;
+}
+
+// Add secondary nav to offcanvas menu via items_wrap
+function mobile_nav_wrap() {
+  $wrap  = '<ul id="%1$s" class="%2$s">'; // default value
+  $wrap .= '%3$s';
+  ob_start();
+  include('inc/secondary-nav-items.php');
+  $wrap .= ob_get_contents();
+  ob_end_clean();
+  $wrap .= '</ul>';
+  return $wrap;
 }

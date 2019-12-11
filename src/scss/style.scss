@@ -1,0 +1,26 @@
+/*!
+Theme Name: OKFN-WP
+Theme URI: https://github.com/okfn/wordpress-theme
+Author: Open Knowledge Foundation
+Author URI: https://okfn.org/
+Description: Theme for blog.okfn.org
+Version: 2.0.0
+*/
+
+@import '../../design-tokens/build/scss/variables';
+@import '../../design-tokens/build/scss/fonts';
+@import 'fonts';
+@import '../../node_modules/bootstrap/scss/bootstrap';
+@import '../../node_modules/jquery.mmenu/dist/jquery.mmenu.all';
+@import 'mixins';
+@import 'icons';
+@import 'elements';
+@import 'search-form';
+@import 'widget';
+@import 'sidebar';
+@import 'comments';
+@import 'header';
+@import 'footer';
+@import 'menu';
+@import 'post';
+@import 'home';

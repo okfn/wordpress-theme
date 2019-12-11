@@ -7,7 +7,7 @@
 get_header();
 ?>
 
-<div class="col-md-8">
+<div class="col-lg-8">
   <?php
   if ( have_posts() ) :
 		// Start the Loop.

@@ -60,8 +60,8 @@ function breadcrumbs() {
 
   global $post;
 
-  echo '<ul class="breadcrumb">';
-  echo '<li><a href="' . esc_url( home_url() ) . '">' . esc_html__( 'Home', 'okfnwp' ) . '</a></li>';
+  echo '<ol class="breadcrumb">';
+  echo '<li class="breadcrumb-item"><a class="breadcrumb-item_link" href="' . esc_url( home_url() ) . '">' . esc_html__( 'Home', 'okfnwp' ) . '</a></li>';
 
   // Temporarily disable this link in the breadcrumbs
   //if (!is_page() && !is_404()) :
@@ -69,17 +69,17 @@ function breadcrumbs() {
   //endif;
 
   if ( is_404() ) :
-		echo '<li>' . esc_html__( 'Page Not Found', 'okfnwp' ) . '</li>';
+		echo '<li class="breadcrumb-item active">' . esc_html__( 'Page Not Found', 'okfnwp' ) . '</li>';
   endif;
 
   if ( is_category() || is_single() ) :
 		$category = get_the_category();
 		$category = $category[0];
-		echo '<li><a href="' . esc_url( get_category_link( $category->term_id ) ) . '">' . esc_html( $category->name ) . '</a></li>';
+		echo '<li class="breadcrumb-item"><a class="breadcrumb-item_link" href="' . esc_url( get_category_link( $category->term_id ) ) . '">' . esc_html( $category->name ) . '</a></li>';
   endif;
 
   if ( is_single() ) :
-		echo '<li>' . get_the_title() . '</li>';
+		echo '<li class="breadcrumb-item active">' . get_the_title() . '</li>';
   endif;
 
   if ( is_page() ) :
@@ -87,38 +87,38 @@ function breadcrumbs() {
 			$anc   = get_post_ancestors( $post->ID );
 			$title = get_the_title();
 			foreach ( $anc as $ancestor ) :
-				$output = '<li><a href="' . get_permalink( $ancestor ) . '" title="' . get_the_title( $ancestor ) . '">' . get_the_title( $ancestor ) . '</a></li>';
+				$output = '<li class="breadcrumb-item"><a class="breadcrumb-item_link" href="' . get_permalink( $ancestor ) . '" title="' . get_the_title( $ancestor ) . '">' . get_the_title( $ancestor ) . '</a></li>';
 			endforeach;
 			echo wp_kses_post( $output );
-			echo '<li>' . esc_html( $title ) . '</li>';
+			echo '<li class="breadcrumb-item active">' . esc_html( $title ) . '</li>';
 			else :
-			  echo '<li>' . get_the_title() . '</li>';
+			  echo '<li class="breadcrumb-item active">' . get_the_title() . '</li>';
 				endif;
   endif;
 
   if ( is_tag() ) :
-		echo '<li>' . single_tag_title( '', false ) . '</li>';
+		echo '<li class="breadcrumb-item active">' . single_tag_title( '', false ) . '</li>';
 
   elseif ( is_day() ) :
-	echo '<li>' . esc_html__( 'Archive for', 'okfnwp' ) . ' ' . esc_html( get_the_time( 'F jS Y' ) ) . '</li>';
+	echo '<li class="breadcrumb-item active">' . esc_html__( 'Archive for', 'okfnwp' ) . ' ' . esc_html( get_the_time( 'F jS Y' ) ) . '</li>';
 
   elseif ( is_month() ) :
-	echo '<li>' . esc_html__( 'Archive for', 'okfnwp' ) . ' ' . esc_html( get_the_time( 'F Y' ) ) . '</li>';
+	echo '<li class="breadcrumb-item active">' . esc_html__( 'Archive for', 'okfnwp' ) . ' ' . esc_html( get_the_time( 'F Y' ) ) . '</li>';
 
   elseif ( is_year() ) :
-	echo '<li>' . esc_html__( 'Archive for', 'okfnwp' ) . ' ' . esc_html( get_the_time( 'Y' ) ) . '</li>';
+	echo '<li class="breadcrumb-item active">' . esc_html__( 'Archive for', 'okfnwp' ) . ' ' . esc_html( get_the_time( 'Y' ) ) . '</li>';
 
   elseif ( is_author() ) :
-	echo '<li>' . esc_html__( 'Author Archive', 'okfnwp' ) . '</li>';
+	echo '<li class="breadcrumb-item active">' . esc_html__( 'Author Archive', 'okfnwp' ) . '</li>';
 
   elseif ( get_query_var( 'paged' ) && ! empty( get_query_var( 'paged' ) ) ) :
-	echo '<li>' . esc_html__( 'Blog Archives', 'okfnwp' ) . '</li>';
+	echo '<li class="breadcrumb-item active">' . esc_html__( 'Blog Archives', 'okfnwp' ) . '</li>';
 
   elseif ( is_search() ) :
-	echo '<li>' . esc_html__( 'Search Results', 'okfnwp' ) . '</li>';
+	echo '<li class="breadcrumb-item active">' . esc_html__( 'Search Results', 'okfnwp' ) . '</li>';
   endif;
 
-  echo '</ul>';
+  echo '</ol>';
 }
 
 // Render a single Read more anchor

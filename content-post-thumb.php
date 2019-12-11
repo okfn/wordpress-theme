@@ -27,11 +27,5 @@ if ( $thumb ) :
 
 	?>
   </div>
-<?php else : ?>
-  <div class="post__thumb post__thumb-default">
-	<a class="post__thumb-link" href="<?php the_permalink(); ?>">
-	  <img class="attachment-small size-small wp-post-image" src="<?php echo esc_url( get_template_directory_uri() ) . '/assets/img/pre-header-logo.png'; ?>" alt="">
-	</a>
-  </div>
 <?php
 endif;

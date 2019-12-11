@@ -7,7 +7,7 @@
 get_header();
 ?>
 
-<div class="main col-md-8">
+<div class="main col-lg-8">
   <?php
   if ( have_posts() ) :
 		?>

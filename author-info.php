@@ -25,9 +25,9 @@ else :
 	if ( $author ) :
 
 		?>
-		<aside class="author-info clearfix">
-			<a href="<?php echo esc_url( $avatar_url ); ?>"><span class="thumbnail"><?php echo wp_kses_post( $avatar ); ?></span></a>
-			<h4>
+		<aside class="author-info">
+			<a href="<?php echo esc_url( $avatar_url ); ?>"><span class="author-info_thumbnail"><?php echo wp_kses_post( $avatar ); ?></span></a>
+			<h4 class="author-info_name">
 			<?php
 
 				// translators: %1$s stands for the author name

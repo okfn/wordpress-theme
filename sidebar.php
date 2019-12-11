@@ -6,7 +6,7 @@
  */
 ?>
 
-<div class="sidebar col-md-4">
+<div class="sidebar col-lg-4">
   <?php
   if ( is_single() ) :
 		// Output the author bio box on post pages

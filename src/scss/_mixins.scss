@@ -1,0 +1,12 @@
+@mixin link-underline-hover($offset: $hoverOffset) {
+  box-shadow: inset 0 $offset 0 0 $color-text-decoration;
+}
+
+@mixin link-underline($hoverOffset: -2.3ex) {
+  box-shadow: inset 0 -0.3ex 0 0 $color-text-decoration;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    @include link-underline-hover($hoverOffset);
+  }
+}

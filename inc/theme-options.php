@@ -136,6 +136,53 @@ class OKFNThemeOptions {
 		//            'theme-options-admin', // page
 		//            'theme_options_setting_section_wordpress' // section
 		//        );
+
+    add_settings_field(
+			'okfnwp_donate_url', // id
+			esc_html__( 'Donation URL', 'okfnwp' ), // title
+			array( $this, 'okfnwp_donate_url_callback' ), // callback
+			'theme-options-admin', // page
+			'theme_options_setting_section_social' // section
+		);
+
+    add_settings_field(
+			'okfnwp_newsletter_url', // id
+			esc_html__( 'Newsletter sign up URL', 'okfnwp' ), // title
+			array( $this, 'okfnwp_newsletter_url_callback' ), // callback
+			'theme-options-admin', // page
+			'theme_options_setting_section_social' // section
+		);
+
+    add_settings_section(
+			'theme_options_setting_section_cta', // id
+			esc_html__( 'Call to action', 'okfnwp' ), // title
+			array( $this, 'theme_options_section_cta' ), // callback
+			'theme-options-admin' // page
+		);
+
+    add_settings_field(
+			'okfnwp_cta_message', // id
+			esc_html__( 'Message', 'okfnwp' ), // title
+			array( $this, 'okfnwp_cta_message_callback' ), // callback
+			'theme-options-admin', // page
+			'theme_options_setting_section_cta' // section
+		);
+
+    add_settings_field(
+			'okfnwp_cta_link_text', // id
+			esc_html__( 'Link text', 'okfnwp' ), // title
+			array( $this, 'okfnwp_cta_link_text_callback' ), // callback
+			'theme-options-admin', // page
+			'theme_options_setting_section_cta' // section
+		);
+
+    add_settings_field(
+			'okfnwp_cta_link_url', // id
+			esc_html__( 'Link URL', 'okfnwp' ), // title
+			array( $this, 'okfnwp_cta_link_url_callback' ), // callback
+			'theme-options-admin', // page
+			'theme_options_setting_section_cta' // section
+		);
   }
 
   public function theme_options_sanitize( $input ) {
@@ -172,6 +219,26 @@ class OKFNThemeOptions {
 		//            $sanitary_values['okfnwp_admin_bar'] = $input['okfnwp_admin_bar'];
 		//        }
 
+    if ( isset( $input['okfnwp_donate_url'] ) ) {
+			$sanitary_values['okfnwp_donate_url'] = sanitize_text_field( $input['okfnwp_donate_url'] );
+		}
+
+    if ( isset( $input['okfnwp_newsletter_url'] ) ) {
+			$sanitary_values['okfnwp_newsletter_url'] = sanitize_text_field( $input['okfnwp_newsletter_url'] );
+		}
+
+    if ( isset( $input['okfnwp_cta_message'] ) ) {
+			$sanitary_values['okfnwp_cta_message'] = sanitize_text_field( $input['okfnwp_cta_message'] );
+		}
+
+    if ( isset( $input['okfnwp_cta_link_text'] ) ) {
+			$sanitary_values['okfnwp_cta_link_text'] = sanitize_text_field( $input['okfnwp_cta_link_text'] );
+		}
+
+    if ( isset( $input['okfnwp_cta_link_url'] ) ) {
+			$sanitary_values['okfnwp_cta_link_url'] = sanitize_text_field( $input['okfnwp_cta_link_url'] );
+		}
+
 		return $sanitary_values;
   }
 
@@ -186,6 +253,8 @@ class OKFNThemeOptions {
   public function theme_options_section_social() {
 
 	  }
+
+  public function theme_options_section_cta() {}
 
 
 //    public function theme_options_section_wordpress() {
@@ -297,6 +366,97 @@ public function okfnwp_ga_id_callback() {
 //
 //        printf('<label for="okfnwp_admin_bar"><input type="checkbox" name="theme_options_option_name[okfnwp_admin_bar]" id="okfnwp_admin_bar" value="1" %s>%s</label>', checked(1, $current_val, false), __(' Show the WordPress Admin toolbar when viewing site', 'okfnwp'));
 //    }
+
+  public function okfnwp_donate_url_callback() {
+    if ($this->theme_options['okfnwp_donate_url']):
+      $current_val = $this->theme_options['okfnwp_donate_url'];
+    else:
+      $current_val = '';
+    endif;
+    $old_val = get_option( 'okfnwp_donate_url' );
+
+    if ( ! isset( $current_val ) && isset( $old_val ) ) :
+      $current_val = $old_val;
+      endif;
+
+    printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_donate_url]" id="okfnwp_donate_url" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
+    ?>
+    <p>E.g <code>https://okfn.org/donate</code></p>
+    <?php
+  }
+
+  public function okfnwp_newsletter_url_callback() {
+    if ($this->theme_options['okfnwp_newsletter_url']):
+      $current_val = $this->theme_options['okfnwp_newsletter_url'];
+    else:
+      $current_val = '';
+    endif;
+    $old_val = get_option( 'okfnwp_newsletter_url' );
+
+    if ( ! isset( $current_val ) && isset( $old_val ) ) :
+      $current_val = $old_val;
+      endif;
+
+    printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_newsletter_url]" id="okfnwp_newsletter_url" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
+    ?>
+    <p>E.g <code>https://..</code></p>
+    <?php
+  }
+
+  public function okfnwp_cta_message_callback() {
+    if ($this->theme_options['okfnwp_cta_message']):
+      $current_val = $this->theme_options['okfnwp_cta_message'];
+    else:
+      $current_val = '';
+    endif;
+    $old_val = get_option( 'okfnwp_cta_message' );
+
+    if ( ! isset( $current_val ) && isset( $old_val ) ) :
+      $current_val = $old_val;
+      endif;
+
+    printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_cta_message]" id="okfnwp_cta_message" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
+    ?>
+    <p>E.g <code>Support a fair, free and open future.</code></p>
+    <?php
+  }
+
+  public function okfnwp_cta_link_text_callback() {
+    if ($this->theme_options['okfnwp_cta_link_text']):
+      $current_val = $this->theme_options['okfnwp_cta_link_text'];
+    else:
+      $current_val = '';
+    endif;
+    $old_val = get_option( 'okfnwp_cta_link_text' );
+
+    if ( ! isset( $current_val ) && isset( $old_val ) ) :
+      $current_val = $old_val;
+      endif;
+
+    printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_cta_link_text]" id="okfnwp_cta_link_text" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
+    ?>
+    <p>E.g <code>Donate now</code></p>
+    <?php
+  }
+
+  public function okfnwp_cta_link_url_callback() {
+    if ($this->theme_options['okfnwp_cta_link_url']):
+      $current_val = $this->theme_options['okfnwp_cta_link_url'];
+    else:
+      $current_val = '';
+    endif;
+    $old_val = get_option( 'okfnwp_cta_link_url' );
+
+    if ( ! isset( $current_val ) && isset( $old_val ) ) :
+      $current_val = $old_val;
+      endif;
+
+    printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_cta_link_url]" id="okfnwp_cta_link_url" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
+    ?>
+    <p>E.g <code>https://okfn.org/donate</code></p>
+    <?php
+  }
+
 }
 
 if ( is_admin() ) :

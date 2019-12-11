@@ -1,0 +1,27 @@
+.widget {
+  ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    display: block;
+    border-top: solid 2px $color-gray-200;
+    padding: $size-spacing-sm 0;
+
+    &:first-child {
+      border-color: $color-gray-900;
+    }
+  }
+
+  a {
+    box-shadow: none;
+  }
+}
+
+.widget_rss{
+  /*Float the RSS feed icon to the right side of the WordPress widget title*/
+  .rss-widget-icon{
+    float: right;
+  }
+}

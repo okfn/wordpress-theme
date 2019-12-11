@@ -8,7 +8,11 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: 'node_modules',
-          src: ['bootstrap/dist/js/bootstrap.min.js', 'jquery/dist/jquery.min.js'],
+          src: [
+            'bootstrap/dist/js/bootstrap.min.js',
+            'jquery/dist/jquery.min.js',
+            'jquery.mmenu/dist/jquery.mmenu.all.js'
+          ],
           dest: 'assets/js',
           flatten: true
         }]
@@ -19,9 +23,25 @@ module.exports = function(grunt) {
       options: {
         mangle: false
       },
+      main: {
+        files: {
+          'assets/js/main.min.js': ['src/js/main.js']
+        }
+      },
       recaptcha: {
         files: {
           'assets/js/okfn-recaptcha-validator.min.js': ['src/js/okfn-recaptcha-validator.js']
+        }
+      }
+    },
+
+    shell: {
+      tokens: {
+        command: 'npx style-dictionary build',
+          options: {
+          execOptions: {
+            cwd: 'design-tokens'
+          }
         }
       }
     },
@@ -56,8 +76,12 @@ module.exports = function(grunt) {
         files: ['src/js/**/*.js'],
         tasks: ['uglify']
       },
+      tokens: {
+        files: 'design-tokens/properties/**/*.json',
+        tasks: ['shell:tokens']
+      },
       scss: {
-        files: ['src/scss/**/*.scss'],
+        files: ['design-tokens/build/scss/*.scss', 'src/scss/**/*.scss'],
         tasks: ['sass', 'postcss:dist']
       }
     }
@@ -68,5 +92,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-postcss');
+  grunt.loadNpmTasks('grunt-shell');
   return grunt.loadNpmTasks('grunt-contrib-watch');
 };

@@ -32,7 +32,7 @@ else :
   // Show dynamic homepage content
 
   ?>
-  <div class="main col-md-8">
+  <div class="main col-lg-8">
 	<?php
 
 	// This is currently the most flexible approach for the Featured post category.

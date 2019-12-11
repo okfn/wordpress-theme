@@ -1,0 +1,98 @@
+/**
+ * Comments
+ */
+
+.comments-area {
+  margin-top: $size-spacing-xxl;
+}
+
+.comments-title {
+  font-size: $size-font-xxl;
+}
+.comment-list {
+  list-style: none outside;
+  padding: 0;
+  margin: $size-spacing-lg 0 0 0;
+
+  .comment {
+    padding: $size-spacing-base;
+    margin-top: $size-spacing-base;
+  }
+  .avatar {
+    float: left;
+    margin: 0 $size-spacing-sm $size-spacing-sm 0;
+    border-radius: 100%;
+  }
+  .comment-meta {
+    font-size: $size-font-sm;
+    margin-bottom: $size-spacing-sm;
+  }
+
+  .children {
+    list-style: none outside;
+    margin: $size-spacing-sm 0 0;
+
+    .depth-2,
+    .depth-3,
+    .depth-4 {
+      margin: 0 0 $size-spacing-lg $size-spacing-lg ;
+    }
+  }
+
+  .even {
+    background: $color-gray-100;
+  }
+  .odd {
+    background: #fff;
+  }
+}
+
+
+/**
+ * Comment form
+ */
+.comment-respond {
+  margin-top: $size-spacing-xl;
+
+  .comment-reply-title {
+    font-size: $size-font-xl;
+  }
+
+  label {
+    display: block;
+    font-size: $size-font-sm;
+  }
+
+  input[type=text],
+  input[type=url],
+  input[type=email] {
+    @extend .form-control;
+  }
+  textarea {
+    @extend .form-control;
+    height: 150px;
+  }
+
+  .form-allowed-tags {
+    font-size: $size-font-sm;
+    margin: $size-spacing-lg 0;
+  }
+
+  input[type=submit] {
+    @extend .btn;
+    @extend .btn-primary;
+  }
+}
+
+.comment-form-cookies-consent {
+  display: flex;
+  align-items: baseline;
+
+  input {
+    margin-right: $size-spacing-sm;
+  }
+}
+
+.g-recaptcha {
+  margin-bottom: $size-spacing-base;
+}

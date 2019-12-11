@@ -1,0 +1,52 @@
+.sidebar {
+  font-size: $size-font-sm;
+  margin-top: $size-spacing-lg;
+
+  @include media-breakpoint-up(xl) {
+    padding-left: $size-spacing-xxl;
+  }
+
+  & > ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  .widget {
+    display: block;
+
+    &:not(:first-child) {
+      margin-top: $grid-gutter-width;
+    }
+  }
+
+  .widgettitle {
+    font-size: $size-font-lg;
+  }
+
+  .author-info {
+    background-color: $color-gray-100;
+    outline: $size-spacing-base solid $color-gray-100;
+
+    & + * {
+      margin-top: $size-spacing-base;
+      padding-top: $grid-gutter-width;
+    }
+  }
+
+  .author-info_thumbnail {
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin-bottom: $size-spacing-sm;
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .author-info_name {
+    font-size: $size-font-lg;
+  }
+}

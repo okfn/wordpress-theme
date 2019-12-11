@@ -1,0 +1,34 @@
+.mm-listitem:after {
+  border-bottom-width: 2px;
+  left: 0;
+}
+
+.mm-btn_prev:before,
+.mm-btn_next:after {
+  transform: none;
+  border: none;
+  @include icon-font();
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+
+.mm-btn_prev:before {
+  content: "\e91a";
+}
+
+.mm-btn_next:after {
+  content: "\e919";
+  right: 0;
+  justify-content: center;
+  opacity: 0.6;
+}
+
+.mm-listitem__btn:not(.mm-listitem__text) {
+  border-left: none;
+}
+
+.mm-menu.menu-primary-container {
+  --mm-color-background: #231f20;
+}

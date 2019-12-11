@@ -1,0 +1,53 @@
+.home {
+  .site-header {
+    min-height: initial;
+  }
+
+  .post__thumb {
+    position: relative;
+    margin-bottom: $size-spacing-lg;
+    display: none;
+
+    @include media-breakpoint-up(lg) {
+      display: block;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .post--blog {
+    margin-top: $grid-gutter-width;
+  }
+
+  .post__thumb-link {
+    display: block;
+  }
+
+  .post__category {
+    background: $color-gray-900;
+    color: #fff;
+    font-style: $size-font-sm;
+    padding: $size-spacing-xs $size-spacing-sm;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  .post-title {
+    font-size: $size-font-xxl;
+  }
+
+  .post--featured {
+    &.post--blog {
+      margin-top: 0;
+    }
+
+    .post-title {
+      font-size: $size-font-xxxl;
+    }
+  }
+}

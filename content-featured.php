@@ -10,9 +10,8 @@
 
   <?php get_template_part( 'content-post-thumb-featured' ); ?>
 
-  <h4><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
+  <h4 class="post-title"><a class="post-title_link" href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
 	<p class="post__meta">
-			<i class="fa fa-calendar"></i>
 				<?php
 				// translators: %1$s stands for the post publish date
 				echo esc_html( sprintf( __( 'Posted %1$s', 'okfnwp' ), get_the_date() ) );

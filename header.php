@@ -19,130 +19,132 @@
 		<?php wp_head(); ?>
 	</head>
 	<body <?php body_class(); ?>>
-		<div id="ok-panel" class="closed"><div class="container"><iframe src="//a.okfn.org/html/oki/panel/panel.html" scrolling="no"></iframe></div></div>
-		<header class="header">
-			<div class="container">
-				<div class="col-sm-7 col-md-8">
-					<div id="header-brand">
-						<?php okfn_theme_logo(); ?>
-						<h1><a rel="home" href="<?php echo esc_url( home_url() ); ?>"><?php bloginfo( 'name' ); ?></a></h1>
+		<div id="page">
+			<header class="site-header">
+				<div class="header">
+					<div class="container">
+						<div class="brand" id="header-brand">
+							<h1>
+								<a class="brand_link" rel="home" href="<?php echo esc_url( home_url() ); ?>">
+									<?php if(has_custom_logo()) {
+										okfn_theme_logo();
+									} else {
+										include 'inc/logo.svg';
+									} ?>
+								</a>
+							</h1>
+						</div>
+
+						<a href="#mmenu" class="show-menu">
+							<span class="icon-menu" aria-hidden="true"></span>
+							<span class="sr-only"><?php _e( 'Open the menu', 'okfnwp' ); ?></span>
+						</a>
+						<nav>
+							<ul id="nav-social" class="secondary nav">
+								<?php include 'inc/secondary-nav-items.php'; ?>
+							</ul>
+
+							<?php
+		// Check if the required menu location exists and show any menu if it doesn't.
+							if ( has_nav_menu( 'primary' ) ) :
+
+								wp_nav_menu(
+										array(
+											'theme_location' => 'primary',
+											'container'       => false,
+										  'items_wrap'      => main_nav_wrap(),
+											'fallback_cb'    => false,
+										)
+								);
+
+							else :
+
+								wp_nav_menu(
+										array(
+											'container'       => false,
+										  'items_wrap'      => main_nav_wrap(),
+											'fallback_cb' => false,
+										)
+								);
+
+							endif;
+							?>
+
+						</nav>
+					</div>
+					<div class="search-bar" id="main-search-bar">
+						<div class="container">
+							<?php get_search_form(); ?>
+							<button class="search-bar_button cancel">
+								<span class="icon-close" aria-hidden="true"></span>
+								<span class="sr-only"><?php _e( 'Cancel', 'okfnwp' );?></span>
+							</button>
+						</div>
 					</div>
 				</div>
-				<div class="col-sm-5 col-md-4">
-					<nav id="header-nav" role="navigation" class="hidden-xs">
-						<div id="nav-social" class="social-links">
-							<?php
+				<?php if ( is_front_page() ) : ?>
+			</header>
+				<?php
+				// If a Custom Header image is selected, show it just on the front page
+				// if ( get_header_image() ) {
+				// 	header_image()
+				// }
 
-							$theme_options = get_option( 'theme_options_option_name' );
+				// Not the Front page
+				else :
+				?>
+				<div class="banner" id="page-banner">
+					<div class="container">
+						<div class="banner_text">
+							<h1>
+								<?php
 
-							?>
-							<a class="discuss" href="https://discuss.okfn.org/<?php echo isset( $theme_options['okfnwp_discuss_id'] ) ? esc_attr( $theme_options['okfnwp_discuss_id'] ) : ''; ?>"><i class="fa fa-comment-o fa-lg"></i></a> 
-							<a class="facebook" href="https://www.facebook.com/<?php echo isset( $theme_options['okfnwp_fb_id'] ) ? esc_attr( $theme_options['okfnwp_fb_id'] ) : 'OKFNetwork'; ?>"><i class="fa fa-facebook fa-lg"></i></a>
-							<a class="twitter" href="https://twitter.com/<?php echo isset( $theme_options['okfnwp_twitter_id'] ) ? esc_attr( $theme_options['okfnwp_twitter_id'] ) : 'okfn'; ?>"><i class="fa fa-twitter fa-lg"></i></a>
+								$blog_title = __( 'Blog', 'okfnwp' );
+
+								if ( is_single() || is_page() ) :
+									the_title();
+								elseif ( is_archive() || is_category() ) :
+									echo esc_html( $blog_title );
+
+								// When loading the latest posts page or a static home page
+								// load the title dynamically from the page title, if set.
+								elseif ( is_home() ) :
+									$dynamic_title = get_the_title( get_option( 'page_for_posts' ) );
+									if ( isset( $dynamic_title ) ) :
+										echo esc_html( $dynamic_title );
+									else :
+										echo esc_html( $blog_title );
+									endif;
+								elseif ( is_404() ) :
+									$error_404_title = __( 'Page Not Found', 'okfnwp' );
+									echo esc_html( $error_404_title );
+								elseif ( is_search() ) :
+															// translators: %1$s stands for the entered search term
+									$search_title = sprintf( __( 'Search Results for: %1$s', 'okfnwp' ), esc_html( get_search_query() ) );
+									echo esc_html( $search_title );
+								endif;
+
+								?>
+							</h1>
 						</div>
-					</nav>
+
+						<?php if (is_single() || is_page()) {
+							if ( has_post_thumbnail() ) {?>
+							<div class="banner_image">
+								<?php the_post_thumbnail( 'small') ?>
+							</div>
+						<?php }} ?>
+
+					</div>
 				</div>
-				<?php do_action( 'okf_panel' ); ?>
-				<div class="hidden-xs" id="ok-panel-wrapper"><a class="ok-ribbon" href="//okfn.org/"><img src="//a.okfn.org/html/oki/panel/assets/images/oki-ribbon.png" alt="Open Knowledge"></a></div>
-			</div>
-		</header>
-		<nav id="navbar-main" class="navbar navbar-default" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main-collapse">
-						<span class="sr-only"><?php esc_html_e( 'Toggle navigation', 'okfnwp' ); ?></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand visible-xs" href="#"><?php esc_html_e( 'Menu', 'okfnwp' ); ?></a>
-				</div>
-				<div id="navbar-main-collapse" class="collapse navbar-collapse">
-					<?php
+			</header>
 
-// Check if the required menu location exists and show any menu if it doesn't.
-					if ( has_nav_menu( 'primary' ) ) :
-
-						wp_nav_menu(
-								array(
-									'theme_location' => 'primary',
-									'menu_class'     => 'nav navbar-nav',
-									'container'      => '',
-									'fallback_cb'    => false,
-								)
-						);
-
-					else :
-
-						wp_nav_menu(
-								array(
-									'menu_class'  => 'nav navbar-nav',
-									'container'   => '',
-									'fallback_cb' => false,
-								)
-						);
-
-					endif;
-
-					get_search_form();
-
-					?>
-				</div>
-			</div>
-		</nav>
-
-		<?php
-
-		// If a Custom Header image is selected, show it just on the front page
-		if ( get_header_image() && is_front_page() ) :
-
-			?>
-			<div class="carousel"><img src="<?php header_image(); ?>" height="<?php echo esc_attr( get_custom_header()->height ); ?>" width="<?php echo esc_attr( get_custom_header()->width ); ?>" alt="" /></div>
-			<?php
-
-		// Do not show the page title on the Front page
-		elseif ( ! is_front_page() ) :
-
-			?>
-			<div id="page-banner">
-				<div class="container">
-					<h1>
-						<?php
-
-						$blog_title = __( 'Blog', 'okfnwp' );
-
-						if ( is_single() || is_page() ) :
-							the_title();
-						elseif ( is_archive() || is_category() ) :
-							echo esc_html( $blog_title );
-
-						// When loading the latest posts page or a static home page
-						// load the title dynamically from the page title, if set.
-						elseif ( is_home() ) :
-							$dynamic_title = get_the_title( get_option( 'page_for_posts' ) );
-							if ( isset( $dynamic_title ) ) :
-								echo esc_html( $dynamic_title );
-							else :
-								echo esc_html( $blog_title );
-							endif;
-						elseif ( is_404() ) :
-							$error_404_title = __( 'Page Not Found', 'okfnwp' );
-							echo esc_html( $error_404_title );
-						elseif ( is_search() ) :
-													// translators: %1$s stands for the entered search term
-							$search_title = sprintf( __( 'Search Results for: %1$s', 'okfnwp' ), esc_html( get_search_query() ) );
-							echo esc_html( $search_title );
-						endif;
-
-						?>
-					</h1>
-				</div>
-			</div>
-			<div id="breadcrumb" role="navigation">
-				<div class="container">
+			<div id="breadcrumb" role="navigation" class="d-none d-xl-block">
+				<nav class="container" aria-label="breadcrumb">
 					<?php breadcrumbs(); ?>
-				</div>
+				</nav>
 			</div>
-		<?php endif; ?>
-		<main class="content"><div class="container">
-				<div class="row">
+			<?php endif; ?>
+			<main class="content">
+				<div class="container">
+					<div class="row">
