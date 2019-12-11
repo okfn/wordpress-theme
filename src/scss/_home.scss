@@ -50,4 +50,8 @@
       font-size: $size-font-xxxl;
     }
   }
+
+  .sidebar {
+    margin-top: 0; // don't need margin if no banner
+  }
 }
