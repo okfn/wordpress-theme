@@ -26,7 +26,9 @@ else :
 
 		?>
 		<aside class="author-info">
-			<a href="<?php echo esc_url( $avatar_url ); ?>"><span class="author-info_thumbnail"><?php echo wp_kses_post( $avatar ); ?></span></a>
+			<a class="author-info_link" href="<?php echo esc_url( $avatar_url ); ?>">
+				<span class="author-info_thumbnail"><?php echo wp_kses_post( $avatar ); ?></span>
+			</a>
 			<h4 class="author-info_name">
 			<?php
 
