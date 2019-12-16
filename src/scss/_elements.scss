@@ -13,3 +13,8 @@ html {
 a:not([class]) {
   @include link-underline;
 }
+
+img {
+  max-width: 100%;
+  height: auto;
+}
