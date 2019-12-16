@@ -32,6 +32,12 @@
       box-shadow: none;
     }
   }
+
+  & + {
+    .site-footer {
+      margin-top: 0;
+    }
+  }
 }
 
 .site-footer,
@@ -42,7 +48,8 @@ html {
 .site-footer {
   color: rgba(0, 0, 0, 0.6);
   padding: $size-spacing-xxl 0 $size-spacing-xl 0;
-	font-size: $size-font-sm;
+  font-size: $size-font-sm;
+  margin-top: $size-spacing-xxl;
 
 	a {
 		color: rgba(0, 0, 0, 0.9);
