@@ -1,0 +1,16 @@
+.blog-pagination {
+  margin-top: $size-spacing-xl;
+  padding-top: $size-spacing-lg;
+  border-top: solid 1px $color-gray-100;
+  text-align: center;
+
+  .page-numbers {
+    display: inline-block;
+    font-size: $size-font-sm;
+    padding: 0.1rem 0.5rem;
+
+    &.current {
+      background-color: $color-blue-base;
+    }
+  }
+}
