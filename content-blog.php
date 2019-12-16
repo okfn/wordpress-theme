@@ -10,7 +10,7 @@
 
 	<?php get_template_part( 'content-post-thumb' ); ?>
 
-	<h4><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
+	<h4 class="post-title"><a class="post-title_link" href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
 	<p class="post__meta">
 	<?php
 	// translators: %1$s stands for the post publish date
