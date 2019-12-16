@@ -127,14 +127,15 @@
 								?>
 							</h1>
 						</div>
-
-						<?php if (is_single() || is_page()) {
-							if ( has_post_thumbnail() ) {?>
-							<div class="banner_image">
-								<?php the_post_thumbnail( 'small') ?>
-							</div>
-						<?php }} ?>
-
+						<?php
+						// if (is_single() || is_page()) {
+						// 	if ( has_post_thumbnail() ) {
+						// 		echo '<div class="banner_image">';
+						// 		the_post_thumbnail( 'small');
+						// 		echo '</div>';
+						// 	}
+						// }
+						?>
 					</div>
 				</div>
 			</header>

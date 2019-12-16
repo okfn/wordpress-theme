@@ -292,9 +292,9 @@
     & > * {
       font-size: $size-font-lg;
 
-      @include media-breakpoint-up(lg) {
-        max-width: 40ch;
-      }
+      // @include media-breakpoint-up(lg) {
+      //   max-width: 40ch;
+      // }
 
       @include media-breakpoint-up(xl) {
         font-size: $size-font-xl;
@@ -310,7 +310,7 @@
         }
 
         @include media-breakpoint-up(lg) {
-          max-width: 16ch;
+          // max-width: 16ch;
           font-size: $size-font-xxxxxl;
         }
         @include media-breakpoint-up(xl) {
