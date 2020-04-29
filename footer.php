@@ -17,7 +17,7 @@
 	<div class="row footer-primary">
 	  <div class="col-sm-3 col-md-2">
 		<a class="footer-logo" href="https://okfn.org/">
-		  <img src="https://a.okfn.org/img/oki/landscape-white-468x122.png" alt="<?php esc_html_e( 'Open Knowledge International', 'okfn' ); ?>">
+		  <img src="https://a.okfn.org/img/oki/landscape-white-468x122.png" alt="<?php esc_html_e( 'Open Knowledge Foundation', 'okfn' ); ?>">
 		</a>
 	  </div>
 	  <div class="col-sm-9 col-md-10">
