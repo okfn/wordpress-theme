@@ -88,7 +88,7 @@
     		<a xmlns:cc="http://creativecommons.org/ns#"
     		   href="https://okfn.org/"
     		   property="cc:attributionName"
-    				   rel="cc:attributionURL"><?php esc_html_e( 'Open Knowledge International', 'okfnwp' ); ?></a>, <?php esc_html_e( 'is licensed under a', 'okfnwp' ); ?>
+    				   rel="cc:attributionURL"><?php esc_html_e( 'Open Knowledge Foundation', 'okfnwp' ); ?></a>, <?php esc_html_e( 'is licensed under a', 'okfnwp' ); ?>
     		<a rel="license"
     		   href="https://creativecommons.org/licenses/by/4.0/">
     			 <?php esc_html_e( 'Creative Commons Attribution 4.0 International License', 'okfnwp' ); ?>
