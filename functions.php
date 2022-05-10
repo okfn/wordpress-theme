@@ -311,7 +311,7 @@ function okfn_is_post_rendered( $post ) {
 }
 
 function okfn_get_first_image_url_from_post_content() {
-  global $post, $posts;
+  global $post;
 
   $first_img_url = '';
   $is_image_file = false;
@@ -325,17 +325,7 @@ function okfn_get_first_image_url_from_post_content() {
 
   endif;
 
-  // Check if the image URL points to an actual image file
-  // ---------------------------------------------------------------------------
-  if ( function_exists( 'getimagesize' ) ) :
-
-		if ( ! empty( $first_img_url ) ) :
-			$is_image_file = getimagesize( $first_img_url );
-			endif;
-
-  endif;
-
-  if ( empty( $first_img_url ) || ! $is_image_file ) :
+  if ( empty( $first_img_url ) ) :
 
 		// Reset value if no image is available
 		$first_img_url = false;
