@@ -53,13 +53,6 @@ class OKFNThemeOptions {
 		//            'theme-options-admin' // page
 		//        );
 
-    add_settings_section(
-			'theme_options_setting_section_ga', // id
-			esc_html__( 'Google Analytics', 'okfnwp' ), // title
-			array( $this, 'theme_options_section_ga' ), // callback
-			'theme-options-admin' // page
-    );
-
 		add_settings_section(
 			'theme_options_setting_section_social', // id
 			esc_html__( 'Social Media', 'okfnwp' ), // title
@@ -96,14 +89,6 @@ class OKFNThemeOptions {
 		//            'theme-options-admin', // page
 		//            'theme_options_setting_section_mailing' // section
 		//        );
-
-    add_settings_field(
-			'okfnwp_ga_id', // id
-			esc_html__( 'Google Analytics Tracking ID', 'okfnwp' ), // title
-			array( $this, 'okfnwp_ga_id_callback' ), // callback
-			'theme-options-admin', // page
-			'theme_options_setting_section_ga' // section
-    );
 
 		add_settings_field(
 			'okfnwp_twitter_id', // id
@@ -199,10 +184,6 @@ class OKFNThemeOptions {
 		//            $sanitary_values['okfnwp_mailinglist_id'] = sanitize_text_field($input['okfnwp_mailinglist_id']);
 		//        }
 
-    if ( isset( $input['okfnwp_ga_id'] ) ) {
-			$sanitary_values['okfnwp_ga_id'] = sanitize_text_field( $input['okfnwp_ga_id'] );
-      }
-
 		if ( isset( $input['okfnwp_twitter_id'] ) ) {
 			$sanitary_values['okfnwp_twitter_id'] = sanitize_text_field( $input['okfnwp_twitter_id'] );
 			}
@@ -245,10 +226,6 @@ class OKFNThemeOptions {
 //    public function theme_options_section_mailing() {
 //
 //    }
-
-  public function theme_options_section_ga() {
-
-    }
 
   public function theme_options_section_social() {
 
@@ -293,19 +270,6 @@ class OKFNThemeOptions {
 //        printf('<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_mailinglist_id]" id="okfnwp_mailinglist_id" value="%s">', isset($current_val) ? esc_attr($current_val) : '');
 //        _e('<p>For the list at http://lists.okfn.org/mailman/subscribe/XYZ, this should be XYZ</p>');
 //    }
-
-public function okfnwp_ga_id_callback() {
-  if (isset($this->theme_options['okfnwp_ga_id'])):
-    $current_val = $this->theme_options['okfnwp_ga_id'];
-  else:
-    $current_val = '';
-  endif;
-
-  printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_ga_id]" id="okfnwp_ga_id" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
-  ?>
-  <p><?php esc_html_e( 'Google Analytics tracking ID for current website' ); ?></p>
-  <?php
-}
 
   public function okfnwp_twitter_id_callback() {
     if (isset($this->theme_options['okfnwp_twitter_id'])):
