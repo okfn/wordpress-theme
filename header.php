@@ -26,11 +26,13 @@
 						<div class="brand" id="header-brand">
 							<h1>
 								<a class="brand_link" rel="home" href="<?php echo esc_url( home_url() ); ?>">
-									<?php if(has_custom_logo()) {
+									<?php
+									if ( has_custom_logo() ) {
 										okfn_theme_logo();
 									} else {
 										include 'inc/logo.svg';
-									} ?>
+									}
+									?>
 								</a>
 							</h1>
 						</div>
@@ -41,30 +43,30 @@
 						</a>
 						<nav>
 							<ul id="nav-social" class="secondary nav">
-								<?php include 'inc/secondary-nav-items.php'; ?>
+								<?php require 'inc/secondary-nav-items.php'; ?>
 							</ul>
 
 							<?php
-		// Check if the required menu location exists and show any menu if it doesn't.
+							// Check if the required menu location exists and show any menu if it doesn't.
 							if ( has_nav_menu( 'primary' ) ) :
 
 								wp_nav_menu(
-										array(
-											'theme_location' => 'primary',
-											'container'       => false,
-										  'items_wrap'      => main_nav_wrap(),
-											'fallback_cb'    => false,
-										)
+									array(
+										'theme_location' => 'primary',
+										'container'      => false,
+										'items_wrap'     => main_nav_wrap(),
+										'fallback_cb'    => false,
+									)
 								);
 
 							else :
 
 								wp_nav_menu(
-										array(
-											'container'       => false,
-										  'items_wrap'      => main_nav_wrap(),
-											'fallback_cb' => false,
-										)
+									array(
+										'container'   => false,
+										'items_wrap'  => main_nav_wrap(),
+										'fallback_cb' => false,
+									)
 								);
 
 							endif;
@@ -77,22 +79,22 @@
 							<?php get_search_form(); ?>
 							<button class="search-bar_button cancel">
 								<span class="icon-close" aria-hidden="true"></span>
-								<span class="sr-only"><?php _e( 'Cancel', 'okfnwp' );?></span>
+								<span class="sr-only"><?php _e( 'Cancel', 'okfnwp' ); ?></span>
 							</button>
 						</div>
 					</div>
 				</div>
 				<?php if ( is_front_page() ) : ?>
 			</header>
-				<?php
-				// If a Custom Header image is selected, show it just on the front page
-				// if ( get_header_image() ) {
-				// 	header_image()
-				// }
+					<?php
+					// If a Custom Header image is selected, show it just on the front page
+					// if ( get_header_image() ) {
+					// header_image()
+					// }
 
-				// Not the Front page
+					// Not the Front page
 				else :
-				?>
+					?>
 				<div class="banner" id="page-banner">
 					<div class="container">
 						<div class="banner_text">
@@ -106,8 +108,8 @@
 								elseif ( is_archive() || is_category() ) :
 									echo esc_html( $blog_title );
 
-								// When loading the latest posts page or a static home page
-								// load the title dynamically from the page title, if set.
+									// When loading the latest posts page or a static home page
+									// load the title dynamically from the page title, if set.
 								elseif ( is_home() ) :
 									$dynamic_title = get_the_title( get_option( 'page_for_posts' ) );
 									if ( isset( $dynamic_title ) ) :
@@ -129,11 +131,11 @@
 						</div>
 						<?php
 						// if (is_single() || is_page()) {
-						// 	if ( has_post_thumbnail() ) {
-						// 		echo '<div class="banner_image">';
-						// 		the_post_thumbnail( 'small');
-						// 		echo '</div>';
-						// 	}
+						// if ( has_post_thumbnail() ) {
+						// echo '<div class="banner_image">';
+						// the_post_thumbnail( 'small');
+						// echo '</div>';
+						// }
 						// }
 						?>
 					</div>

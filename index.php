@@ -15,19 +15,19 @@ get_header();
 
 <div class="col-md-12">
   <?php
-  if ( have_posts() ) :
+	if ( have_posts() ) :
 		?>
 		<div class="row">
 		<?php
 		// Start the Loop.
 		while ( have_posts() ) :
-the_post();
+			the_post();
 
 			/*
-             * Include the post format-specific template for the content. If you want to
-             * use this in a child theme, then include a file called called content-___.php
-             * (where ___ is the post format) and that will be used instead.
-             */
+			 * Include the post format-specific template for the content. If you want to
+			 * use this in a child theme, then include a file called called content-___.php
+			 * (where ___ is the post format) and that will be used instead.
+			 */
 			get_template_part( 'content', 'blog' );
 
 			endwhile;
@@ -38,7 +38,7 @@ the_post();
 		paging_nav();
 
   endif;
-  ?>
+	?>
 </div>
 
 <?php

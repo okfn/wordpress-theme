@@ -13,9 +13,10 @@ else :
 	$author_description = get_the_author_meta( 'description' );
 	$avatar             = get_avatar( get_the_author_meta( 'ID' ), 80 );
 
-	/* Prepare a suitable URL for the Gravatar user profile, as recommended here:
-     *  https://en.gravatar.com/site/implement/profiles/
-     */
+	/*
+	 Prepare a suitable URL for the Gravatar user profile, as recommended here:
+	 *  https://en.gravatar.com/site/implement/profiles/
+	 */
 	$avatar_url = 'https://www.gravatar.com/' . md5( get_the_author_meta( 'user_email' ) );
 
 	if ( empty( $author_description ) ) :
@@ -35,7 +36,7 @@ else :
 				// translators: %1$s stands for the author name
 				echo esc_html( sprintf( __( 'About %1$s' ), get_the_author_meta( 'display_name' ) ) );
 
-				?>
+			?>
 				</h4>
 			<p><?php echo wp_kses_post( $author_description ); ?></p>
 		</aside>

@@ -9,13 +9,13 @@ get_header();
 
 <div class="main col-lg-8">
   <?php
-  if ( have_posts() ) :
+	if ( have_posts() ) :
 		?>
 		<div class="row">
 		<?php
 		// Start the Loop.
 		while ( have_posts() ) :
-the_post();
+			the_post();
 			// Include the page content template.
 			get_template_part( 'content', 'blog' );
 			endwhile;
@@ -27,7 +27,7 @@ the_post();
   else :
 	  get_template_part( 'content', 'none' );
   endif;
-  ?>
+	?>
 </div>
 
 <?php

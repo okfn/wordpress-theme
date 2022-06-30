@@ -16,7 +16,7 @@
 		// translators: %1$s stands for the post publish date
 		echo sprintf( esc_html__( 'Posted %1$s', 'okfnwp' ), get_the_date() );
 
-		?>
+	?>
 		</p>
 
 	<?php

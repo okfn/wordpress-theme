@@ -19,10 +19,10 @@ else :
 		exit;
 	endif;
 
-// Check with the Google reCAPTCHA API
+	// Check with the Google reCAPTCHA API
 	$response = file_get_contents( 'https://www.google.com/recaptcha/api/siteverify?secret=' . okfn_get_recaptcha_public_key() . '&response=' . $captcha . '&remoteip=' . $_SERVER['REMOTE_ADDR'] );
 
-// Validate result
+	// Validate result
 	if ( false == $response . success ) :
 
 		$data = array( 'spam' => 'true' );

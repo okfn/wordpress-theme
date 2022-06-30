@@ -5,22 +5,23 @@
  */
 function latest_posts( $atts ) {
 
-  $atts = shortcode_atts(
-	  array(
-		  'title' => __( 'Latest posts from the blog', 'okfnwp' ),
-	  ), $atts
-	  );
+	$atts = shortcode_atts(
+		array(
+			'title' => __( 'Latest posts from the blog', 'okfnwp' ),
+		),
+		$atts
+	);
 
-  ob_start();
+	ob_start();
 
-  ?>
+	?>
   <section class="list-posts">
 	<h3><?php echo esc_html( $atts['title'] ); ?></h3>
 	<div class="row">
 	  <?php
 
-	  $posts = new WP_Query( 'post_type=post&posts_per_page=3&ignore_sticky_posts=true' );
-	  while ( $posts->have_posts() ) :
+		$posts = new WP_Query( 'post_type=post&posts_per_page=3&ignore_sticky_posts=true' );
+		while ( $posts->have_posts() ) :
 			$posts->the_post();
 
 			// Get post category
@@ -40,16 +41,16 @@ function latest_posts( $atts ) {
 			<?php
 
 	  endwhile;
-	  wp_reset_query();
+		wp_reset_query();
 
-	  ?>
+		?>
 	</div>
   </section>
-  <?php
+	<?php
 
-  $content = ob_get_contents();
-  ob_end_clean();
-  return $content;
+	$content = ob_get_contents();
+	ob_end_clean();
+	return $content;
 
 }
 
