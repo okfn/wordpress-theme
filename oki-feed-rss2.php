@@ -27,13 +27,13 @@ do_action( 'rss_tag_pre', 'rss2' );
 	 xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
 	 xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
 	 <?php
-	 /**
-	  * Fires at the end of the RSS root to add namespaces.
-	  *
-	  * @since 2.0.0
-	  */
-	 do_action( 'rss2_ns' );
-	 ?>
+		/**
+		 * Fires at the end of the RSS root to add namespaces.
+		 *
+		 * @since 2.0.0
+		 */
+		do_action( 'rss2_ns' );
+		?>
 	 >
 
   <channel>
@@ -56,7 +56,7 @@ do_action( 'rss_tag_pre', 'rss2' );
 	   *                         'yearly'. Default 'hourly'.
 	   */
 	  echo esc_html( apply_filters( 'rss_update_period', $duration ) );
-	  ?>
+	?>
 	  </sy:updatePeriod>
 	<sy:updateFrequency>
 	<?php
@@ -71,7 +71,7 @@ do_action( 'rss_tag_pre', 'rss2' );
 	   *                          of RSS updates within the update period. Default '1'.
 	   */
 	  echo esc_html( apply_filters( 'rss_update_frequency', $frequency ) );
-	  ?>
+	?>
 	  </sy:updateFrequency>
 	<?php
 	/**
@@ -82,8 +82,8 @@ do_action( 'rss_tag_pre', 'rss2' );
 	do_action( 'rss2_head' );
 
 	while ( have_posts() ) :
-the_post();
-	  ?>
+		the_post();
+		?>
 	  <item>
 		<title><?php the_title_rss(); ?></title>
 		<link><?php the_permalink_rss(); ?></link>
@@ -95,9 +95,9 @@ the_post();
 		<?php
 		$gravatar_img = okfn_get_avatar_img_url( 264 );
 		if ( ! empty( $gravatar_img ) ) :
-		  ?>
+			?>
 		  <enclosure url="<?php echo esc_attr( $gravatar_img ); ?>" length="N/A" type="image/jpeg" />
-		  <?php
+			<?php
 		endif;
 		the_category_rss( 'rss2' )
 		?>
@@ -106,8 +106,8 @@ the_post();
 		  <description><![CDATA[<?php the_excerpt_rss(); ?>]]></description>
 		<?php else : ?>
 		  <description><![CDATA[<?php the_excerpt_rss(); ?>]]></description>
-		  <?php $content = get_the_content_feed( 'rss2' ); ?>
-		  <?php if ( strlen( $content ) > 0 ) : ?>
+			<?php $content = get_the_content_feed( 'rss2' ); ?>
+			<?php if ( strlen( $content ) > 0 ) : ?>
 			<content:encoded><![CDATA[<?php echo wp_kses_post( $content ); ?>]]></content:encoded>
 		  <?php else : ?>
 			<content:encoded><![CDATA[<?php the_excerpt_rss(); ?>]]></content:encoded>

@@ -20,10 +20,10 @@
 
   <?php
 
-  the_excerpt();
-  okfn_read_more_btn();
+	the_excerpt();
+	okfn_read_more_btn();
 
-  ?>
+	?>
 
 </div>
 

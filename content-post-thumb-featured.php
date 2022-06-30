@@ -25,5 +25,5 @@ if ( has_post_thumbnail() ) :
 			<img class="attachment-small size-small wp-post-image" src="<?php echo wp_kses_post( okfn_get_first_image_url_from_post_content() ); ?>" alt="">
 		</a>
 	</div>
-<?php
+	<?php
 endif;

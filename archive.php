@@ -11,10 +11,10 @@ get_header();
 
 <div class="col-lg-8">
   <?php
-  if ( have_posts() ) :
+	if ( have_posts() ) :
 		// Start the Loop.
 		while ( have_posts() ) :
-the_post();
+			the_post();
 
 			/*
 			 * Include the post format-specific template for the content. If you want to
@@ -28,7 +28,7 @@ the_post();
 		paging_nav();
 
   endif;
-  ?>
+	?>
 </div>
 <?php
 get_sidebar();
