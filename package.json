@@ -3,8 +3,11 @@
 	"title": "Open Knowledge WordPress Theme",
 	"description": "",
 	"version": "1.0.0",
-	"author": {},
-	"repository": {},
+	"author": "Open Knowledge Foundation",
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:okfn/wordpress-theme.git"
+	},
 	"engines": {
 		"node": ">=0.10.25",
 		"npm": ">=1.4.4"
