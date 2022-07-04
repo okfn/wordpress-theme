@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The header for our theme.
  *
@@ -144,7 +143,7 @@
 
 			<div id="breadcrumb" role="navigation" class="d-none d-xl-block">
 				<nav class="container" aria-label="breadcrumb">
-					<?php breadcrumbs(); ?>
+					<?php okf_breadcrumbs(); ?>
 				</nav>
 			</div>
 			<?php endif; ?>

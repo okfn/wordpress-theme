@@ -35,7 +35,7 @@ get_header();
 		</div>
 		<?php
 		// Previous/next post navigation.
-		paging_nav();
+		okf_paging_nav();
 
   endif;
 	?>

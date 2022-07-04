@@ -1,9 +1,9 @@
 <?php
-
 /**
  * @package OKFNWP
  */
-$categories = get_the_category();
+
+$okf_categories = get_the_category();
 
 if ( has_post_thumbnail() ) :
 	$thumb = get_the_post_thumbnail( $post, 'small' );
@@ -21,8 +21,8 @@ if ( $thumb ) :
 
 	echo '<a class="post__thumb-link" href="' . esc_url( get_permalink() ) . '">' . wp_kses_post( $thumb ) . '</a>';
 
-	if ( $categories ) :
-		echo wp_kses_post( sprintf( '<a href="%1$s" class="post__category">%2$s</a>', get_category_link( $categories[0]->term_id ), $categories[0]->name ) );
+	if ( $okf_categories ) :
+		echo wp_kses_post( sprintf( '<a href="%1$s" class="post__category">%2$s</a>', get_category_link( $okf_categories[0]->term_id ), $okf_categories[0]->name ) );
 	endif;
 
 	?>

@@ -23,7 +23,7 @@ get_header();
 
 			endwhile;
 		// Previous/next post navigation.
-		paging_nav();
+		okf_paging_nav();
   else :
 	  get_template_part( 'content', 'none' );
   endif;
