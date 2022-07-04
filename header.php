@@ -38,7 +38,7 @@
 
 						<a href="#mmenu" class="show-menu">
 							<span class="icon-menu" aria-hidden="true"></span>
-							<span class="sr-only"><?php _e( 'Open the menu', 'okfnwp' ); ?></span>
+							<span class="sr-only"><?php esc_html_e( 'Open the menu', 'okfnwp' ); ?></span>
 						</a>
 						<nav>
 							<ul id="nav-social" class="secondary nav">
@@ -78,7 +78,7 @@
 							<?php get_search_form(); ?>
 							<button class="search-bar_button cancel">
 								<span class="icon-close" aria-hidden="true"></span>
-								<span class="sr-only"><?php _e( 'Cancel', 'okfnwp' ); ?></span>
+								<span class="sr-only"><?php esc_html_e( 'Cancel', 'okfnwp' ); ?></span>
 							</button>
 						</div>
 					</div>
@@ -86,12 +86,13 @@
 				<?php if ( is_front_page() ) : ?>
 			</header>
 					<?php
-					// If a Custom Header image is selected, show it just on the front page
+					// If a Custom Header image is selected, show it just on the front page.
 					// if ( get_header_image() ) {
 					// header_image()
 					// }
+					// @ignore Don't test commented out code.
 
-					// Not the Front page
+					// Not the Front page.
 				else :
 					?>
 				<div class="banner" id="page-banner">
@@ -100,29 +101,29 @@
 							<h1>
 								<?php
 
-								$blog_title = __( 'Blog', 'okfnwp' );
+								$okf_blog_title = __( 'Blog', 'okfnwp' );
 
 								if ( is_single() || is_page() ) :
 									the_title();
 								elseif ( is_archive() || is_category() ) :
-									echo esc_html( $blog_title );
+									echo esc_html( $okf_blog_title );
 
 									// When loading the latest posts page or a static home page
 									// load the title dynamically from the page title, if set.
 								elseif ( is_home() ) :
-									$dynamic_title = get_the_title( get_option( 'page_for_posts' ) );
-									if ( isset( $dynamic_title ) ) :
-										echo esc_html( $dynamic_title );
+									$okf_dynamic_title = get_the_title( get_option( 'page_for_posts' ) );
+									if ( isset( $okf_dynamic_title ) ) :
+										echo esc_html( $okf_dynamic_title );
 									else :
-										echo esc_html( $blog_title );
+										echo esc_html( $okf_blog_title );
 									endif;
 								elseif ( is_404() ) :
-									$error_404_title = __( 'Page Not Found', 'okfnwp' );
-									echo esc_html( $error_404_title );
+									$okf_error_404_title = __( 'Page Not Found', 'okfnwp' );
+									echo esc_html( $okf_error_404_title );
 								elseif ( is_search() ) :
-															// translators: %1$s stands for the entered search term
-									$search_title = sprintf( __( 'Search Results for: %1$s', 'okfnwp' ), esc_html( get_search_query() ) );
-									echo esc_html( $search_title );
+									// translators: %1$s stands for the entered search term.
+									$okf_search_title = sprintf( __( 'Search Results for: %1$s', 'okfnwp' ), esc_html( get_search_query() ) );
+									echo esc_html( $okf_search_title );
 								endif;
 
 								?>
@@ -136,6 +137,7 @@
 						// echo '</div>';
 						// }
 						// }
+						// @ignore Don't test commented out code.
 						?>
 					</div>
 				</div>
