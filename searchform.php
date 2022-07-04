@@ -1,6 +1,10 @@
 <?php
-// The default template for rendering the search form in the header, widgets
-// and everywhere else.
+/**
+ * The default template for rendering the search form in the header, widgets and everywhere else.
+ *
+ * @package OKFNWP
+ */
+
 ?>
 <form class="search-form" action="<?php esc_url( home_url() ); ?>/" method="get" role="search">
   <input type="text" name="s" class="search-bar_input" value="<?php the_search_query(); ?>" placeholder="<?php _e( 'Search...', 'okfnwp' ); ?>">
