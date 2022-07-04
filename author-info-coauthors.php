@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Display the author's name and bio within blog posts
  *

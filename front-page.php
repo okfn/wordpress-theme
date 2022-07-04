@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The template for displaying the front page of the site.
  *
@@ -29,7 +28,7 @@ if ( is_singular() && ! empty( $post->post_content ) ) :
 
 else :
 
-	// Show dynamic homepage content
+	// Show dynamic homepage content.
 
 	?>
   <div class="main col-lg-8">
@@ -51,7 +50,7 @@ else :
 
 		$all_sticky_posts = get_option( 'sticky_posts' );
 
-		// Show Sticky Posts only when at least one Sticky Post exists
+		// Show Sticky Posts only when at least one Sticky Post exists.
 		if ( ! empty( $all_sticky_posts ) ) :
 
 			$sticky_post = new WP_Query(
@@ -76,8 +75,7 @@ else :
 
 	  endif;
 
-		// Get Featured posts
-		// -------------------------------------------------------------------------
+		// Get Featured posts.
 		$featured = new WP_Query(
 			array(
 				'cat'            => $featured_cat->term_id,
@@ -125,7 +123,7 @@ else :
 		$args = array(
 			'category__in'   => $frontpage_categories,
 			'posts_per_page' => 10,
-			'post_status'    => 'publish', // Required! so that no Private posts are listed for logged in users
+			'post_status'    => 'publish', // Required! so that no Private posts are listed for logged in users.
 			'post__not_in'   => $rendered_posts_ids,
 		);
 

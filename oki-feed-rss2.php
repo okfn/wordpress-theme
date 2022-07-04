@@ -4,6 +4,7 @@
  *
  * @package WordPress
  */
+
 header( 'Content-Type: ' . feed_content_type( 'rss2' ) . '; charset=' . esc_attr( get_bloginfo( 'charset' ) ), true );
 $more = 1;
 
@@ -17,6 +18,7 @@ echo '<?xml version="1.0" encoding="' . esc_attr( get_bloginfo( 'charset' ) ) . 
  * @param string $context Type of feed. Possible values include 'rss2', 'rss2-comments',
  *                        'rdf', 'atom', and 'atom-comments'.
  */
+
 do_action( 'rss_tag_pre', 'rss2' );
 ?>
 <rss version="2.0"
@@ -32,6 +34,7 @@ do_action( 'rss_tag_pre', 'rss2' );
 		 *
 		 * @since 2.0.0
 		 */
+
 		do_action( 'rss2_ns' );
 		?>
 	 >
@@ -45,32 +48,34 @@ do_action( 'rss_tag_pre', 'rss2' );
 	<language><?php bloginfo_rss( 'language' ); ?></language>
 	<sy:updatePeriod>
 	<?php
-	  $duration = 'hourly';
+	  $okf_duration = 'hourly';
 
 	  /**
 	   * Filters how often to update the RSS feed.
 	   *
 	   * @since 2.1.0
 	   *
-	   * @param string $duration The update period. Accepts 'hourly', 'daily', 'weekly', 'monthly',
+	   * @param string $okf_duration The update period. Accepts 'hourly', 'daily', 'weekly', 'monthly',
 	   *                         'yearly'. Default 'hourly'.
 	   */
-	  echo esc_html( apply_filters( 'rss_update_period', $duration ) );
+
+	  echo esc_html( apply_filters( 'rss_update_period', $okf_duration ) );
 	?>
 	  </sy:updatePeriod>
 	<sy:updateFrequency>
 	<?php
-	  $frequency = '1';
+	  $okf_frequency = '1';
 
 	  /**
 	   * Filters the RSS update frequency.
 	   *
 	   * @since 2.1.0
 	   *
-	   * @param string $frequency An integer passed as a string representing the frequency
+	   * @param string $okf_frequency An integer passed as a string representing the frequency
 	   *                          of RSS updates within the update period. Default '1'.
 	   */
-	  echo esc_html( apply_filters( 'rss_update_frequency', $frequency ) );
+
+	  echo esc_html( apply_filters( 'rss_update_frequency', $okf_frequency ) );
 	?>
 	  </sy:updateFrequency>
 	<?php
@@ -79,6 +84,7 @@ do_action( 'rss_tag_pre', 'rss2' );
 	 *
 	 * @since 2.0.0
 	 */
+
 	do_action( 'rss2_head' );
 
 	while ( have_posts() ) :
@@ -124,6 +130,7 @@ do_action( 'rss_tag_pre', 'rss2' );
 		 *
 		 * @since 2.0.0
 		 */
+
 		do_action( 'rss2_item' );
 		?>
 	  </item>
