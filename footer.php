@@ -14,20 +14,20 @@
 
 
   <?php
-	$theme_options = get_option( 'theme_options_option_name' );
+	$okf_theme_options = get_option( 'theme_options_option_name' );
 
-	if ( ! empty( $theme_options['okfnwp_cta_message'] ) ) {
+	if ( ! empty( $okf_theme_options['okfnwp_cta_message'] ) ) {
 		?>
   <section class="footer-cta">
 	<div class="container">
 	  <div class="text">
-		<p><?php echo $theme_options['okfnwp_cta_message']; ?></p>
+		<p><?php echo esc_html( $okf_theme_options['okfnwp_cta_message'] ); ?></p>
 	  </div>
 		<?php
-		if ( ! empty( $theme_options['okfnwp_cta_link_text'] ) && ! empty( $theme_options['okfnwp_cta_link_url'] ) ) {
+		if ( ! empty( $okf_theme_options['okfnwp_cta_link_text'] ) && ! empty( $okf_theme_options['okfnwp_cta_link_url'] ) ) {
 			?>
 	  <div class="link">
-		<a href="<?php echo $theme_options['okfnwp_cta_link_url']; ?>"><?php echo $theme_options['okfnwp_cta_link_text']; ?></a>
+		<a href="<?php echo esc_html( $okf_theme_options['okfnwp_cta_link_url'] ); ?>"><?php echo esc_html( $okf_theme_options['okfnwp_cta_link_text'] ); ?></a>
 	  </div>
 			<?php
 		}
@@ -80,8 +80,8 @@
 		  </p>
 		  <p>
 			<a class="license" rel="license" href="https://creativecommons.org/licenses/by/4.0/">
-			  <?php echo file_get_contents( get_stylesheet_directory() . '/assets/img/cc.svg', FILE_USE_INCLUDE_PATH ); ?>
-			  <?php echo file_get_contents( get_stylesheet_directory() . '/assets/img/by.svg', FILE_USE_INCLUDE_PATH ); ?>
+			  <?php echo esc_html( file_get_contents( get_stylesheet_directory() ) . '/assets/img/cc.svg', FILE_USE_INCLUDE_PATH ); ?>
+			  <?php echo esc_html( file_get_contents( get_stylesheet_directory() ) . '/assets/img/by.svg', FILE_USE_INCLUDE_PATH ); ?>
 			</a>
 			<?php esc_html_e( 'Content on this site, made by', 'okfnwp' ); ?>
 			<a xmlns:cc="http://creativecommons.org/ns#"
