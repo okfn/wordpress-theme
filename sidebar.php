@@ -4,12 +4,13 @@
  *
  * @package OKFNWP
  */
+
 ?>
 
 <div class="sidebar col-lg-4">
   <?php
 	if ( is_single() ) :
-		// Output the author bio box on post pages
+		// Output the author bio box on post pages.
 		get_template_part( 'author-info' );
   endif;
 	?>

@@ -1,10 +1,10 @@
 <?php
-
 /**
  * Display the author's name and bio within blog posts
  *
  * @package OKFNWP
  */
+
 if ( function_exists( 'coauthors' ) ) :
 	get_template_part( 'author', 'info-coauthors' );
 else :
@@ -17,6 +17,7 @@ else :
 	 Prepare a suitable URL for the Gravatar user profile, as recommended here:
 	 *  https://en.gravatar.com/site/implement/profiles/
 	 */
+
 	$avatar_url = 'https://www.gravatar.com/' . md5( get_the_author_meta( 'user_email' ) );
 
 	if ( empty( $author_description ) ) :
@@ -33,7 +34,7 @@ else :
 			<h4 class="author-info_name">
 			<?php
 
-				// translators: %1$s stands for the author name
+				// translators: %1$s stands for the author name.
 				echo esc_html( sprintf( __( 'About %1$s' ), get_the_author_meta( 'display_name' ) ) );
 
 			?>
