@@ -25,7 +25,7 @@ if ( post_password_required() ) {
 	<h2 class="comments-title">
 		<?php
 		  // translators: %1$s stands for number of comments and %2$s for the post title.
-		esc_html( printf( esc_html( _n( 'One thought on &ldquo;%2$s&rdquo;', '%1$s thoughts on &ldquo;%2$s&rdquo;', get_comments_number(), 'okfnwp' ) ), esc_html( number_format_i18n( get_comments_number() ) ), get_the_title() ) );
+		esc_html( printf( esc_html( _n( '%1$d thought on &ldquo;%2$s&rdquo;', '%1$d thoughts on &ldquo;%2$s&rdquo;', get_comments_number(), 'okfnwp' ) ), esc_html( number_format_i18n( get_comments_number() ) ), esc_html( get_the_title() ) ) );
 		?>
 	</h2>
 
@@ -61,7 +61,7 @@ if ( post_password_required() ) {
 	  <p class="no-comments"><?php esc_html_e( 'Comments are closed.', 'okfnwp' ); ?></p>
 	<?php endif; ?>
 
-  <?php endif; // have_comments() ?>
+  <?php endif; // have_comments() @ignore Don't check commented out function. ?>
 
   <?php comment_form(); ?>
 
