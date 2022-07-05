@@ -1,6 +1,6 @@
 <?php
 /**
- * The featured post thumbnail template.
+ * The featured post thumbnail template
  *
  * @package OKFNWP
  */

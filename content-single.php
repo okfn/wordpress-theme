@@ -1,7 +1,10 @@
 <?php
 /**
+ * Template for rendering single posts
+ *
  * @package OKFNWP
  */
+
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'post--single' ); ?>>
