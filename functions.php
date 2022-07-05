@@ -12,7 +12,7 @@ if ( ! isset( $content_width ) ) {
 /**
  * Add theme Options page
  */
-require_once 'inc/theme-options.php';
+require_once 'inc/class-okfnthemeoptions.php';
 
 /**
  * Add theme Shortcodes from the old OKI WordPress theme
