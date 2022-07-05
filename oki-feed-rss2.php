@@ -5,6 +5,9 @@
  * @package WordPress
  */
 
+// phpcs:ignoreFile
+// File is ingored because it is not written based on WordPress Community Standards and requires a refactor
+
 header( 'Content-Type: ' . feed_content_type( 'rss2' ) . '; charset=' . esc_attr( get_bloginfo( 'charset' ) ), true );
 $more = 1;
 
