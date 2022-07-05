@@ -108,7 +108,7 @@
 				'theme_location' => 'primary',
 				'container'      => 'nav',
 				'container_id'   => 'mmenu',
-				'items_wrap'     => mobile_nav_wrap(),
+				'items_wrap'     => okf_mobile_nav_wrap(),
 				'fallback_cb'    => false,
 			)
 		);

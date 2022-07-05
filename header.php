@@ -53,7 +53,7 @@
 									array(
 										'theme_location' => 'primary',
 										'container'      => false,
-										'items_wrap'     => main_nav_wrap(),
+										'items_wrap'     => okf_main_nav_wrap(),
 										'fallback_cb'    => false,
 									)
 								);
@@ -63,7 +63,7 @@
 								wp_nav_menu(
 									array(
 										'container'   => false,
-										'items_wrap'  => main_nav_wrap(),
+										'items_wrap'  => okf_main_nav_wrap(),
 										'fallback_cb' => false,
 									)
 								);

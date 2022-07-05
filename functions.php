@@ -4,7 +4,8 @@
  *
  * @package OKFNWP
  */
-// Set a fixed, maximum allowed width for any content in the theme
+
+// Set a fixed, maximum allowed width for any content in the theme.
 if ( ! isset( $content_width ) ) {
 	$content_width = 600;
 }
@@ -31,14 +32,15 @@ require_once 'inc/latest-posts.php';
  */
 require_once 'inc/template-tags.php';
 
-/*
+/**
  * Initialize the OKFN WordPress theme and set up several required options
+ *
+ * @return void
  */
-
 function okfn_theme_setup() {
 
 	// Load translated strings for the theme, placed in /languages in
-	// https://codex.wordpress.org/I18n_for_WordPress_Developers
+	// https://codex.wordpress.org/I18n_for_WordPress_Developers.
 	load_theme_textdomain( 'okfnwp', get_template_directory() . '/languages' );
 
 	/**
@@ -87,7 +89,9 @@ function okfn_theme_setup() {
 			)
 		);
   else :
+	  // phpcs:disable
 	  add_custom_image_header( $wp_head_callback, $admin_head_callback );
+	  // phpcs:enable
   endif;
 
   /**
@@ -99,15 +103,19 @@ register_nav_menus(
 		'footer-menu-1' => __( 'Footer Menu 1', 'okfnwp' ),
 //        'footer-menu-2' => 'Footer Menu 2'
 	)
-	);
+);
 }
 
 add_action( 'after_setup_theme', 'okfn_theme_setup' );
 
+/**
+ * Initialize default widgets
+ *
+ * @return void
+ */
 function okfn_widgets_init() {
-	/**
-	 * Register sidebars
-	 */
+
+	// Register sidebars.
 	register_sidebar(
 		array(
 			'name'          => __( 'Sidebar', 'okfnwp' ),
@@ -122,9 +130,14 @@ function okfn_widgets_init() {
 
 add_action( 'widgets_init', 'okfn_widgets_init' );
 
-// Backwards compatibility function for Title Tag theme support
+// Backwards compatibility function for Title Tag theme support.
 if ( ! function_exists( '_wp_render_title_tag' ) ) :
 
+	/**
+	 * Create title tag element
+	 *
+	 * @return void
+	 */
 	function okfn_render_title() {
 		?>
 		<title><?php wp_title( '|', true, 'right' ); ?></title>
@@ -136,21 +149,26 @@ endif;
 
 /**
  * Enqueue stylesheets
+ *
+ * @return void
  */
-function enqueue_stylesheets() {
+function okf_enqueue_stylesheets() {
 
 	wp_enqueue_style( 'stylesheet', get_template_directory_uri() . '/style.css', null, filemtime( get_stylesheet_directory() . '/style.css' ) );
 }
 
-add_action( 'wp_print_styles', 'enqueue_stylesheets' );
+add_action( 'wp_print_styles', 'okf_enqueue_stylesheets' );
 
 /**
  * Enqueue scripts
+ *
+ * @return void
  */
-function enqueue_scripts() {
+function okf_enqueue_scripts() {
 
 	if ( ! is_admin() ) {
 		wp_deregister_script( 'jquery' );
+		// phpcs:ignore
 		wp_register_script(
 			'jquery',
 			get_template_directory_uri() . '/assets/js/jquery.min.js',
@@ -161,6 +179,7 @@ function enqueue_scripts() {
 		  wp_enqueue_script( 'jquery' );
 	}
 
+	// phpcs:ignore
 	wp_register_script(
 		'bootstrap',
 		get_template_directory_uri() . '/assets/js/bootstrap.min.js',
@@ -170,6 +189,7 @@ function enqueue_scripts() {
 	);
 	wp_enqueue_script( 'bootstrap' );
 
+	// phpcs:ignore
 	wp_register_script(
 		'mmenu',
 		get_template_directory_uri() . '/assets/js/jquery.mmenu.all.js',
@@ -188,7 +208,8 @@ function enqueue_scripts() {
 	);
 	wp_enqueue_script( 'okfn-wp' );
 
-	/* Validate user comments with Google reCAPTCHA */
+	// Validate user comments with Google reCAPTCHA.
+	// phpcs:ignore
 	wp_register_script(
 		'okfn_recaptcha_validator',
 		get_template_directory_uri() . '/assets/js/okfn-recaptcha-validator.min.js',
@@ -208,13 +229,15 @@ function enqueue_scripts() {
 	}
 }
 
-add_action( 'wp_enqueue_scripts', 'enqueue_scripts' );
-
+add_action( 'wp_enqueue_scripts', 'okf_enqueue_scripts' );
 
 /**
  * Fetch Menu object to output name
+ *
+ * @param string $location Unique navigation menu location identifier.
+ * @return $menu
  */
-function get_menu_by_location( $location ) {
+function okf_get_menu_by_location( $location ) {
 	$menus = get_nav_menu_locations();
 
 	if ( ! isset( $menus[ $location ] ) ) {
@@ -227,10 +250,17 @@ function get_menu_by_location( $location ) {
 }
 
 
-// Show title on home page
-add_filter( 'wp_title', 'wp_title_for_home', 10, 2 );
+// Show title on home page.
+add_filter( 'wp_title', 'okf_wp_title_for_home', 10, 2 );
 
-function wp_title_for_home( $title, $sep ) {
+/**
+ * Helper function for compositing the page title
+ *
+ * @param string $title Title content.
+ * @param string $sep Title separator content.
+ * @return $title
+ */
+function okf_wp_title_for_home( $title, $sep ) {
 	global $paged, $page;
 
 	if ( is_feed() ) {
@@ -245,7 +275,7 @@ function wp_title_for_home( $title, $sep ) {
 	}
 
 	if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() ) {
-		// translators: %s stands for page number
+		// translators: %s stands for page number.
 		$title = "$title $sep " . sprintf( __( 'Page %s', 'okfnwp' ), max( $paged, $page ) );
 	}
 
@@ -259,11 +289,17 @@ function wp_title_for_home( $title, $sep ) {
 
 add_action( 'edit_form_after_title', 'okfn_front_page_editor_notice' );
 
+/**
+ * Show notice for Editor users on the front page
+ *
+ * @return void
+ */
 function okfn_front_page_editor_notice() {
 	$page_on_front = get_option( 'page_on_front' );
 	global $post;
 
 	if ( isset( $page_on_front ) && $page_on_front === $post->ID ) {
+		// phpcs:ignore
 		// remove_post_type_support('page', 'editor');
 		?>
 		<div class="notice notice-warning inline">
@@ -273,25 +309,31 @@ function okfn_front_page_editor_notice() {
 	}
 }
 
-/* Define some global variables */
-
+/**
+ * Define some global variables
+ *
+ * @return void
+ */
 function okfn_global_vars() {
-	global $rendered_posts_ids;
-	$rendered_posts_ids = array();
+	global $okf_rendered_posts_ids;
+	$okf_rendered_posts_ids = array();
 }
 
 add_action( 'wp', 'okfn_global_vars' );
 
-// Get the post categories which will be featured on the Home page from the
-// most recently updated 20 posts. Once the categories are extracted
+/**
+ * Get the post categories which will be featured on the Home page from the most recently updated 20 posts. Once the categories are extracted.
+ *
+ * @return void
+ */
 function okfn_get_featured_cats() {
-	global $frontpage_categories;
+	global $okf_frontpage_categories;
 
-	if ( ! isset( $frontpage_categories ) ) :
-		$frontpage_categories = array();
+	if ( ! isset( $okf_frontpage_categories ) ) :
+		$okf_frontpage_categories = array();
   endif;
 
-	// Get 20 latest posts ordered by date of modification
+	// Get 20 latest posts ordered by date of modification.
 	$okfn_recent_posts = get_posts(
 		array(
 			'posts_per_page' => 20,
@@ -300,18 +342,22 @@ function okfn_get_featured_cats() {
 	);
 
 	// Extract the IDs of the largest unique categories assigned
-	// to the 20 latest posts
+	// to the 20 latest posts.
 	foreach ( $okfn_recent_posts as $value ) :
 		// Must use wp_get_post_terms() here as we need the categories ordered by the
-		// total number of posts they contain
-		$frontpage_categories = array_unique( array_merge( $frontpage_categories, wp_get_post_terms( $value, 'category', array( 'fields' => 'ids' ) ) ) );
+		// total number of posts they contain.
+		$okf_frontpage_categories = array_unique( array_merge( $okf_frontpage_categories, wp_get_post_terms( $value, 'category', array( 'fields' => 'ids' ) ) ) );
   endforeach;
 }
 
 add_action( 'wp', 'okfn_get_featured_cats' );
 
-// When a post is rendered in a template, remember its ID, so that no duplicate
-// post appear in the listings.
+/**
+ * When a post is rendered in a template, remember its ID, so that no duplicate post appear in the listings.
+ *
+ * @param object $post Current post object.
+ * @return void
+ */
 function okfn_save_rendered_post_id( $post ) {
 	global $rendered_posts_ids;
 
@@ -320,7 +366,12 @@ function okfn_save_rendered_post_id( $post ) {
   endif;
 }
 
-// Check if a post has not already been rendered in the loop
+/**
+ * Check if a post has not already been rendered in the loop.
+ *
+ * @param object $post Current post object.
+ * @return boolean
+ */
 function okfn_is_post_rendered( $post ) {
 	global $rendered_posts_ids;
 	global $post; // Required!
@@ -332,13 +383,18 @@ function okfn_is_post_rendered( $post ) {
   endif;
 }
 
+/**
+ * Extract image URL from the first image element in the post content
+ *
+ * @return $first_img_url
+ */
 function okfn_get_first_image_url_from_post_content() {
 	global $post;
 
 	$first_img_url = '';
 	$is_image_file = false;
 
-	// Match <img> tags within post content
+	// Match <img> tags within post content.
 	$image_urls = preg_match_all( '/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $post->post_content, $matches );
 
 	if ( $image_urls ) :
@@ -349,7 +405,7 @@ function okfn_get_first_image_url_from_post_content() {
 
 	if ( empty( $first_img_url ) ) :
 
-		// Reset value if no image is available
+		// Reset value if no image is available.
 		$first_img_url = false;
 
   endif;
@@ -361,11 +417,22 @@ function okfn_get_first_image_url_from_post_content() {
 
 add_filter( 'comment_form_submit_button', 'okfn_google_captcha' );
 
+/**
+ * Render Google reCAPTCHA button
+ *
+ * @param string $submit_button ReCAPTCHA submit button.
+ * @return string
+ */
 function okfn_google_captcha( $submit_button ) {
 	wp_nonce_field( 'g-recaptcha-check', 'g-recaptcha' );
 	return '<div class="g-recaptcha" data-sitekey= "' . okfn_get_recaptcha_public_key() . '"></div>' . $submit_button;
 }
 
+/**
+ * Helper function for getting the reCAPTCHA public key
+ *
+ * @return $recaptcha_public_key
+ */
 function okfn_get_recaptcha_public_key() {
 
 	if ( defined( 'RECAPTCHA_PUBLIC_KEY' ) ) :
@@ -377,24 +444,34 @@ function okfn_get_recaptcha_public_key() {
   return $recaptcha_public_key;
 }
 
-// Remove WordPress generator meta tag to hide current WP version
+// Remove WordPress generator meta tag to hide current WP version.
 add_filter( 'the_generator', '__return_false' );
 
-// Fix inconsistencies in the src and srcset content for images
+// Fix inconsistencies in the src and srcset content for images.
 add_filter( 'wp_calculate_image_srcset_meta', '__return_null' );
 
-// Add custom RSS feed
-add_feed( 'enclosure', 'oki_custom_rss2_feed' );
+// Add custom RSS feed.
+add_feed( 'enclosure', 'okf_custom_rss2_feed' );
 
-function oki_custom_rss2_feed() {
+/**
+ * Custom RSS template for feed
+ *
+ * @return void
+ */
+function okf_custom_rss2_feed() {
 	load_template( TEMPLATEPATH . '/oki-feed-rss2.php' );
 }
 
-// Generate a permalink to an author image on Gravatar, with specific size
+/**
+ * Generate a permalink to an author image on Gravatar, with specific size
+ *
+ * @param string $image_size Image size name.
+ * @return string
+ */
 function okfn_get_avatar_img_url( $image_size ) {
 	$user_id = get_the_author_meta( 'id' );
 
-	if ( validate_gravatar( $user_id ) ) :
+	if ( okf_validate_gravatar( $user_id ) ) :
 		return str_replace( 'http:', 'https:', esc_url( remove_query_arg( array( 'd', 'r' ), get_avatar_url( $user_id, array( 'size' => $image_size ) ) ) ) );
   endif;
 }
@@ -402,12 +479,12 @@ function okfn_get_avatar_img_url( $image_size ) {
 /**
  * Utility function to check if a gravatar exists for a given email or id
  *
- * @param int|string|object $id_or_email A user ID,  email address, or comment object
- * @return bool if the gravatar exists or not
+ * @param int|string|object $id_or_email A user ID,  email address, or comment object.
+ * @return bool if the gravatar exists or not.
  * https://gist.github.com/justinph/5197810
  */
-function validate_gravatar( $id_or_email ) {
-	// id or email code borrowed from wp-includes/pluggable.php
+function okf_validate_gravatar( $id_or_email ) {
+	// id or email code borrowed from wp-includes/pluggable.php.
 	$email = '';
 	if ( is_numeric( $id_or_email ) ) {
 		$id   = (int) $id_or_email;
@@ -416,8 +493,8 @@ function validate_gravatar( $id_or_email ) {
 			$email = $user->user_email;
 		}
 	} elseif ( is_object( $id_or_email ) ) {
-		// No avatar for pingbacks or trackbacks
-		$allowed_comment_types = apply_filters( 'get_avatar_comment_types', array( 'comment' ) );
+		// No avatar for pingbacks or trackbacks.
+		$allowed_comment_types = apply_filters( 'get_avatar_comment_types', array( 'comment' ) ); // phpcs:ignore
 		if ( ! empty( $id_or_email->comment_type ) && ! in_array( $id_or_email->comment_type, (array) $allowed_comment_types ) ) {
 			return false;
 		}
@@ -456,9 +533,12 @@ function validate_gravatar( $id_or_email ) {
 }
 
 
-// Add search button to main nav via items_wrap
-// default value of 'items_wrap' is <ul id="%1$s" class="%2$s">%3$s</ul>'
-function main_nav_wrap() {
+/**
+ * Add search button to main nav via items_wrap default value of 'items_wrap' is <ul id="%1$s" class="%2$s">%3$s</ul>'.
+ *
+ * @return $wrap
+ */
+function okf_main_nav_wrap() {
 	$wrap  = '<ul class="primary nav">';
 	$wrap .= '%3$s';
 	$wrap .= '<li class="search"><label for="search"><span class="icon-search" aria-hidden="true" id="display-search-bar"></span><span class="sr-only">Search</span></label></li>';
@@ -466,9 +546,13 @@ function main_nav_wrap() {
 	return $wrap;
 }
 
-// Add secondary nav to offcanvas menu via items_wrap
-function mobile_nav_wrap() {
-	$wrap  = '<ul id="%1$s" class="%2$s">'; // default value
+/**
+ * Add secondary nav to offcanvas menu via items_wrap
+ *
+ * @return $wrap
+ */
+function okf_mobile_nav_wrap() {
+	$wrap  = '<ul id="%1$s" class="%2$s">'; // default value.
 	$wrap .= '%3$s';
 	ob_start();
 	include 'inc/secondary-nav-items.php';
