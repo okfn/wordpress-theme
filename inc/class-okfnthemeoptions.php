@@ -294,15 +294,14 @@ class OKFNThemeOptions {
 	// phpcs:disable
 	// public function theme_options_section_mailing() {}
 
-	// public function theme_options_section_ga() {}
+	public function theme_options_section_ga() {}
 
-	// public function theme_options_section_social() {}
+	public function theme_options_section_social() {}
 
-	// public function theme_options_section_cta() {}
+	public function theme_options_section_cta() {}
 
-	// public function theme_options_section_wordpress() {
-	//
-	// }
+	public function theme_options_section_wordpress() {}
+
 	// public function okfnwp_mailinglist_heading_callback() {
 	//
 	// $current_val = $this->theme_options['okfnwp_mailinglist_heading'];
