@@ -111,17 +111,17 @@ else :
 	// Get the most recent post for each of the featured categories defined in
 	// functions.php via okfn_global_vars().
 
-	global $frontpage_categories;
+	global $okf_frontpage_categories;
 	global $okf_rendered_posts_ids;
 
-	if ( $frontpage_categories ) :
+	if ( $okf_frontpage_categories ) :
 
 		?>
 	  <div class="row">
 		<?php
 
 		$okf_args = array(
-			'category__in'   => $frontpage_categories,
+			'category__in'   => $okf_frontpage_categories,
 			'posts_per_page' => 10,
 			'post_status'    => 'publish', // Required! so that no Private posts are listed for logged in users.
 			'post__not_in'   => $okf_rendered_posts_ids,
