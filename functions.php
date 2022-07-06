@@ -38,7 +38,6 @@ require_once 'inc/template-tags.php';
  * @return void
  */
 function okfn_theme_setup() {
-
 	// Load translated strings for the theme, placed in /languages in
 	// https://codex.wordpress.org/I18n_for_WordPress_Developers.
 	load_theme_textdomain( 'okfnwp', get_template_directory() . '/languages' );
@@ -88,22 +87,22 @@ function okfn_theme_setup() {
 				'header-text' => false,
 			)
 		);
-  else :
-	  // phpcs:disable
-	  add_custom_image_header( $wp_head_callback, $admin_head_callback );
-	  // phpcs:enable
-  endif;
+	else :
+		// phpcs:disable
+		add_custom_image_header($wp_head_callback, $admin_head_callback);
+	// phpcs:enable
+	endif;
 
-  /**
-   * Register menus
-   */
-register_nav_menus(
-	array(
-		'primary'       => 'Primary',
-		'footer-menu-1' => __( 'Footer Menu 1', 'okfnwp' ),
-//        'footer-menu-2' => 'Footer Menu 2'
-	)
-);
+	/**
+	 * Register menus
+	 */
+	register_nav_menus(
+		array(
+			'primary'       => 'Primary',
+			'footer-menu-1' => __( 'Footer Menu 1', 'okfnwp' ),
+			// 'footer-menu-2' => 'Footer Menu 2'
+		)
+	);
 }
 
 add_action( 'after_setup_theme', 'okfn_theme_setup' );
@@ -114,7 +113,6 @@ add_action( 'after_setup_theme', 'okfn_theme_setup' );
  * @return void
  */
 function okfn_widgets_init() {
-
 	// Register sidebars.
 	register_sidebar(
 		array(
@@ -138,8 +136,7 @@ if ( ! function_exists( '_wp_render_title_tag' ) ) :
 	 *
 	 * @return void
 	 */
-	function okfn_render_title() {
-		?>
+	function okfn_render_title() {      ?>
 		<title><?php wp_title( '|', true, 'right' ); ?></title>
 		<?php
 	}
@@ -153,7 +150,6 @@ endif;
  * @return void
  */
 function okf_enqueue_stylesheets() {
-
 	wp_enqueue_style( 'stylesheet', get_template_directory_uri() . '/style.css', null, filemtime( get_stylesheet_directory() . '/style.css' ) );
 }
 
@@ -165,7 +161,6 @@ add_action( 'wp_print_styles', 'okf_enqueue_stylesheets' );
  * @return void
  */
 function okf_enqueue_scripts() {
-
 	if ( ! is_admin() ) {
 		wp_deregister_script( 'jquery' );
 		// phpcs:ignore
@@ -176,7 +171,7 @@ function okf_enqueue_scripts() {
 			false,
 			false
 		);
-		  wp_enqueue_script( 'jquery' );
+		wp_enqueue_script( 'jquery' );
 	}
 
 	// phpcs:ignore
@@ -225,7 +220,6 @@ function okf_enqueue_scripts() {
 	if ( is_single() && comments_open() ) {
 		wp_enqueue_script( 'recaptcha', '//www.google.com/recaptcha/api.js', array(), array(), true );
 		wp_enqueue_script( 'okfn_recaptcha_validator' );
-
 	}
 }
 
@@ -303,7 +297,7 @@ function okfn_front_page_editor_notice() {
 		// remove_post_type_support('page', 'editor');
 		?>
 		<div class="notice notice-warning inline">
-		<p><?php esc_html_e( 'You are currently editing the page that shows your front page content.', 'okfnwp' ); ?></p>
+			<p><?php esc_html_e( 'You are currently editing the page that shows your front page content.', 'okfnwp' ); ?></p>
 		</div>
 		<?php
 	}
@@ -327,11 +321,11 @@ add_action( 'wp', 'okfn_global_vars' );
  * @return void
  */
 function okfn_get_featured_cats() {
-	global $okf_frontpage_categories;
+	 global $okf_frontpage_categories;
 
 	if ( ! isset( $okf_frontpage_categories ) ) :
 		$okf_frontpage_categories = array();
-  endif;
+	endif;
 
 	// Get 20 latest posts ordered by date of modification.
 	$okfn_recent_posts = get_posts(
@@ -347,7 +341,7 @@ function okfn_get_featured_cats() {
 		// Must use wp_get_post_terms() here as we need the categories ordered by the
 		// total number of posts they contain.
 		$okf_frontpage_categories = array_unique( array_merge( $okf_frontpage_categories, wp_get_post_terms( $value, 'category', array( 'fields' => 'ids' ) ) ) );
-  endforeach;
+	endforeach;
 }
 
 add_action( 'wp', 'okfn_get_featured_cats' );
@@ -363,7 +357,7 @@ function okfn_save_rendered_post_id( $post ) {
 
 	if ( isset( $post ) && ! in_array( $post->ID, $rendered_posts_ids ) ) :
 		array_push( $rendered_posts_ids, $post->ID );
-  endif;
+	endif;
 }
 
 /**
@@ -378,9 +372,9 @@ function okfn_is_post_rendered( $post ) {
 
 	if ( isset( $post ) && in_array( $post->ID, $rendered_posts_ids ) ) :
 		return true;
-  else :
-	  return false;
-  endif;
+	else :
+		return false;
+	endif;
 }
 
 /**
@@ -389,7 +383,7 @@ function okfn_is_post_rendered( $post ) {
  * @return $first_img_url
  */
 function okfn_get_first_image_url_from_post_content() {
-	global $post;
+	 global $post;
 
 	$first_img_url = '';
 	$is_image_file = false;
@@ -401,14 +395,14 @@ function okfn_get_first_image_url_from_post_content() {
 
 		$first_img_url = $matches[1][0];
 
-  endif;
+	endif;
 
 	if ( empty( $first_img_url ) ) :
 
 		// Reset value if no image is available.
 		$first_img_url = false;
 
-  endif;
+	endif;
 
 	return $first_img_url;
 }
@@ -434,14 +428,13 @@ function okfn_google_captcha( $submit_button ) {
  * @return $recaptcha_public_key
  */
 function okfn_get_recaptcha_public_key() {
-
 	if ( defined( 'RECAPTCHA_PUBLIC_KEY' ) ) :
 		$recaptcha_public_key = RECAPTCHA_PUBLIC_KEY;
-  else :
-	  $recaptcha_public_key = '6Lf7NCITAAAAALKEyDJtNygRuXv9NsiINqYWF5Y3';
-  endif;
+	else :
+		$recaptcha_public_key = '6Lf7NCITAAAAALKEyDJtNygRuXv9NsiINqYWF5Y3';
+	endif;
 
-  return $recaptcha_public_key;
+	return $recaptcha_public_key;
 }
 
 // Remove WordPress generator meta tag to hide current WP version.
@@ -473,7 +466,7 @@ function okfn_get_avatar_img_url( $image_size ) {
 
 	if ( okf_validate_gravatar( $user_id ) ) :
 		return str_replace( 'http:', 'https:', esc_url( remove_query_arg( array( 'd', 'r' ), get_avatar_url( $user_id, array( 'size' => $image_size ) ) ) ) );
-  endif;
+	endif;
 }
 
 /**
@@ -494,7 +487,7 @@ function okf_validate_gravatar( $id_or_email ) {
 		}
 	} elseif ( is_object( $id_or_email ) ) {
 		// No avatar for pingbacks or trackbacks.
-		$allowed_comment_types = apply_filters( 'get_avatar_comment_types', array( 'comment' ) ); // phpcs:ignore
+		$allowed_comment_types = apply_filters('get_avatar_comment_types', array('comment')); // phpcs:ignore
 		if ( ! empty( $id_or_email->comment_type ) && ! in_array( $id_or_email->comment_type, (array) $allowed_comment_types ) ) {
 			return false;
 		}
@@ -523,7 +516,7 @@ function okf_validate_gravatar( $id_or_email ) {
 		} else {
 			$data = $response['response']['code'];
 		}
-		  wp_cache_set( $hashkey, $data, $group = '', $expire = 60 * 5 );
+		wp_cache_set( $hashkey, $data, $group = '', $expire = 60 * 5 );
 	}
 	if ( '200' == $data ) {
 		return true;
