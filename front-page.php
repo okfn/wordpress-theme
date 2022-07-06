@@ -1,17 +1,17 @@
 <?php
-
 /**
  * The template for displaying the front page of the site.
  *
  * @package OKFNWP
  */
+
 get_header();
 
 global $post;
 
 if ( is_singular() && ! empty( $post->post_content ) ) :
 
-	// Show static page content
+	// Show static page content.
 
 	if ( have_posts() ) :
 		while ( have_posts() ) :
@@ -29,7 +29,7 @@ if ( is_singular() && ! empty( $post->post_content ) ) :
 
 else :
 
-	// Show dynamic homepage content
+	// Show dynamic homepage content.
 
 	?>
   <div class="main col-lg-8">
@@ -37,34 +37,32 @@ else :
 
 	// This is currently the most flexible approach for the Featured post category.
 	// Get the category object by its path/slug.
-	// ---------------------------------------------------------------------------
 
-	if ( ! isset( $featured_cat ) ) {
-		$featured_cat = get_category_by_path( 'featured' );
+	if ( ! isset( $okf_featured_cat ) ) {
+		$okf_featured_cat = get_category_by_path( 'featured' );
 	}
 
 	// Check if the Home page is paginated and skip the featured posts rendering
-	// on any page after the first one
-	// ---------------------------------------------------------------------------
+	// on any page after the first one.
 
-	if ( isset( $paged, $featured_cat ) && $paged < 2 ) :
+	if ( isset( $paged, $okf_featured_cat ) && $paged < 2 ) :
 
-		$all_sticky_posts = get_option( 'sticky_posts' );
+		$okf_all_sticky_posts = get_option( 'sticky_posts' );
 
-		// Show Sticky Posts only when at least one Sticky Post exists
-		if ( ! empty( $all_sticky_posts ) ) :
+		// Show Sticky Posts only when at least one Sticky Post exists.
+		if ( ! empty( $okf_all_sticky_posts ) ) :
 
-			$sticky_post = new WP_Query(
+			$okf_sticky_post = new WP_Query(
 				array(
-					'post__in'     => $all_sticky_posts,
-					'post__not_in' => $rendered_posts_ids,
+					'post__in'     => $okf_all_sticky_posts,
+					'post__not_in' => $okf_rendered_posts_ids,
 				)
 			);
 
-			if ( $sticky_post->have_posts() ) :
+			if ( $okf_sticky_post->have_posts() ) :
 
-				while ( $sticky_post->have_posts() ) :
-					$sticky_post->the_post();
+				while ( $okf_sticky_post->have_posts() ) :
+					$okf_sticky_post->the_post();
 
 					get_template_part( 'content', 'featured' );
 
@@ -76,20 +74,19 @@ else :
 
 	  endif;
 
-		// Get Featured posts
-		// -------------------------------------------------------------------------
-		$featured = new WP_Query(
+		// Get Featured posts.
+		$okf_featured = new WP_Query(
 			array(
-				'cat'            => $featured_cat->term_id,
+				'cat'            => $okf_featured_cat->term_id,
 				'posts_per_page' => 1,
-				'post__not_in'   => $rendered_posts_ids,
+				'post__not_in'   => $okf_rendered_posts_ids,
 			)
 		);
 
-		if ( $featured->have_posts() ) :
+		if ( $okf_featured->have_posts() ) :
 
-			while ( $featured->have_posts() ) :
-				$featured->the_post();
+			while ( $okf_featured->have_posts() ) :
+				$okf_featured->the_post();
 
 				get_template_part( 'content', 'featured' );
 
@@ -100,6 +97,7 @@ else :
 	  endif;
 
 		/*
+		@ignore Don't test commented out code.
 		else:
 
 		?>
@@ -113,33 +111,33 @@ else :
 	// Get the most recent post for each of the featured categories defined in
 	// functions.php via okfn_global_vars().
 
-	global $frontpage_categories;
-	global $rendered_posts_ids;
+	global $okf_frontpage_categories;
+	global $okf_rendered_posts_ids;
 
-	if ( $frontpage_categories ) :
+	if ( $okf_frontpage_categories ) :
 
 		?>
 	  <div class="row">
 		<?php
 
-		$args = array(
-			'category__in'   => $frontpage_categories,
+		$okf_args = array(
+			'category__in'   => $okf_frontpage_categories,
 			'posts_per_page' => 10,
-			'post_status'    => 'publish', // Required! so that no Private posts are listed for logged in users
-			'post__not_in'   => $rendered_posts_ids,
+			'post_status'    => 'publish', // Required! so that no Private posts are listed for logged in users.
+			'post__not_in'   => $okf_rendered_posts_ids,
 		);
 
 		// Query the most recent post from each of the featured categories,
 		// while checking and remembering already rendered posts.
-		$featured_post = new WP_Query( $args );
+		$okf_featured_post = new WP_Query( $okf_args );
 
-		if ( $featured_post->have_posts() ) :
+		if ( $okf_featured_post->have_posts() ) :
 
-			while ( $featured_post->have_posts() ) :
+			while ( $okf_featured_post->have_posts() ) :
 
-				$featured_post->the_post();
+				$okf_featured_post->the_post();
 
-				// Check if the current post has already been rendered on the page
+				// Check if the current post has already been rendered on the page.
 				if ( ! okfn_is_post_rendered( $post ) ) :
 					get_template_part( 'content', 'front' );
 					endif;

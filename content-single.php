@@ -1,13 +1,16 @@
 <?php
 /**
+ * Template for rendering single posts
+ *
  * @package OKFNWP
  */
+
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'post--single' ); ?>>
   <p class="post__meta"><?php the_date(); ?>, <?php echo esc_html( __( 'by', 'okfnwp' ) ); ?>
 	<?php
-	// Check if the Co-authrors plugin is available
+	// Check if the Co-authrors plugin is available.
 	if ( function_exists( 'coauthors_posts_links' ) ) {
 		coauthors_posts_links();
 	} else {

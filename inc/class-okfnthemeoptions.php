@@ -1,24 +1,50 @@
 <?php
+/**
+ * Тheme options settings page template
+ *
+ * @package OKFNWP
+ */
 
+ /**
+  * Custom class for theme options settings page
+  */
 class OKFNThemeOptions {
 
-	private $theme_options;
+	/**
+	 * Theme options values
+	 *
+	 * @var array
+	 */
+	private $okf_theme_options;
 
+	/**
+	 * Initialization actions
+	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'theme_options_add_plugin_page' ) );
 		add_action( 'admin_init', array( $this, 'theme_options_page_init' ) );
 	}
 
+	/**
+	 * Theme Options page initialization
+	 *
+	 * @return void
+	 */
 	public function theme_options_add_plugin_page() {
 		add_theme_page(
-			__( 'Theme Options', 'okfnwp' ), // page_title
-			__( 'Theme Options', 'okfnwp' ), // menu_title
-			'manage_options', // capability
-			'theme-options', // menu_slug
-			array( $this, 'theme_options_create_admin_page' ) // function
+			__( 'Theme Options', 'okfnwp' ), // page_title.
+			__( 'Theme Options', 'okfnwp' ), // menu_title.
+			'manage_options', // capability.
+			'theme-options', // menu_slug.
+			array( $this, 'theme_options_create_admin_page' ) // function.
 		);
 	}
 
+	/**
+	 * Create Theme Options page content
+	 *
+	 * @return void
+	 */
 	public function theme_options_create_admin_page() {
 		$this->theme_options = get_option( 'theme_options_option_name' );
 		?>
@@ -39,154 +65,174 @@ class OKFNThemeOptions {
 		<?php
 	}
 
+	/**
+	 * Initialize Theme Options sections and input fields
+	 *
+	 * @return void
+	 */
 	public function theme_options_page_init() {
 
 		register_setting(
-			'theme_options_option_group', // option_group
-			'theme_options_option_name', // option_name
-			array( $this, 'theme_options_sanitize' ) // sanitize_callback
+			'theme_options_option_group', // option_group.
+			'theme_options_option_name', // option_name.
+			array( $this, 'theme_options_sanitize' ) // sanitize_callback.
 		);
+
+		// phpcs:disable
 		// add_settings_section(
-		// 'theme_options_setting_section_mailing', // id
-		// __('Mailing List', 'okfnwp'), // title
-		// array($this, 'theme_options_section_mailing'), // callback
-		// 'theme-options-admin' // page
+		// 'theme_options_setting_section_mailing', // id.
+		// __('Mailing List', 'okfnwp'), // title.
+		// array($this, 'theme_options_section_mailing'), // callback.
+		// 'theme-options-admin' // page.
 		// );
+		// phpcs:enable
 
 		add_settings_section(
-			'theme_options_setting_section_ga', // id
-			esc_html__( 'Google Analytics', 'okfnwp' ), // title
-			array( $this, 'theme_options_section_ga' ), // callback
-			'theme-options-admin' // page
+			'theme_options_setting_section_ga', // id.
+			esc_html__( 'Google Analytics', 'okfnwp' ), // title.
+			array( $this, 'theme_options_section_ga' ), // callback.
+			'theme-options-admin' // page.
 		);
 
 		add_settings_section(
-			'theme_options_setting_section_social', // id
-			esc_html__( 'Social Media', 'okfnwp' ), // title
-			array( $this, 'theme_options_section_social' ), // callback
-			'theme-options-admin' // page
+			'theme_options_setting_section_social', // id.
+			esc_html__( 'Social Media', 'okfnwp' ), // title.
+			array( $this, 'theme_options_section_social' ), // callback.
+			'theme-options-admin' // page.
 		);
 
+		// phpcs:disable
 		// add_settings_section(
-		// 'theme_options_setting_section_wordpress', // id
-		// __('WordPress Settings', 'okfnwp'), // title
-		// array($this, 'theme_options_section_wordpress'), // callback
-		// 'theme-options-admin' // page
+		// 'theme_options_setting_section_wordpress', // id.
+		// __('WordPress Settings', 'okfnwp'), // title.
+		// array($this, 'theme_options_section_wordpress'), // callback.
+		// 'theme-options-admin' // page.
 		// );
 		// add_settings_field(
-		// "okfnwp_mailinglist_heading", // id
-		// __('Mailing List Heading', 'okfnwp'), // title
-		// array($this, 'okfnwp_mailinglist_heading_callback'), // callback
-		// 'theme-options-admin', // page
-		// 'theme_options_setting_section_mailing' // section
+		// "okfnwp_mailinglist_heading", // id.
+		// __('Mailing List Heading', 'okfnwp'), // title.
+		// array($this, 'okfnwp_mailinglist_heading_callback'), // callback.
+		// 'theme-options-admin', // page.
+		// 'theme_options_setting_section_mailing' // section.
 		// );
 		//
 		// add_settings_field(
-		// "okfnwp_mailinglist_action", // id
-		// __('Mailing URL', 'okfnwp'), // title
-		// array($this, 'okfnwp_mailinglist_action_callback'), // callback
-		// 'theme-options-admin', // page
-		// 'theme_options_setting_section_mailing' // section
+		// "okfnwp_mailinglist_action", // id.
+		// __('Mailing URL', 'okfnwp'), // title.
+		// array($this, 'okfnwp_mailinglist_action_callback'), // callback.
+		// 'theme-options-admin', // page.
+		// 'theme_options_setting_section_mailing' // section.
 		// );
 		//
 		// add_settings_field(
-		// "okfnwp_mailinglist_id", // id
-		// __('Mailman List ID', 'okfnwp'), // title
-		// array($this, 'okfnwp_mailinglist_id_callback'), // callback
-		// 'theme-options-admin', // page
-		// 'theme_options_setting_section_mailing' // section
+		// "okfnwp_mailinglist_id", // id.
+		// __('Mailman List ID', 'okfnwp'), // title.
+		// array($this, 'okfnwp_mailinglist_id_callback'), // callback.
+		// 'theme-options-admin', // page.
+		// 'theme_options_setting_section_mailing' // section.
 		// );
+		// phpcs:enable
 
 		add_settings_field(
-			'okfnwp_ga_id', // id
-			esc_html__( 'Google Analytics Tracking ID', 'okfnwp' ), // title
-			array( $this, 'okfnwp_ga_id_callback' ), // callback
-			'theme-options-admin', // page
-			'theme_options_setting_section_ga' // section
+			'okfnwp_ga_id', // id.
+			esc_html__( 'Google Analytics Tracking ID', 'okfnwp' ), // title.
+			array( $this, 'okfnwp_ga_id_callback' ), // callback.
+			'theme-options-admin', // page.
+			'theme_options_setting_section_ga' // section..
 		);
 
 		add_settings_field(
-			'okfnwp_twitter_id', // id
-			esc_html__( 'Twitter Handle', 'okfnwp' ), // title
-			array( $this, 'okfnwp_twitter_id_callback' ), // callback
-			'theme-options-admin', // page
-			'theme_options_setting_section_social' // section
+			'okfnwp_twitter_id', // id.
+			esc_html__( 'Twitter Handle', 'okfnwp' ), // title.
+			array( $this, 'okfnwp_twitter_id_callback' ), // callback.
+			'theme-options-admin', // page.
+			'theme_options_setting_section_social' // section..
 		);
 
 		add_settings_field(
-			'okfnwp_fb_id', // id
-			esc_html__( 'Facebook Page', 'okfnwp' ), // title
-			array( $this, 'okfnwp_fb_id_callback' ), // callback
-			'theme-options-admin', // page
-			'theme_options_setting_section_social' // section
+			'okfnwp_fb_id', // id.
+			esc_html__( 'Facebook Page', 'okfnwp' ), // title.
+			array( $this, 'okfnwp_fb_id_callback' ), // callback.
+			'theme-options-admin', // page.
+			'theme_options_setting_section_social' // section..
 		);
 
 		add_settings_field(
-			'okfnwp_discuss_id', // id
-			esc_html__( 'Discuss Page', 'okfnwp' ), // title
-			array( $this, 'okfnwp_discuss_id_callback' ), // callback
-			'theme-options-admin', // page
-			'theme_options_setting_section_social' // section
+			'okfnwp_discuss_id', // id.
+			esc_html__( 'Discuss Page', 'okfnwp' ), // title.
+			array( $this, 'okfnwp_discuss_id_callback' ), // callback.
+			'theme-options-admin', // page.
+			'theme_options_setting_section_social' // section..
 		);
 
+		// phpcs:disable
 		// add_settings_field(
-		// "okfnwp_admin_bar", // id
-		// __('WordPress toolbar visibility', 'okfnwp'), // title
-		// array($this, 'okfnwp_admin_bar_callback'), // callback
-		// 'theme-options-admin', // page
-		// 'theme_options_setting_section_wordpress' // section
+		// "okfnwp_admin_bar", // id.
+		// __('WordPress toolbar visibility', 'okfnwp'), // title.
+		// array($this, 'okfnwp_admin_bar_callback'), // callback.
+		// 'theme-options-admin', // page.
+		// 'theme_options_setting_section_wordpress' // section.
 		// );
+		// phpcs:enable
 
 		add_settings_field(
-			'okfnwp_donate_url', // id
-			esc_html__( 'Donation URL', 'okfnwp' ), // title
-			array( $this, 'okfnwp_donate_url_callback' ), // callback
-			'theme-options-admin', // page
-			'theme_options_setting_section_social' // section
+			'okfnwp_donate_url', // id.
+			esc_html__( 'Donation URL', 'okfnwp' ), // title.
+			array( $this, 'okfnwp_donate_url_callback' ), // callback.
+			'theme-options-admin', // page.
+			'theme_options_setting_section_social' // section..
 		);
 
 		add_settings_field(
-			'okfnwp_newsletter_url', // id
-			esc_html__( 'Newsletter sign up URL', 'okfnwp' ), // title
-			array( $this, 'okfnwp_newsletter_url_callback' ), // callback
-			'theme-options-admin', // page
-			'theme_options_setting_section_social' // section
+			'okfnwp_newsletter_url', // id.
+			esc_html__( 'Newsletter sign up URL', 'okfnwp' ), // title.
+			array( $this, 'okfnwp_newsletter_url_callback' ), // callback.
+			'theme-options-admin', // page.
+			'theme_options_setting_section_social' // section..
 		);
 
 		add_settings_section(
-			'theme_options_setting_section_cta', // id
-			esc_html__( 'Call to action', 'okfnwp' ), // title
-			array( $this, 'theme_options_section_cta' ), // callback
-			'theme-options-admin' // page
+			'theme_options_setting_section_cta', // id.
+			esc_html__( 'Call to action', 'okfnwp' ), // title.
+			array( $this, 'theme_options_section_cta' ), // callback.
+			'theme-options-admin' // page.
 		);
 
 		add_settings_field(
-			'okfnwp_cta_message', // id
-			esc_html__( 'Message', 'okfnwp' ), // title
-			array( $this, 'okfnwp_cta_message_callback' ), // callback
-			'theme-options-admin', // page
-			'theme_options_setting_section_cta' // section
+			'okfnwp_cta_message', // id.
+			esc_html__( 'Message', 'okfnwp' ), // title.
+			array( $this, 'okfnwp_cta_message_callback' ), // callback.
+			'theme-options-admin', // page.
+			'theme_options_setting_section_cta' // section.
 		);
 
 		add_settings_field(
-			'okfnwp_cta_link_text', // id
-			esc_html__( 'Link text', 'okfnwp' ), // title
-			array( $this, 'okfnwp_cta_link_text_callback' ), // callback
-			'theme-options-admin', // page
-			'theme_options_setting_section_cta' // section
+			'okfnwp_cta_link_text', // id.
+			esc_html__( 'Link text', 'okfnwp' ), // title.
+			array( $this, 'okfnwp_cta_link_text_callback' ), // callback.
+			'theme-options-admin', // page.
+			'theme_options_setting_section_cta' // section.
 		);
 
 		add_settings_field(
-			'okfnwp_cta_link_url', // id
-			esc_html__( 'Link URL', 'okfnwp' ), // title
-			array( $this, 'okfnwp_cta_link_url_callback' ), // callback
-			'theme-options-admin', // page
-			'theme_options_setting_section_cta' // section
+			'okfnwp_cta_link_url', // id.
+			esc_html__( 'Link URL', 'okfnwp' ), // title.
+			array( $this, 'okfnwp_cta_link_url_callback' ), // callback.
+			'theme-options-admin', // page.
+			'theme_options_setting_section_cta' // section.
 		);
 	}
 
+	/**
+	 * Sanitize input data
+	 *
+	 * @param string $input Input value.
+	 * @return $sanitary_values
+	 */
 	public function theme_options_sanitize( $input ) {
 		$sanitary_values = array();
+
+		// phpcs:disable
 		// if (isset($input['okfnwp_mailinglist_heading'])) {
 		// $sanitary_values['okfnwp_mailinglist_heading'] = sanitize_text_field($input['okfnwp_mailinglist_heading']);
 		// }
@@ -198,6 +244,7 @@ class OKFNThemeOptions {
 		// if (isset($input['okfnwp_mailinglist_id'])) {
 		// $sanitary_values['okfnwp_mailinglist_id'] = sanitize_text_field($input['okfnwp_mailinglist_id']);
 		// }
+		// phpcs:enable
 
 		if ( isset( $input['okfnwp_ga_id'] ) ) {
 			$sanitary_values['okfnwp_ga_id'] = sanitize_text_field( $input['okfnwp_ga_id'] );
@@ -215,9 +262,11 @@ class OKFNThemeOptions {
 			$sanitary_values['okfnwp_discuss_id'] = sanitize_text_field( $input['okfnwp_discuss_id'] );
 		}
 
+		// phpcs:disable
 		// if (isset($input['okfnwp_admin_bar'])) {
 		// $sanitary_values['okfnwp_admin_bar'] = $input['okfnwp_admin_bar'];
 		// }
+		// phpcs:enable
 
 		if ( isset( $input['okfnwp_donate_url'] ) ) {
 			$sanitary_values['okfnwp_donate_url'] = sanitize_text_field( $input['okfnwp_donate_url'] );
@@ -242,24 +291,17 @@ class OKFNThemeOptions {
 		return $sanitary_values;
 	}
 
-	// public function theme_options_section_mailing() {
-	//
-	// }
+	// phpcs:disable
+	// public function theme_options_section_mailing() {}
 
-	public function theme_options_section_ga() {
+	public function theme_options_section_ga() {}
 
-	}
-
-	public function theme_options_section_social() {
-
-	}
+	public function theme_options_section_social() {}
 
 	public function theme_options_section_cta() {}
 
+	public function theme_options_section_wordpress() {}
 
-	// public function theme_options_section_wordpress() {
-	//
-	// }
 	// public function okfnwp_mailinglist_heading_callback() {
 	//
 	// $current_val = $this->theme_options['okfnwp_mailinglist_heading'];
@@ -293,7 +335,13 @@ class OKFNThemeOptions {
 	// printf('<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_mailinglist_id]" id="okfnwp_mailinglist_id" value="%s">', isset($current_val) ? esc_attr($current_val) : '');
 	// _e('<p>For the list at http://lists.okfn.org/mailman/subscribe/XYZ, this should be XYZ</p>');
 	// }
+	// phpcs:enable
 
+	/**
+	 * Callback funtion for setting the Google Analytics tracking ID
+	 *
+	 * @return void
+	 */
 	public function okfnwp_ga_id_callback() {
 		if ( isset( $this->theme_options['okfnwp_ga_id'] ) ) :
 			$current_val = $this->theme_options['okfnwp_ga_id'];
@@ -303,10 +351,15 @@ class OKFNThemeOptions {
 
 	  printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_ga_id]" id="okfnwp_ga_id" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
 		?>
-  <p><?php esc_html_e( 'Google Analytics tracking ID for current website' ); ?></p>
+  <p><?php esc_html_e( 'Google Analytics tracking ID for current website', 'okfnwp' ); ?></p>
 		<?php
 	}
 
+	/**
+	 * Callback funtion for setting the Twitter ID
+	 *
+	 * @return void
+	 */
 	public function okfnwp_twitter_id_callback() {
 		if ( isset( $this->theme_options['okfnwp_twitter_id'] ) ) :
 			$current_val = $this->theme_options['okfnwp_twitter_id'];
@@ -321,10 +374,15 @@ class OKFNThemeOptions {
 
 		printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_twitter_id]" id="okfnwp_twitter_id" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
 		?>
-		<p><?php esc_html_e( 'Twitter handle to link to. Example: If your handle is @okfn, use okfn' ); ?></p>
+		<p><?php esc_html_e( 'Twitter handle to link to. Example: If your handle is @okfn, use okfn', 'okfnwp' ); ?></p>
 		<?php
 	}
 
+	/**
+	 * Callback funtion for setting the Facebook ID
+	 *
+	 * @return void
+	 */
 	public function okfnwp_fb_id_callback() {
 		if ( isset( $this->theme_options['okfnwp_fb_id'] ) ) :
 			$current_val = $this->theme_options['okfnwp_fb_id'];
@@ -339,10 +397,15 @@ class OKFNThemeOptions {
 
 		printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_fb_id]" id="okfnwp_fb_id" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
 		?>
-		<p><?php esc_html_e( 'Facebook page name. If the URL to your page is https://www.facebook.com/OKFNetwork, then use OKFNetwork' ); ?></p>
+		<p><?php esc_html_e( 'Facebook page name. If the URL to your page is https://www.facebook.com/OKFNetwork, then use OKFNetwork', 'okfnwp' ); ?></p>
 		<?php
 	}
 
+	/**
+	 * Callback funtion for setting the Discuss ID
+	 *
+	 * @return void
+	 */
 	public function okfnwp_discuss_id_callback() {
 		if ( $this->theme_options['okfnwp_discuss_id'] ) :
 			$current_val = $this->theme_options['okfnwp_discuss_id'];
@@ -357,16 +420,23 @@ class OKFNThemeOptions {
 
 		printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_discuss_id]" id="okfnwp_discuss_id" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
 		?>
-		<p><?php esc_html_e( 'Discuss (discuss.okfn.org) page name. If the URL to your page is https://discuss.okfn.org/c/local-groups/okbr, then use c/local-groups/okbr' ); ?></p>
+		<p><?php esc_html_e( 'Discuss (discuss.okfn.org) page name. If the URL to your page is https://discuss.okfn.org/c/local-groups/okbr, then use c/local-groups/okbr', 'okfnwp' ); ?></p>
 		<?php
 	}
 
+	// phpcs:disable
 	// public function okfnwp_admin_bar_callback() {
 	// $current_val = isset($this->theme_options['okfnwp_admin_bar']) ? $this->theme_options['okfnwp_admin_bar'] : false;
 	//
 	// printf('<label for="okfnwp_admin_bar"><input type="checkbox" name="theme_options_option_name[okfnwp_admin_bar]" id="okfnwp_admin_bar" value="1" %s>%s</label>', checked(1, $current_val, false), __(' Show the WordPress Admin toolbar when viewing site', 'okfnwp'));
 	// }
+	// phpcs:enable
 
+	/**
+	 * Callback funtion for setting the OKF Donate URL
+	 *
+	 * @return void
+	 */
 	public function okfnwp_donate_url_callback() {
 		if ( $this->theme_options['okfnwp_donate_url'] ) :
 			$current_val = $this->theme_options['okfnwp_donate_url'];
@@ -385,6 +455,11 @@ class OKFNThemeOptions {
 		<?php
 	}
 
+	/**
+	 * Callback funtion for setting the OKF Newsletter URL
+	 *
+	 * @return void
+	 */
 	public function okfnwp_newsletter_url_callback() {
 		if ( $this->theme_options['okfnwp_newsletter_url'] ) :
 			$current_val = $this->theme_options['okfnwp_newsletter_url'];
@@ -403,6 +478,11 @@ class OKFNThemeOptions {
 		<?php
 	}
 
+	/**
+	 * Callback funtion for setting the Call to Action message
+	 *
+	 * @return void
+	 */
 	public function okfnwp_cta_message_callback() {
 		if ( $this->theme_options['okfnwp_cta_message'] ) :
 			$current_val = $this->theme_options['okfnwp_cta_message'];
@@ -421,6 +501,11 @@ class OKFNThemeOptions {
 		<?php
 	}
 
+	/**
+	 * Callback funtion for setting the Call to Action link text
+	 *
+	 * @return void
+	 */
 	public function okfnwp_cta_link_text_callback() {
 		if ( $this->theme_options['okfnwp_cta_link_text'] ) :
 			$current_val = $this->theme_options['okfnwp_cta_link_text'];
@@ -439,6 +524,11 @@ class OKFNThemeOptions {
 		<?php
 	}
 
+	/**
+	 * Callback funtion for setting the Call to Action URL
+	 *
+	 * @return void
+	 */
 	public function okfnwp_cta_link_url_callback() {
 		if ( $this->theme_options['okfnwp_cta_link_url'] ) :
 			$current_val = $this->theme_options['okfnwp_cta_link_url'];
@@ -460,16 +550,16 @@ class OKFNThemeOptions {
 }
 
 if ( is_admin() ) :
-	$theme_options = new OKFNThemeOptions();
+	$okf_theme_options = new OKFNThemeOptions();
 endif;
 
 /*
  * Retrieve this value with:
- * $theme_options = get_option( 'theme_options_option_name' ); // Array of All Options
- * $okfnwp_mailinglist_heading = $theme_options['okfnwp_mailinglist_heading']; // okfnwp_mailinglist_heading
- * $okfnwp_mailinglist_action = $theme_options['okfnwp_mailinglist_action']; // okfnwp_mailinglist_action
- * $okfnwp_mailinglist_id = $theme_options['okfnwp_mailinglist_id']; // okfnwp_mailinglist_id
- * $okfnwp_twitter_id = $theme_options['okfnwp_twitter_id']; // okfnwp_twitter_id
- * $okfnwp_fb_id = $theme_options['okfnwp_fb_id']; // okfnwp_fb_id
- * $okfnwp_admin_bar = $theme_options['okfnwp_admin_bar']; // okfnwp_admin_bar
+ * $okf_theme_options = get_option( 'theme_options_option_name' ); // Array of All Options
+ * $okfnwp_mailinglist_heading = $okf_theme_options['okfnwp_mailinglist_heading']; // okfnwp_mailinglist_heading
+ * $okfnwp_mailinglist_action = $okf_theme_options['okfnwp_mailinglist_action']; // okfnwp_mailinglist_action
+ * $okfnwp_mailinglist_id = $okf_theme_options['okfnwp_mailinglist_id']; // okfnwp_mailinglist_id
+ * $okfnwp_twitter_id = $okf_theme_options['okfnwp_twitter_id']; // okfnwp_twitter_id
+ * $okfnwp_fb_id = $okf_theme_options['okfnwp_fb_id']; // okfnwp_fb_id
+ * $okfnwp_admin_bar = $okf_theme_options['okfnwp_admin_bar']; // okfnwp_admin_bar
  */

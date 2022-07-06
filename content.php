@@ -1,7 +1,10 @@
 <?php
 /**
+ * General content template.
+ *
  * @package OKFNWP
  */
+
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class( 'post post--excerpt' ); ?>>

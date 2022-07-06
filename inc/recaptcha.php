@@ -1,6 +1,11 @@
 <?php
+/**
+ * Form validation template for reCAPTCHA
+ *
+ * @package OKFNWP
+ */
 
-$data;
+$okf_data;
 header( 'Content-Type: application/json' );
 error_reporting( E_ALL ^ E_NOTICE );
 
@@ -10,28 +15,28 @@ if ( ! isset( $_POST['g-recaptcha'] ) || ! wp_verify_nonce( $_POST['g-recaptcha'
 else :
 
 	if ( isset( $_POST['g-recaptcha-response'] ) ) :
-		$captcha = $_POST['g-recaptcha-response'];
+		$okf_captcha = $_POST['g-recaptcha-response'];
 	endif;
 
-	if ( ! $captcha ) :
-		$data = array( 'nocaptcha' => 'true' );
-		echo json_encode( $data );
+	if ( ! $okf_captcha ) :
+		$okf_data = array( 'nocaptcha' => 'true' );
+		echo json_encode( $okf_data );
 		exit;
 	endif;
 
-	// Check with the Google reCAPTCHA API
-	$response = file_get_contents( 'https://www.google.com/recaptcha/api/siteverify?secret=' . okfn_get_recaptcha_public_key() . '&response=' . $captcha . '&remoteip=' . $_SERVER['REMOTE_ADDR'] );
+	// Check with the Google reCAPTCHA API.
+	$okf_response = file_get_contents( 'https://www.google.com/recaptcha/api/siteverify?secret=' . okfn_get_recaptcha_public_key() . '&response=' . $okf_captcha . '&remoteip=' . $_SERVER['REMOTE_ADDR'] );
 
-	// Validate result
-	if ( false == $response . success ) :
+	// Validate result.
+	if ( false == $okf_response . success ) :
 
-		$data = array( 'spam' => 'true' );
-		echo json_encode( $data );
+		$okf_data = array( 'spam' => 'true' );
+		echo json_encode( $okf_data );
 
 	else :
 
-		$data = array( 'spam' => 'false' );
-		echo json_encode( $data );
+		$okf_data = array( 'spam' => 'false' );
+		echo json_encode( $okf_data );
 
 	endif;
 

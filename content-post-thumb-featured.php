@@ -1,9 +1,11 @@
 <?php
-
 /**
+ * The featured post thumbnail template
+ *
  * @package OKFNWP
  */
-$categories = get_the_category();
+
+$okf_categories = get_the_category();
 
 if ( has_post_thumbnail() ) :
 
@@ -13,8 +15,8 @@ if ( has_post_thumbnail() ) :
 
 		echo wp_kses_post( '<a class="post__thumb-link" href="' . get_permalink() . '">' . get_the_post_thumbnail( $post, 'large' ) . '</a>' );
 
-		if ( $categories ) :
-			echo wp_kses_post( sprintf( '<a href="%1$s" class="post__category">%2$s</a>', get_category_link( $categories[0]->term_id ), $categories[0]->name ) );
+		if ( $okf_categories ) :
+			echo wp_kses_post( sprintf( '<a href="%1$s" class="post__category">%2$s</a>', get_category_link( $okf_categories[0]->term_id ), $okf_categories[0]->name ) );
 		endif;
 
 		?>

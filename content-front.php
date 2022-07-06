@@ -1,6 +1,7 @@
 <?php
-
 /**
+ * The content template for the front page.
+ *
  * @package OKFNWP
  */
 
@@ -13,7 +14,7 @@
 	<p class="post__meta">
 	<?php
 
-		// translators: %1$s stands for the post publish date
+		// translators: %1$s stands for the post publish date.
 		echo sprintf( esc_html__( 'Posted %1$s', 'okfnwp' ), get_the_date() );
 
 	?>

@@ -1,6 +1,8 @@
 <?php
 /**
  * Template Name: Full Width Page
+ *
+ * @package OKFNWP
  */
 
 get_header();

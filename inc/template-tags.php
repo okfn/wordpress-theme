@@ -1,11 +1,16 @@
 <?php
-
 /**
  * Custom template tags
  *
  * @package OKFNWP
  */
-function paging_nav() {
+
+ /**
+  * Pagination links builder function
+  *
+  * @return void
+  */
+function okf_paging_nav() {
 	global $wp_query, $wp_rewrite;
 
 	// Don't print empty markup if there's only one page.
@@ -48,22 +53,29 @@ function paging_nav() {
 		<?php echo wp_kses_post( $links ); ?>
 		</nav><!-- .blog-pagination -->
 		<?php
-  endif;
+	endif;
 }
 
-function breadcrumbs() {
+/**
+ * Breadcrumbs builder function
+ *
+ * @return void
+ */
+function okf_breadcrumbs() {
 
-	// Don't show breadcrumbs on the Home page
+	// Don't show breadcrumbs on the Home page.
 	if ( is_home() ) :
 		return;
-  endif;
+	endif;
 
 	global $post;
 
 	echo '<ol class="breadcrumb">';
 	echo '<li class="breadcrumb-item"><a class="breadcrumb-item_link" href="' . esc_url( home_url() ) . '">' . esc_html__( 'Home', 'okfnwp' ) . '</a></li>';
 
-	// Temporarily disable this link in the breadcrumbs
+	// Temporarily disable this link in the breadcrumbs.
+
+	// @ignore Temporary tests ignore for the commented out code.
 	// if (!is_page() && !is_404()) :
 	// echo '<li><a href="' . get_permalink(get_option('page_for_posts')) . '">' . __('Blog', 'okfn') . '</a></li>';
 	// endif;
@@ -79,7 +91,7 @@ function breadcrumbs() {
   endif;
 
 	if ( is_single() ) :
-		echo '<li class="breadcrumb-item active">' . get_the_title() . '</li>';
+		echo '<li class="breadcrumb-item active">' . wp_kses_post( get_the_title() ) . '</li>';
   endif;
 
 	if ( is_page() ) :
@@ -92,7 +104,7 @@ function breadcrumbs() {
 			echo wp_kses_post( $output );
 			echo '<li class="breadcrumb-item active">' . esc_html( $title ) . '</li>';
 			else :
-				echo '<li class="breadcrumb-item active">' . get_the_title() . '</li>';
+				echo '<li class="breadcrumb-item active">' . wp_kses_post( get_the_title() ) . '</li>';
 				endif;
   endif;
 
@@ -121,14 +133,22 @@ function breadcrumbs() {
   echo '</ol>';
 }
 
-// Render a single Read more anchor
+/**
+ * Render a single Read more anchor
+ *
+ * @return void
+ */
 function okfn_read_more_btn() {
 	?>
   <a href="<?php the_permalink(); ?>"><?php esc_html_e( 'Read more', 'okfnwp' ); ?></a>
 	<?php
 }
 
-// Backwards compatible function for rendering custom theme logos, where supported
+/**
+ * Backwards compatible function for rendering custom theme logos, where supported
+ *
+ * @return void
+ */
 function okfn_theme_logo() {
 	if ( function_exists( 'the_custom_logo' ) ) {
 		the_custom_logo();

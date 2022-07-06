@@ -1,9 +1,17 @@
 <?php
-
 /**
- * Output latest posts in a 3 column row
+ * Helper function for rendering latest posts block
+ *
+ * @package OKFNWP
  */
-function latest_posts( $atts ) {
+
+ /**
+  * Output latest posts in a 3 column row
+  *
+  * @param array $atts - Contains title attribute for setting the Latest Posts block title.
+  * @return string
+  */
+function okf_latest_posts( $atts ) {
 
 	$atts = shortcode_atts(
 		array(
@@ -18,13 +26,13 @@ function latest_posts( $atts ) {
   <section class="list-posts">
 	<h3><?php echo esc_html( $atts['title'] ); ?></h3>
 	<div class="row">
-	  <?php
+	 <?php
 
 		$posts = new WP_Query( 'post_type=post&posts_per_page=3&ignore_sticky_posts=true' );
 		while ( $posts->have_posts() ) :
 			$posts->the_post();
 
-			// Get post category
+			// Get post category.
 			$categories = get_the_category();
 
 			?>
@@ -54,4 +62,4 @@ function latest_posts( $atts ) {
 
 }
 
-add_shortcode( 'latestposts', 'latest_posts' );
+add_shortcode( 'latestposts', 'okf_latest_posts' );
