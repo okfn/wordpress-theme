@@ -55,7 +55,7 @@ else :
 			$okf_sticky_post = new WP_Query(
 				array(
 					'post__in'     => $okf_all_sticky_posts,
-					'post__not_in' => $rendered_posts_ids,
+					'post__not_in' => $okf_rendered_posts_ids,
 				)
 			);
 
@@ -79,7 +79,7 @@ else :
 			array(
 				'cat'            => $okf_featured_cat->term_id,
 				'posts_per_page' => 1,
-				'post__not_in'   => $rendered_posts_ids,
+				'post__not_in'   => $okf_rendered_posts_ids,
 			)
 		);
 
@@ -112,7 +112,7 @@ else :
 	// functions.php via okfn_global_vars().
 
 	global $frontpage_categories;
-	global $rendered_posts_ids;
+	global $okf_rendered_posts_ids;
 
 	if ( $frontpage_categories ) :
 
@@ -124,7 +124,7 @@ else :
 			'category__in'   => $frontpage_categories,
 			'posts_per_page' => 10,
 			'post_status'    => 'publish', // Required! so that no Private posts are listed for logged in users.
-			'post__not_in'   => $rendered_posts_ids,
+			'post__not_in'   => $okf_rendered_posts_ids,
 		);
 
 		// Query the most recent post from each of the featured categories,

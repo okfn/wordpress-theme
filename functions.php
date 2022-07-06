@@ -353,10 +353,10 @@ add_action( 'wp', 'okfn_get_featured_cats' );
  * @return void
  */
 function okfn_save_rendered_post_id( $post ) {
-	global $rendered_posts_ids;
+	global $okf_rendered_posts_ids;
 
-	if ( isset( $post ) && ! in_array( $post->ID, $rendered_posts_ids ) ) :
-		array_push( $rendered_posts_ids, $post->ID );
+	if ( isset( $post ) && ! in_array( $post->ID, $okf_rendered_posts_ids ) ) :
+		array_push( $okf_rendered_posts_ids, $post->ID );
 	endif;
 }
 
@@ -367,10 +367,10 @@ function okfn_save_rendered_post_id( $post ) {
  * @return boolean
  */
 function okfn_is_post_rendered( $post ) {
-	global $rendered_posts_ids;
+	global $okf_rendered_posts_ids;
 	global $post; // Required!
 
-	if ( isset( $post ) && in_array( $post->ID, $rendered_posts_ids ) ) :
+	if ( isset( $post ) && in_array( $post->ID, $okf_rendered_posts_ids ) ) :
 		return true;
 	else :
 		return false;
