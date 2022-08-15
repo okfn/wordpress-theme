@@ -243,6 +243,43 @@ function okf_get_menu_by_location( $location ) {
 	return $menu;
 }
 
+//enable upload for webp image files.
+function webp_upload_mimes($existing_mimes) {
+    $existing_mimes['webp'] = 'image/webp';
+    return $existing_mimes;
+}
+add_filter('mime_types', 'webp_upload_mimes');
+
+//enable preview / thumbnail for webp image files.
+function webp_is_displayable($result, $path) {
+    if ($result === false) {
+        $displayable_image_types = array( IMAGETYPE_WEBP );
+        $info = @getimagesize( $path );
+
+        if (empty($info)) {
+            $result = false;
+        } elseif (!in_array($info[2], $displayable_image_types)) {
+            $result = false;
+        } else {
+            $result = true;
+        }
+    }
+
+    return $result;
+}
+add_filter('file_is_displayable_image', 'webp_is_displayable', 10, 2);
+
+//enable avif and heic image files.
+function allow_modern_images( $mime_types ) {
+	$mime_types['heic'] = 'image/heic';
+	$mime_types['heif'] = 'image/heif';
+	$mime_types['heics'] = 'image/heic-sequence';
+	$mime_types['heifs'] = 'image/heif-sequence';
+	$mime_types['avif'] = 'image/avif';
+	$mime_types['avifs'] = 'image/avif-sequence';
+	return $mime_types;
+   }
+   add_filter( 'upload_mimes', 'allow_modern_images');
 
 // Show title on home page.
 add_filter( 'wp_title', 'okf_wp_title_for_home', 10, 2 );
