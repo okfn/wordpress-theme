@@ -243,43 +243,60 @@ function okf_get_menu_by_location( $location ) {
 	return $menu;
 }
 
-//enable upload for webp image files.
-function webp_upload_mimes($existing_mimes) {
-    $existing_mimes['webp'] = 'image/webp';
-    return $existing_mimes;
+/**
+ * Enable upload for webp image files.
+ *
+ * @param [type] $existing_mimes Contains a list of valid file MIME types.
+ * @return $existing_mimes
+ */
+function okf_webp_upload_mimes( $existing_mimes ) {
+	$existing_mimes['webp'] = 'image/webp';
+	return $existing_mimes;
 }
-add_filter('mime_types', 'webp_upload_mimes');
+add_filter( 'mime_types', 'okf_webp_upload_mimes' );
 
-//enable preview / thumbnail for webp image files.
-function webp_is_displayable($result, $path) {
-    if ($result === false) {
-        $displayable_image_types = array( IMAGETYPE_WEBP );
-        $info = @getimagesize( $path );
+/**
+ * Enable preview/thumbnail for webp image files
+ *
+ * @param [type] $result Contains $result boolean value.
+ * @param [type] $path Contains path to image file.
+ * @return $result
+ */
+function okf_webp_is_displayable( $result, $path ) {
+	if ( false === $result ) {
+		$displayable_image_types = array( IMAGETYPE_WEBP );
+		$info                    = @getimagesize( $path );
 
-        if (empty($info)) {
-            $result = false;
-        } elseif (!in_array($info[2], $displayable_image_types)) {
-            $result = false;
-        } else {
-            $result = true;
-        }
-    }
+		if ( empty( $info ) ) {
+			$result = false;
+		} elseif ( ! in_array( $info[2], $displayable_image_types ) ) {
+			$result = false;
+		} else {
+			$result = true;
+		}
+	}
 
-    return $result;
+	return $result;
 }
-add_filter('file_is_displayable_image', 'webp_is_displayable', 10, 2);
+add_filter( 'file_is_displayable_image', 'okf_webp_is_displayable', 10, 2 );
 
-//enable avif and heic image files.
-function allow_modern_images( $mime_types ) {
-	$mime_types['heic'] = 'image/heic';
-	$mime_types['heif'] = 'image/heif';
+/**
+ * Enable avif and heic image files
+ *
+ * @param [type] $mime_types Contains a list of valid file MIME types.
+ * @return $mime_types
+ */
+function okf_allow_modern_images( $mime_types ) {
+	$mime_types['heic']  = 'image/heic';
+	$mime_types['heif']  = 'image/heif';
 	$mime_types['heics'] = 'image/heic-sequence';
 	$mime_types['heifs'] = 'image/heif-sequence';
-	$mime_types['avif'] = 'image/avif';
+	$mime_types['avif']  = 'image/avif';
 	$mime_types['avifs'] = 'image/avif-sequence';
 	return $mime_types;
-   }
-   add_filter( 'upload_mimes', 'allow_modern_images');
+}
+
+add_filter( 'upload_mimes', 'okf_allow_modern_images' );
 
 // Show title on home page.
 add_filter( 'wp_title', 'okf_wp_title_for_home', 10, 2 );
