@@ -136,7 +136,7 @@ if ( ! function_exists( '_wp_render_title_tag' ) ) :
 	 *
 	 * @return void
 	 */
-	function okfn_render_title() {      ?>
+	function okfn_render_title() {        ?>
 		<title><?php wp_title( '|', true, 'right' ); ?></title>
 		<?php
 	}
@@ -297,6 +297,21 @@ function okf_allow_modern_images( $mime_types ) {
 }
 
 add_filter( 'upload_mimes', 'okf_allow_modern_images' );
+
+// Ensure all network sites include custom file formats support.
+add_filter(
+	'site_option_upload_filetypes',
+	function ( $filetypes ) {
+		$filetype_matches = array( 'webp', 'heic', 'heif', 'heics', 'heifs', 'avif', 'avifs' );
+		$filetypes        = explode( ' ', $filetypes );
+		if ( ! in_array( $filetype_matches, $filetypes, true ) ) {
+			$filetypes += $filetype_matches;
+			$filetypes  = implode( ' ', $filetypes );
+		}
+
+		return $filetypes;
+	}
+);
 
 // Show title on home page.
 add_filter( 'wp_title', 'okf_wp_title_for_home', 10, 2 );
