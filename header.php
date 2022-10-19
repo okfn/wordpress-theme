@@ -43,7 +43,7 @@
 			<?php } ?>
 			<meta name="twitter:site" value="@okfn" />
 			<meta name="twitter:creator" value="<?php echo $twitter_name ?>" />
-			<? } ?>
+			<?php } ?>
 		<!-- end Twitter Card data -->
 
 		<?php wp_head(); ?>
