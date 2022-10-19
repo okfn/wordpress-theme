@@ -23,13 +23,13 @@
 			$twitter_title  = get_the_title();
 			$twitter_desc   = get_the_excerpt();
 
-			if ( has_post_thumbnail() ) :
+			if ( has_post_thumbnail() ) {
 				$twitter_thumb = get_the_post_thumbnail( $post, 'small' );
-			elseif ( okfn_get_first_image_url_from_post_content() ) :
+			} elseif ( okfn_get_first_image_url_from_post_content() ) {
 				$twitter_thumb = okfn_get_first_image_url_from_post_content();
-			else :
+			} else {
 				$twitter_thumb = null;
-			endif;
+			}
 
 			$twitter_name = get_the_author_meta('twitter');
 			if (!$twitter_name) { $twitter_name = 'okfn'; }
