@@ -30,20 +30,29 @@
 			} else {
 				$twitter_thumb = null;
 			}
-
-			$twitter_name = get_the_author_meta('twitter');
-			if (!$twitter_name) { $twitter_name = 'okfn'; }
+			$okf_theme_options = get_option( 'theme_options_option_name' );
+			if ( ! empty( $okf_theme_options['okfnwp_twitter_id'] ) ) {
+				$twitter_site = $okf_theme_options['okfnwp_twitter_id'];
+			} else {
+				$twitter_site = null;
+			}
+			$twitter_creator = get_the_author_meta('twitter');
 			?>
 			<meta name="twitter:card" value="summary" />
 			<meta name="twitter:url" value="<?php echo $twitter_url; ?>" />
 			<meta name="twitter:title" value="<?php echo $twitter_title; ?>" />
 			<meta name="twitter:description" value="<?php echo $twitter_desc; ?>" />
+
 			<?php if ($twitter_thumb) { ?>
 			<meta name="twitter:image" value="<?php echo $twitter_thumb; ?>" />
+			<?php } ?> 
+			<?php if ($twitter_site) { ?>
+			<meta name="twitter:site" value="<?php echo $twitter_site ?>" />
+			<?php } ?> 
+			<?php if ($twitter_creator) { ?>
+			<meta name="twitter:creator" value="<?php echo $twitter_creator ?>" />
 			<?php } ?>
-			<meta name="twitter:site" value="@okfn" />
-			<meta name="twitter:creator" value="<?php echo $twitter_name ?>" />
-			<?php } ?>
+		<?php } ?>
 		<!-- end Twitter Card data -->
 
 		<?php wp_head(); ?>
