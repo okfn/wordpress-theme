@@ -15,6 +15,46 @@
 		<link rel="shortcut icon" href="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/assets/img/favicon.ico" />
 		<link rel="profile" href="http://gmpg.org/xfn/11">
 		<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
+
+		<!-- Twitter Card data -->
+		<?php
+			if(is_single() || is_page()) {
+			$twitter_url    = get_permalink();
+			$twitter_title  = get_the_title();
+			$twitter_desc   = get_the_excerpt();
+
+			if ( has_post_thumbnail() ) {
+				$twitter_thumb = get_the_post_thumbnail( $post, 'small' );
+			} elseif ( okfn_get_first_image_url_from_post_content() ) {
+				$twitter_thumb = okfn_get_first_image_url_from_post_content();
+			} else {
+				$twitter_thumb = null;
+			}
+			$okf_theme_options = get_option( 'theme_options_option_name' );
+			if ( ! empty( $okf_theme_options['okfnwp_twitter_id'] ) ) {
+				$twitter_site = $okf_theme_options['okfnwp_twitter_id'];
+			} else {
+				$twitter_site = null;
+			}
+			$twitter_creator = get_the_author_meta('twitter');
+			?>
+			<meta name="twitter:card" value="summary" />
+			<meta name="twitter:url" value="<?php echo $twitter_url; ?>" />
+			<meta name="twitter:title" value="<?php echo $twitter_title; ?>" />
+			<meta name="twitter:description" value="<?php echo $twitter_desc; ?>" />
+
+			<?php if ($twitter_thumb) { ?>
+			<meta name="twitter:image" value="<?php echo $twitter_thumb; ?>" />
+			<?php } ?> 
+			<?php if ($twitter_site) { ?>
+			<meta name="twitter:site" value="@<?php echo $twitter_site ?>" />
+			<?php } ?> 
+			<?php if ($twitter_creator) { ?>
+			<meta name="twitter:creator" value="@<?php echo $twitter_creator ?>" />
+			<?php } ?>
+		<?php } ?>
+		<!-- end Twitter Card data -->
+
 		<?php wp_head(); ?>
 	</head>
 	<body <?php body_class(); ?>>
