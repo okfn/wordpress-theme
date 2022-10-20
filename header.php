@@ -47,10 +47,10 @@
 			<meta name="twitter:image" value="<?php echo $twitter_thumb; ?>" />
 			<?php } ?> 
 			<?php if ($twitter_site) { ?>
-			<meta name="twitter:site" value="<?php echo $twitter_site ?>" />
+			<meta name="twitter:site" value="@<?php echo $twitter_site ?>" />
 			<?php } ?> 
 			<?php if ($twitter_creator) { ?>
-			<meta name="twitter:creator" value="<?php echo $twitter_creator ?>" />
+			<meta name="twitter:creator" value="@<?php echo $twitter_creator ?>" />
 			<?php } ?>
 		<?php } ?>
 		<!-- end Twitter Card data -->
