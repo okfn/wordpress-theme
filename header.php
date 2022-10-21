@@ -24,7 +24,7 @@
 			$twitter_desc   = get_the_excerpt();
 
 			if ( has_post_thumbnail() ) {
-				$twitter_thumb = get_the_post_thumbnail( $post, 'small' );
+				$twitter_thumb = get_the_post_thumbnail_url();
 			} elseif ( okfn_get_first_image_url_from_post_content() ) {
 				$twitter_thumb = okfn_get_first_image_url_from_post_content();
 			} else {
