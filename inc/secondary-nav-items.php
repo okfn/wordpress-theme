@@ -35,6 +35,13 @@ if ( ! empty( $okf_theme_options['okfnwp_linkedin_id'] ) ) {
 </li>
 	<?php
 }
+if ( ! empty( $okf_theme_options['okfnwp_mastodon_id'] ) ) {
+	?>
+<li class="nav-item">
+  <a class="mastodon nav-link" href="https://fosstodon.org/@<?php echo isset( $okf_theme_options['okfnwp_mastodon_id'] ) ? esc_attr( $okf_theme_options['okfnwp_mastodon_id'], 'okfnwp' ) : 'okfn'; ?>">Mastodon</a>
+</li>
+	<?php
+}
 if ( ! empty( $okf_theme_options['okfnwp_donate_url'] ) ) {
 	?>
 <li class="nav-item">
