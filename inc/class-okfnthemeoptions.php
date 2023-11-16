@@ -431,7 +431,7 @@ class OKFNThemeOptions {
 	 * @return void
 	 */
 	public function okfnwp_linkedin_id_callback() {
-		if ( $this->theme_options['okfnwp_linkedin_id'] ) :
+		if ( isset( $this->theme_options['okfnwp_linkedin_id'] ) ) :
 			$current_val = $this->theme_options['okfnwp_linkedin_id'];
 	  else :
 		  $current_val = '';
@@ -454,7 +454,7 @@ class OKFNThemeOptions {
 	 * @return void
 	 */
 	public function okfnwp_mastodon_id_callback() {
-		if ( isset ( $this->theme_options['okfnwp_mastodon_id'] ) ) :
+		if ( isset( $this->theme_options['okfnwp_mastodon_id'] ) ) :
 			$current_val = $this->theme_options['okfnwp_mastodon_id'];
 	  else :
 		  $current_val = '';
