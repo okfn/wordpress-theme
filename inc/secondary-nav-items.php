@@ -17,7 +17,7 @@ if ( ! empty( $okf_theme_options['okfnwp_fb_id'] ) ) {
 if ( ! empty( $okf_theme_options['okfnwp_twitter_id'] ) ) {
 	?>
 <li class="nav-item">
-  <a class="twitter nav-link" href="https://twitter.com/<?php echo isset( $okf_theme_options['okfnwp_twitter_id'] ) ? esc_attr( $okf_theme_options['okfnwp_twitter_id'] ) : 'okfn'; ?>">Twitter</a>
+  <a class="twitter nav-link" href="https://twitter.com/<?php echo isset( $okf_theme_options['okfnwp_twitter_id'] ) ? esc_attr( $okf_theme_options['okfnwp_twitter_id'] ) : 'okfn'; ?>">Twitter/X</a>
 </li>
 	<?php
 }
