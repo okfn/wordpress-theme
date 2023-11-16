@@ -93,10 +93,6 @@
 				 <?php esc_html_e( 'Creative Commons Attribution 4.0 International License', 'okfnwp' ); ?>
 			</a>.
 		  </p>
-		  <p>
-			<?php esc_html_e( 'Refer to our', 'okfnwp' ); ?> <a href="https://okfn.org/attribution/">
-			  <?php esc_html_e( 'attributions page', 'okfnwp' ); ?></a> <?php esc_html_e( 'for attributions of other work on the site', 'okfnwp' ); ?>.
-		  </p>
 		</div>
 	  </div>
 	</footer>
