@@ -143,7 +143,7 @@ class OKFNThemeOptions {
 
 		add_settings_field(
 			'okfnwp_twitter_id', // id.
-			esc_html__( 'Twitter Handle', 'okfnwp' ), // title.
+			esc_html__( 'Twitter/X Handle', 'okfnwp' ), // title.
 			array( $this, 'okfnwp_twitter_id_callback' ), // callback.
 			'theme-options-admin', // page.
 			'theme_options_setting_section_social' // section..
@@ -398,7 +398,7 @@ class OKFNThemeOptions {
 
 		printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_twitter_id]" id="okfnwp_twitter_id" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
 		?>
-		<p><?php esc_html_e( 'Twitter handle to link to. Example: If your handle is @okfn, use okfn', 'okfnwp' ); ?></p>
+		<p><?php esc_html_e( 'Twitter/X handle to link to. Example: If your handle is @okfn, use okfn', 'okfnwp' ); ?></p>
 		<?php
 	}
 
