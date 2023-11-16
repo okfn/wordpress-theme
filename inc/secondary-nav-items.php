@@ -28,6 +28,13 @@ if ( ! empty( $okf_theme_options['okfnwp_discuss_id'] ) ) {
 </li>
 	<?php
 }
+if ( ! empty( $okf_theme_options['okfnwp_linkedin_id'] ) ) {
+	?>
+<li class="nav-item">
+  <a class="linkedin nav-link" href="https://www.linkedin.com/company/<?php echo isset( $okf_theme_options['okfnwp_linkedin_id'] ) ? esc_attr( $okf_theme_options['okfnwp_linkedin_id'], 'okfnwp' ) : 'open-knowledge-foundation'; ?>">LinkedIn</a>
+</li>
+	<?php
+}
 if ( ! empty( $okf_theme_options['okfnwp_donate_url'] ) ) {
 	?>
 <li class="nav-item">

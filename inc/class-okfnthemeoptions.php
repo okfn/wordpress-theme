@@ -165,6 +165,14 @@ class OKFNThemeOptions {
 			'theme_options_setting_section_social' // section..
 		);
 
+		add_settings_field(
+			'okfnwp_linkedin_id', // id.
+			esc_html__( 'LinkedIn Page', 'okfnwp' ), // title.
+			array( $this, 'okfnwp_linkedin_id_callback' ), // callback.
+			'theme-options-admin', // page.
+			'theme_options_setting_section_social' // section..
+		);
+
 		// phpcs:disable
 		// add_settings_field(
 		// "okfnwp_admin_bar", // id.
@@ -256,6 +264,10 @@ class OKFNThemeOptions {
 
 		if ( isset( $input['okfnwp_fb_id'] ) ) {
 			$sanitary_values['okfnwp_fb_id'] = sanitize_text_field( $input['okfnwp_fb_id'] );
+		}
+
+		if ( isset( $input['okfnwp_linkedin_id'] ) ) {
+			$sanitary_values['okfnwp_linkedin_id'] = sanitize_text_field( $input['okfnwp_linkedin_id'] );
 		}
 
 		if ( isset( $input['okfnwp_discuss_id'] ) ) {
@@ -398,6 +410,29 @@ class OKFNThemeOptions {
 		printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_fb_id]" id="okfnwp_fb_id" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
 		?>
 		<p><?php esc_html_e( 'Facebook page name. If the URL to your page is https://www.facebook.com/OKFNetwork, then use OKFNetwork', 'okfnwp' ); ?></p>
+		<?php
+	}
+
+	/**
+	 * Callback funtion for setting the LinkedIn ID
+	 *
+	 * @return void
+	 */
+	public function okfnwp_linkedin_id_callback() {
+		if ( $this->theme_options['okfnwp_linkedin_id'] ) :
+			$current_val = $this->theme_options['okfnwp_linkedin_id'];
+	  else :
+		  $current_val = '';
+	  endif;
+		$old_val = get_option( 'okfnwp_linkedin_id' );
+
+	  if ( ! isset( $current_val ) && isset( $old_val ) ) :
+		  $current_val = $old_val;
+			endif;
+
+		printf( '<input class="regular-text" type="text" name="theme_options_option_name[okfnwp_linkedin_id]" id="okfnwp_linkedin_id" value="%s">', isset( $current_val ) ? esc_attr( $current_val ) : '' );
+		?>
+		<p><?php esc_html_e( 'LinkedIn page name. If the URL to your page is https://www.linkedin.com/company/open-knowledge-foundation/, then use open-knowledge-foundation', 'okfnwp' ); ?></p>
 		<?php
 	}
 
