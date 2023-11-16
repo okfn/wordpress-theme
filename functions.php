@@ -45,7 +45,7 @@ function okfn_theme_setup() {
 	/**
 	 * Add theme support for features
 	 */
-	add_theme_support( 'html5' );
+	add_theme_support( 'html5', array( 'comment-list', 'comment-form', 'search-form', 'gallery', 'caption', 'style', 'script' ) );
 	add_theme_support( 'menus' );
 	add_theme_support(
 		'custom-logo',
